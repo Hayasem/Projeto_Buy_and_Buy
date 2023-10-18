@@ -26,8 +26,8 @@
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/text_tela_cadastro"
-            />
+            app:layout_constraintTop_toBottomOf="@id/text_tela_cadastro"
+    />
 
     <ImageView
             android:id="@+id/logo"
