@@ -74,7 +74,6 @@ public class FormCadastro extends AppCompatActivity {
 
                 //O objeto Task é o responsável pelo cadrasto de usuários, ele basicamente vai portar o resultado do cadastro
                 if(task.isSuccessful()){
-
                     SalvarDadosUsuario();
                     Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.GREEN);
@@ -146,6 +145,5 @@ public class FormCadastro extends AppCompatActivity {
         editemail = findViewById(R.id.editemail);
         edit_senha = findViewById(R.id.edit_senha);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
-
     }
 }
