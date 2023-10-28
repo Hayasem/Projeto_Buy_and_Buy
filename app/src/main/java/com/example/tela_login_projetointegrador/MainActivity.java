@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            TelaPrincipal();
+                            MenuScreen();
                         }
                     },2000);
                 }else{
@@ -103,12 +103,12 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser usuarioAtual = FirebaseAuth.getInstance().getCurrentUser();
 
         if(usuarioAtual != null){
-            TelaPrincipal();
+            MenuScreen();
         }
     }
 
-    private void TelaPrincipal(){
-        Intent intent = new Intent(MainActivity.this, TelaPerfilUsuario.class);
+    private void MenuScreen(){
+        Intent intent = new Intent(MainActivity.this, MenuScreen.class);
         startActivity(intent);
         finish();
     }

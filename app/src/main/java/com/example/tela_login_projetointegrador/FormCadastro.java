@@ -72,7 +72,7 @@ public class FormCadastro extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
 
-                //O objeto Task é o responsável pelo cadrasto de usuários, ele basicamente vai portar o resultado do cadastro
+                //O objeto Task é o responsável pelo cadastro de usuários, ele basicamente vai portar o resultado do cadastro
                 if(task.isSuccessful()){
                     SalvarDadosUsuario();
                     Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
