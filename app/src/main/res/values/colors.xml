@@ -6,5 +6,7 @@
     <color name="amarelo">#fce48c</color>
     <color name="roxo">#8e3cce</color>
     <color name="magenta">#8B008B</color>
+    <color name="cinza">#808080</color>
+    <color name="cinza_claro">#fafafa</color>
 
 </resources>
