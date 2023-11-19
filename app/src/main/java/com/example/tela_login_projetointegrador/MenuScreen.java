@@ -14,6 +14,7 @@ import java.util.List;
 public class MenuScreen extends AppCompatActivity {
 
     private ImageButton bt_perfil;
+    private ImageButton bt_notificacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +22,14 @@ public class MenuScreen extends AppCompatActivity {
         setContentView(R.layout.activity_menu_screen);
         IniciarComponentes();
 
-        bt_perfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MenuScreen.this, TelaPerfilUsuario.class);
-                startActivity(intent);
-            }
+        bt_perfil.setOnClickListener(v -> {
+            Intent intent = new Intent(MenuScreen.this, TelaPerfilUsuario.class);
+            startActivity(intent);
+        });
+
+        bt_notificacao.setOnClickListener(v -> {
+            Intent intent = new Intent(MenuScreen.this, ActivityNotificacao.class);
+            startActivity(intent);
         });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView_products);
@@ -93,6 +96,7 @@ public class MenuScreen extends AppCompatActivity {
     }
     private void IniciarComponentes(){
         bt_perfil = findViewById(R.id.bt_perfil);
+        bt_notificacao = findViewById(R.id.bt_notification);
         RecyclerView recyclerView = findViewById(R.id.recyclerView_products);
 
     }

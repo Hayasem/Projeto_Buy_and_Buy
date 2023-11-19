@@ -1,36 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-
-
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/container_icons" android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            android:id="@+id/nestedScrollView">
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <TextView
-                    android:text="Notificações"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/textView3"
-                    android:textSize="20sp" tools:layout_editor_absoluteX="149dp" tools:layout_editor_absoluteY="16dp"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
+    <TextView
+            android:id="@+id/textView2"
+            android:text="Notificações"
+            android:layout_width="460dp"
+            android:layout_height="75dp"
+            android:textSize="20sp"
+            android:gravity="start"
+    />
     <ListView
-            android:layout_width="394dp"
-            android:layout_height="592dp"
-            android:id="@+id/lvNotificacoes" app:layout_anchorGravity="center"
-            app:layout_anchor="@+id/nestedScrollView"/>
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            android:id="@+id/lvNotificacoes"
+            android:layout_width="match_parent"
+            android:layout_height="651dp"
+    />
+</LinearLayout>
