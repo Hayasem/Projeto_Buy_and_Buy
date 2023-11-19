@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Tela_Login_ProjetoIntegrador</string>
+    <string name="entrar">Entrar</string>
+    <string name="texto_cadastro">Crie uma conta aqui</string>
+    <string name="title_cadastro">Cadastre-se</string>
+    <string name="mochila_do_ex_rcito">Mochila do exército</string>
+    <string name="aaaaaaaaaaaaaa">AAAAAAAAAAAAAA</string>
+    <string name="r_200_00">R$ 200,00</string>
+</resources>
