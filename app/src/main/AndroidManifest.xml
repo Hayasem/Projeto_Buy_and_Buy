@@ -13,16 +13,16 @@
             android:theme="@style/Theme.Tela_Login_ProjetoIntegrador"
             tools:targetApi="31">
         <activity
-                android:name=".MenuScreen"
+                android:name=".backendactivitys.MenuScreen"
                 android:exported="false"/>
         <activity
-                android:name=".TelaPerfilUsuario"
+                android:name=".backendactivitys.TelaPerfilUsuario"
                 android:exported="false"/>
         <activity
-                android:name=".FormCadastro"
+                android:name=".backendactivitys.FormCadastro"
                 android:exported="false"/>
         <activity
-                android:name=".MainActivity"
+                android:name=".backendactivitys.MainActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -1,4 +1,4 @@
-package com.example.tela_login_projetointegrador;
+package com.example.tela_login_projetointegrador.backendactivitys;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.tela_login_projetointegrador.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(com.example.tela_login_projetointegrador.R.layout.activity_main);
         IniciarComponentes();
         text_tela_cadastro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,10 +114,10 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
     private void IniciarComponentes(){
-        text_tela_cadastro = findViewById(R.id.text_tela_cadastro);
-        edit_email = findViewById(R.id.edit_email);
-        edit_senha = findViewById(R.id.edit_senha);
-        bt_entrar = findViewById(R.id.bt_entrar);
+        text_tela_cadastro = findViewById(com.example.tela_login_projetointegrador.R.id.text_tela_cadastro);
+        edit_email = findViewById(com.example.tela_login_projetointegrador.R.id.edit_email);
+        edit_senha = findViewById(com.example.tela_login_projetointegrador.R.id.edit_senha);
+        bt_entrar = findViewById(com.example.tela_login_projetointegrador.R.id.bt_entrar);
         progressBar = findViewById(R.id.progressBar);
     }
 }

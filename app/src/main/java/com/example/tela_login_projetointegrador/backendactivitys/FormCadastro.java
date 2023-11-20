@@ -1,4 +1,4 @@
-package com.example.tela_login_projetointegrador;
+package com.example.tela_login_projetointegrador.backendactivitys;
 
 import android.graphics.Color;
 import android.hardware.biometrics.BiometricPrompt;
@@ -9,6 +9,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.tela_login_projetointegrador.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +38,7 @@ public class FormCadastro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_form_cadastro);
+        setContentView(com.example.tela_login_projetointegrador.R.layout.activity_form_cadastro);
         iniciarComponentes();
 
         //Com esse comando,o botão agora consegue "escutar" eventos de click:
@@ -141,9 +142,9 @@ public class FormCadastro extends AppCompatActivity {
     }
     //Recuperando pelo id:
     private void iniciarComponentes(){
-        edit_nome = findViewById(R.id.edit_nome);
-        editemail = findViewById(R.id.editemail);
-        edit_senha = findViewById(R.id.edit_senha);
+        edit_nome = findViewById(com.example.tela_login_projetointegrador.R.id.edit_nome);
+        editemail = findViewById(com.example.tela_login_projetointegrador.R.id.editemail);
+        edit_senha = findViewById(com.example.tela_login_projetointegrador.R.id.edit_senha);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
     }
 }

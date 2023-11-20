@@ -1,4 +1,4 @@
-package com.example.tela_login_projetointegrador;
+package com.example.tela_login_projetointegrador.backendactivitys;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapter.MyAdapter;
+import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.model.Product;
 import java.util.ArrayList;
 import java.util.List;

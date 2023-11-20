@@ -1,4 +1,4 @@
-package com.example.tela_login_projetointegrador;
+package com.example.tela_login_projetointegrador.backendactivitys;
 
 import android.content.Intent;
 import android.view.View;
@@ -7,9 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.tela_login_projetointegrador.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
-import org.w3c.dom.Text;
 
 public class TelaPerfilUsuario extends AppCompatActivity {
    private TextView nomeUsuario, emailUsuario;
@@ -21,7 +21,7 @@ public class TelaPerfilUsuario extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tela_perfil_usuario);
+        setContentView(com.example.tela_login_projetointegrador.R.layout.activity_tela_perfil_usuario);
         IniciarComponentes();
 
 
@@ -59,8 +59,8 @@ public class TelaPerfilUsuario extends AppCompatActivity {
     }
 
     private void IniciarComponentes(){
-        nomeUsuario = findViewById(R.id.text_nome_usuario);
-        emailUsuario = findViewById(R.id.text_email_usuario);
+        nomeUsuario = findViewById(com.example.tela_login_projetointegrador.R.id.text_nome_usuario);
+        emailUsuario = findViewById(com.example.tela_login_projetointegrador.R.id.text_email_usuario);
         bt_deslogar = findViewById(R.id.bt_deslogar);
     }
 }
