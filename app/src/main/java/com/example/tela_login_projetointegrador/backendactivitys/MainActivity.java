@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void MenuScreen(){
-        Intent intent = new Intent(MainActivity.this, MenuScreen.class);
+        Intent intent = new Intent(this, SecondActivity.class);
         startActivity(intent);
         finish();
     }

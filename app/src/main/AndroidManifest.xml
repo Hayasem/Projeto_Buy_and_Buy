@@ -19,9 +19,6 @@
                 android:name=".backendactivitys.TelaPerfilUsuario"
                 android:exported="false"/>
         <activity
-                android:name=".backendactivitys.FormCadastro"
-                android:exported="false"/>
-        <activity
                 android:name=".backendactivitys.MainActivity"
                 android:exported="true">
             <intent-filter>
@@ -30,6 +27,21 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+<!--        <activity-->
+<!--                android:name=".TelaPerfilUsuario"-->
+<!--                android:exported="true"-->
+<!--                android:launchMode="singleTop"-->
+<!--            />-->
+        <activity
+                android:name=".backendactivitys.FormCadastro"
+                android:exported="true"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".backendactivitys.SecondActivity"
+                android:exported="true"
+                android:launchMode="singleTop"
+            />
+
     </application>
 
 </manifest>
