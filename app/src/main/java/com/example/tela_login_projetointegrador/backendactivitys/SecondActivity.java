@@ -1,8 +1,11 @@
-package com.example.tela_login_projetointegrador;
+package com.example.tela_login_projetointegrador.backendactivitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.tela_login_projetointegrador.R;
+import com.example.tela_login_projetointegrador.backendactivitys.MenuScreen;
+import com.example.tela_login_projetointegrador.backendactivitys.TelaPerfilUsuario;
 import com.example.tela_login_projetointegrador.fragment.FragmentNotificacao;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

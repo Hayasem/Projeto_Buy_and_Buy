@@ -1,5 +1,5 @@
-package com.example.tela_login_projetointegrador;
-
+package com.example.tela_login_projetointegrador.backendactivitys;
+import com.example.tela_login_projetointegrador.R;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import com.example.tela_login_projetointegrador.backendactivitys.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 import org.w3c.dom.Text;
@@ -47,27 +47,6 @@ public class TelaPerfilUsuario extends Fragment {
     }
 
 
-    //    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_tela_perfil_usuario);
-//        IniciarComponentes();
-//
-//
-//        //Ao clicar em deslogar, o usuário será deslogado, e retornará a tela inicial:
-//        bt_deslogar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                FirebaseAuth.getInstance().signOut();
-//                Intent intent = new Intent(TelaPerfilUsuario.this, MainActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
-//
-//    }
-
     //Recuperando o ID:
     @Override
     public void onStart() {
@@ -86,10 +65,4 @@ public class TelaPerfilUsuario extends Fragment {
             }
         });
     }
-
-//    private void IniciarComponentes(){
-//        nomeUsuario = findViewById(R.id.text_nome_usuario);
-//        emailUsuario = findViewById(R.id.text_email_usuario);
-//        bt_deslogar = findViewById(R.id.bt_deslogar);
-//    }
 }
