@@ -1,16 +1,17 @@
 package com.example.tela_login_projetointegrador;
-
 import android.content.Intent;
 import android.os.Bundle;
-//import androidx.support.annotation.NonNull;
-//import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
-import android.view.Menu;
+
+import com.example.tela_login_projetointegrador.fragment.FragmentNotificacao;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import org.jetbrains.annotations.NotNull;
 
 public class SecondActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -19,39 +20,42 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.second_activity);
-
-        BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.navigationView);
+        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation_view);
         navigationView.setOnNavigationItemSelectedListener(this);
+        navigationView.setSelectedItemId(R.id.homeId); //seleciona o menu da primeira tela aberta
 
-        Menu menu = navigationView.getMenu();
-        getMenuInflater().inflate(R.menu.navigation,menu);
+        if (savedInstanceState == null) { // Carregar a primeira tela (Fragment)
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new MenuScreen())
+                    .commit();
+        }
 
     }
-
     @Override
-    public boolean onNavigationItemSelected( @NotNull MenuItem menuItem) {
+    public boolean onNavigationItemSelected( @NotNull MenuItem menuItem) {// metodo responsal por fazer a navegacao entre as telas
 
         if(menuItem.getItemId()==R.id.homeId){
-            Log.d("clicounotificacao","clicou notificacao");
-            startActivity(new Intent(this, MenuScreen.class));
-            finish();
+            Fragment menuScreen = MenuScreen.newInstance();
+            openFragment(menuScreen);
             return true;
         }else if(menuItem.getItemId() == R.id.notificacaoId){
-            Log.d("clicounotificacao","clicou notificacao");
-            startActivity(new Intent(this, ActivityNotificacao.class));
-            finish();
+            Fragment fragmentNotificacao = FragmentNotificacao.newInstance();
+            openFragment(fragmentNotificacao);
             return true;
         }else if (menuItem.getItemId() ==R.id.carrinhoId) {
-            Log.d("clicounotificacao","clicou carrinho");
-            startActivity(new Intent(this, ActivityNotificacao.class));
-            finish();
             return true;
-        }else if(menuItem.getItemId() ==R.id.profileId){
-            Log.d("clicounotificacao","clicou profile");
-            startActivity(new Intent(this, TelaPerfilUsuario.class));
-            finish();
+        }else if (menuItem.getItemId() ==R.id.profileId) {
+            Fragment telaPerfilUsuario = TelaPerfilUsuario.newInstance();
+            openFragment(telaPerfilUsuario);
             return true;
         }
         return false;
+    }
+
+    private void openFragment(Fragment fragment) { //metodo generico para efetuar a troca de fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
