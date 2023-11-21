@@ -1,44 +1,54 @@
 package com.example.tela_login_projetointegrador;
 import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapter.MyAdapter;
 import com.example.tela_login_projetointegrador.model.Product;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuScreen extends AppCompatActivity {
+public class MenuScreen extends Fragment {
 
     private ImageButton bt_perfil;
     private ImageButton bt_notificacao;
 
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_screen);
-        IniciarComponentes();
-
-//        bt_perfil.setOnClickListener(v -> {
-//            Intent intent = new Intent(MenuScreen.this, TelaPerfilUsuario.class);
-//            startActivity(intent);
-//        });
-//
-//        bt_notificacao.setOnClickListener(v -> {
-//            Intent intent = new Intent(MenuScreen.this, ActivityNotificacao.class);
-//            startActivity(intent);
-//        });
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView_products);
-        List<Product> productList = new ArrayList<>();
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MyAdapter(getApplicationContext(), productList));
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_menu_screen, container, false);
+        // foi alterado para fragment por questão de melhores praticas, uma vez que não a necessidade de atualizar a tela toda, exemplo o menu e appbar não precisa ficar
+        // sendo carregado a toda mudança de tela pois eles não se alteram.
+        //https://dev.to/alexandrefreire/qual-a-diferenca-entre-activity-fragmentactivity-e-fragment-216o
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_products);
+        List<Product> productList = carregaDados();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new MyAdapter(getContext(), productList));
         recyclerView.setHasFixedSize(true);
+        return view;
+    }
 
+    public static MenuScreen newInstance(){
+        return new MenuScreen();
+    }
+
+    private List<Product> carregaDados(){
+        List<Product> productList = new ArrayList<>();
         Product product1 = new Product(R.drawable.img_backpack,
                 "Mochila militar",
                 "Uma mochila perfeita para aqueles que gostam de se aventurar. Consta com 6 diferentes bolsos a fim de armazenar tudo de essêncial, a fim de atender até aqueles com mais preparo. Anti-impermeável, e fácil de se ajustar, uma dos top modelos da loja.",
@@ -92,14 +102,9 @@ public class MenuScreen extends AppCompatActivity {
                 "Relógio de pulso feito especialmente para aqueles que perdem a noção do tempo devido a monotoniedade de suas vidas, exercitem-se mais...sério",
                 "R$ 89,99");
         productList.add(product9);
-
+        return productList;
     }
-    private void IniciarComponentes(){
-//        bt_perfil = findViewById(R.id.bt_perfil);
-//        bt_notificacao = findViewById(R.id.bt_notification);
-//        RecyclerView recyclerView = findViewById(R.id.recyclerView_products);
 
-    }
 
 
 }
