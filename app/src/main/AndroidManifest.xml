@@ -13,7 +13,7 @@
             android:theme="@style/Theme.Tela_Login_ProjetoIntegrador"
             tools:targetApi="31">
         <activity
-                android:name=".backendactivitys.ShoppingCart"
+                android:name=".backendactivitys.CartScreen"
                 android:exported="false"/>
         <activity
                 android:name=".backendactivitys.MenuScreen"
