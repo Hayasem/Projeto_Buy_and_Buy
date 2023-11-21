@@ -41,6 +41,8 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
             openFragment(fragmentNotificacao);
             return true;
         }else if (menuItem.getItemId() ==R.id.carrinhoId) {
+            Fragment cartScreen = CartScreen.newInstance();
+            openFragment(cartScreen);
             return true;
         }else if (menuItem.getItemId() ==R.id.profileId) {
             Fragment telaPerfilUsuario = TelaPerfilUsuario.newInstance();
