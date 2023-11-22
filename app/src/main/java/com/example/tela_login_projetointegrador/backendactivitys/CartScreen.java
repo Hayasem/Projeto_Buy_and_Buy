@@ -5,12 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.tela_login_projetointegrador.Adapter.MyAdapter;
+import com.example.tela_login_projetointegrador.Adapter.MyCartAdapter;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.model.CartProducts;
 
@@ -26,7 +26,7 @@ public class CartScreen extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_CartProducts);
         List<CartProducts> cartProducts = carregaDados();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyAdapter(getContext(), cartProducts));
+        recyclerView.setAdapter(new MyCartAdapter(getContext(), cartProducts));
         recyclerView.setHasFixedSize(true);
         return view;
     }
@@ -35,6 +35,7 @@ public class CartScreen extends Fragment {
         return new CartScreen();
     }
     private List<CartProducts> carregaDados(){
+
         List<CartProducts> cartProducts = new ArrayList<>();
         CartProducts product1 = new CartProducts(R.drawable.img_backpack,
                 "Mochila militar", R.drawable.plus_icon, R.drawable.minus_icon,
@@ -58,6 +59,7 @@ public class CartScreen extends Fragment {
                 "Bolsa de couro", R.drawable.plus_icon, R.drawable.minus_icon,
                 "Quantidade", "R$ 100,00");
         cartProducts.add(product4);
+        return cartProducts;
 
     }
 }
