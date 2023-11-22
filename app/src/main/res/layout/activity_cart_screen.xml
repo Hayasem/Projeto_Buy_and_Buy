@@ -17,6 +17,8 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:layout_constraintTop_toTopOf="parent"
             app:title="Carrinho"
+            app:subtitle="Subtotal = R$ 750,00"
+            app:subtitleTextColor="@color/black"
             app:titleTextColor="@color/black"/>
 
 
@@ -28,16 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
-    />
-    <TextView
-            android:text="subtotal = R$ 450,00"
-            android:layout_marginStart="15dp"
-            android:textColor="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/subtotal"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="5dp"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            app:layout_constraintVertical_bias="0.0"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

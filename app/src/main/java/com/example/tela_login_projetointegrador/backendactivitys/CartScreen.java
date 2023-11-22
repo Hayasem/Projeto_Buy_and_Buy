@@ -59,6 +59,12 @@ public class CartScreen extends Fragment {
                 "Bolsa de couro", R.drawable.plus_icon, R.drawable.minus_icon,
                 "Quantidade", "R$ 100,00");
         cartProducts.add(product4);
+
+        List<CartProducts> cartProducts5 = new ArrayList<>();
+        CartProducts product5 = new CartProducts(R.drawable.img_headset,
+                "Headset Gamer", R.drawable.plus_icon, R.drawable.minus_icon,
+                "Quantidade", "R$ 300,00");
+        cartProducts.add(product5);
         return cartProducts;
 
     }
