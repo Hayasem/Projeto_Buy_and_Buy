@@ -21,7 +21,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_products"
+            android:id="@+id/recyclerView_CartProducts"
             android:layout_width="415dp"
             android:layout_height="550dp"
             app:layout_constraintStart_toStartOf="parent"

@@ -18,12 +18,12 @@
                 android:text="titulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/idTitulo"
-                android:textSize="16sp" android:textStyle="bold" android:paddingStart="10sp" android:paddingTop="5sp"
+                android:textSize="16sp" android:textStyle="bold" android:paddingStart="40dp" android:paddingTop="5sp"
         />
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/idSubtitulo"
-                android:text="subtitulo" android:paddingStart="10sp" android:paddingTop="5sp"
+                android:text="subtitulo" android:paddingStart="40dp" android:paddingTop="5sp"
         />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

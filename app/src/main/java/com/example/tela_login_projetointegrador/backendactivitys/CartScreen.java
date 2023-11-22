@@ -21,7 +21,7 @@ public class CartScreen extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_cart_screen, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_products);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_CartProducts);
         List<Product> productList = carregaDados();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new MyAdapter(getContext(), productList));
