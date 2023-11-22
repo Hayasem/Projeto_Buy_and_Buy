@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapter.MyAdapter;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.model.Product;
+import com.example.tela_login_projetointegrador.model.CartProducts;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,9 @@ public class CartScreen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_cart_screen, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_CartProducts);
-        List<Product> productList = carregaDados();
+        List<CartProducts> cartProducts = carregaDados();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyAdapter(getContext(), productList));
+        recyclerView.setAdapter(new MyAdapter(getContext(), cartProducts));
         recyclerView.setHasFixedSize(true);
         return view;
     }
@@ -32,31 +34,30 @@ public class CartScreen extends Fragment {
     public static CartScreen newInstance() {
         return new CartScreen();
     }
-    private List<Product> carregaDados(){
-        List<Product> productList = new ArrayList<>();
-        Product product1 = new Product(R.drawable.img_backpack,
-                "Mochila militar",
-                "Uma mochila perfeita para aqueles que gostam de se aventurar. Consta com 6 diferentes bolsos a fim de armazenar tudo de essêncial, a fim de atender até aqueles com mais preparo. Anti-impermeável, e fácil de se ajustar, uma dos top modelos da loja.",
-                "R$ 149,99");
-        productList.add(product1);
+    private List<CartProducts> carregaDados(){
+        List<CartProducts> cartProducts = new ArrayList<>();
+        CartProducts product1 = new CartProducts(R.drawable.img_backpack,
+                "Mochila militar", R.drawable.plus_icon, R.drawable.minus_icon,
+                "Quantidade", "R$ 149,99");
+        cartProducts.add(product1);
 
-        Product product2 = new Product(R.drawable.img_racket,
-                "Raquete elétrica de alta tensão",
-                "Não aguenta mais aqueles mosquitos atrapalhando seu sono durante a madrugada? Acabe com todos eles utilizando nosso mais novo modelo de raquete elétrica de alta tensão. Você merece ter uma boa noite de sono depois de um longo dia de trabalho, não deixe mais esses pequenos encreiqueiros te incomodarem.",
-                "R$ 79,99");
-        productList.add(product2);
+        List<CartProducts> cartProducts2 = new ArrayList<>();
+        CartProducts product2 = new CartProducts(R.drawable.camisa_one_piece,
+                "Camiseta One Piece", R.drawable.plus_icon, R.drawable.minus_icon,
+                "Quantidade", "R$ 59,99");
+        cartProducts.add(product2);
 
-        Product product3 = new Product(R.drawable.img_sneakers,
-                "Tênis Yonex",
-                "Tênis perfeitamente equilibrado entre adrenalina e conforto, seus pés vão se sentir no paraíso ao calçar. Fácil de limpar, e adaptável a circunferência de seus pés.",
-                "R$ 200,00");
-        productList.add(product3);
+        List<CartProducts> cartProducts3 = new ArrayList<>();
+        CartProducts product3 = new CartProducts(R.drawable.calca_jeans,
+                "Calça Jeans", R.drawable.plus_icon, R.drawable.minus_icon,
+                "Quantidade", "R$ 80,00");
+        cartProducts.add(product3);
 
-        Product product4 = new Product(R.drawable.oculos_de_sol,
-                "Óculos de sol",
-                "Cansado de, mesmo em um dia tão lindo não poder olhar para o sol? Pois seus problemas acabaram, venha confirir nosso mais novo modelo de óculos de sol testado e aprovado por 327 de 328 cientistas.",
-                "R$ 20,00");
-        productList.add(product4);
-        return productList;
+        List<CartProducts> cartProducts4 = new ArrayList<>();
+        CartProducts product4 = new CartProducts(R.drawable.bolsa_couro,
+                "Bolsa de couro", R.drawable.plus_icon, R.drawable.minus_icon,
+                "Quantidade", "R$ 100,00");
+        cartProducts.add(product4);
+
     }
 }
