@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.R;
+import com.example.tela_login_projetointegrador.model.CartProducts;
 import com.example.tela_login_projetointegrador.model.Product;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
@@ -13,10 +14,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     Context context;
     List<Product> produtos;
+    List<CartProducts> products;
     public MyAdapter(Context context, List<Product> produtos) {
         this.context = context;
         this.produtos = produtos;
-
+    }
+    public MyAdapter(List<CartProducts> products) {
+        this.context = context;
+        this.products = products;
     }
     @NonNull
     @NotNull
