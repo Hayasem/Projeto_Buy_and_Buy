@@ -102,6 +102,4 @@ public class FragmentNotificacao extends Fragment {
 
         return listaNotificacao;
     }
-
-
 }

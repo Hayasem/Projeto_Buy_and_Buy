@@ -28,7 +28,6 @@ public class MenuScreen extends Fragment {
     private ImageButton bt_perfil;
     private ImageButton bt_notificacao;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -105,7 +104,4 @@ public class MenuScreen extends Fragment {
         productList.add(product9);
         return productList;
     }
-
-
-
 }
