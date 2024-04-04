@@ -3,7 +3,7 @@
     <item
             android:id="@+id/homeId"
             android:icon="@drawable/img_home"
-            android:title="Home"/>
+            android:title="Principal"/>
     <item
             android:id="@+id/notificacaoId"
             android:icon="@drawable/notification_icon"
@@ -17,6 +17,6 @@
     <item
             android:id="@+id/profileId"
             android:icon="@drawable/img_user"
-            android:title="Profile"/>
+            android:title="Perfil"/>
 
 </menu>
