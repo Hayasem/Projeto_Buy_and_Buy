@@ -1,4 +1,5 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
+import android.widget.ImageView;
 import com.example.tela_login_projetointegrador.R;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -6,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
+import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.tela_login_projetointegrador.backendactivitys.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +23,7 @@ public class TelaPerfilUsuario extends Fragment {
    private Button bt_deslogar;
    FirebaseFirestore database = FirebaseFirestore.getInstance();
    String usuarioID;
+
 
     @Nullable
     @Override
@@ -42,9 +44,11 @@ public class TelaPerfilUsuario extends Fragment {
 
         return view;
     }
+
     public static TelaPerfilUsuario newInstance(){
         return new TelaPerfilUsuario();
     }
+
 
 
     //Recuperando o ID:

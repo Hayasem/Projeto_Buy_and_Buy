@@ -31,12 +31,13 @@ public class FragmentNotificacao extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_notificacao, container, false);
-
         ListView list = view.findViewById(R.id.lvNotificacoes);
 
         // Carrega os dados de exemplo e configura o ArrayAdapter
         List<HolderNotificacao> lista = carregarDados();
         ArrayAdapter<HolderNotificacao> listaAdapter = new NotificacaoAdapter( getContext(), R.layout.adapternotificacao, lista);
+
+
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Notificações");

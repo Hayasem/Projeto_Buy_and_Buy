@@ -30,7 +30,8 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
 
     }
     @Override
-    public boolean onNavigationItemSelected( @NotNull MenuItem menuItem) {// metodo responsal por fazer a navegacao entre as telas
+    public boolean onNavigationItemSelected( @NotNull MenuItem menuItem) {
+        // metodo responsavel por fazer a navegacao entre as telas
 
         if(menuItem.getItemId()==R.id.homeId){
             Fragment menuScreen = MenuScreen.newInstance();
