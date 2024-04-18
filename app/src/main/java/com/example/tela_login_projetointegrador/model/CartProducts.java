@@ -1,67 +1,90 @@
 package com.example.tela_login_projetointegrador.model;
 
 public class CartProducts {
-    int foto;
-    String nome;
-    int maisIcone;
-    int menosIcone;
-    String quantidade;
-    String preco;
+    int idCarrinho;
+    int idProduto;
+    int idUsuario;
+    int idPedido;
+    float preco_uni;
+    float total;
+    String data_add;
+    boolean noCarrinho;
 
-    public CartProducts(int foto, String nome, int maisIcone, int menosIcone, String quantidade, String preco) {
-        this.foto = foto;
-        this.nome = nome;
-        this.maisIcone = maisIcone;
-        this.menosIcone = menosIcone;
-        this.quantidade = quantidade;
-        this.preco = preco;
+    public CartProducts(int idCarrinho, int idProduto, int idUsuario, int idPedido, float preco_uni, float total, String data_add, boolean noCarrinho) {
+        this.idCarrinho = idCarrinho;
+        this.idProduto = idProduto;
+        this.idUsuario = idUsuario;
+        this.idPedido = idPedido;
+        this.preco_uni = preco_uni;
+        this.total = total;
+        this.data_add = data_add;
+        this.noCarrinho = noCarrinho;
     }
 
-    public int getFoto() {
-        return foto;
+    public CartProducts() {
     }
 
-    public void setFoto(int foto) {
-        this.foto = foto;
+    public int getIdCarrinho() {
+        return idCarrinho;
     }
 
-    public String getNome() {
-        return nome;
+    public void setIdCarrinho(int idCarrinho) {
+        this.idCarrinho = idCarrinho;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public int getIdProduto() {
+        return idProduto;
     }
 
-    public int getMaisIcone() {
-        return maisIcone;
+    public void setIdProduto(int idProduto) {
+        this.idProduto = idProduto;
     }
 
-    public void setMaisIcone(int maisIcone) {
-        this.maisIcone = maisIcone;
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public int getMenosIcone() {
-        return menosIcone;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public void setMenosIcone(int menosIcone) {
-        this.menosIcone = menosIcone;
+    public int getIdPedido() {
+        return idPedido;
     }
 
-    public String getQuantidade() {
-        return quantidade;
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public void setQuantidade(String quantidade) {
-        this.quantidade = quantidade;
+    public float getPreco_uni() {
+        return preco_uni;
     }
 
-    public String getPreco() {
-        return preco;
+    public void setPreco_uni(float preco_uni) {
+        this.preco_uni = preco_uni;
     }
 
-    public void setPreco(String preco) {
-        this.preco = preco;
+    public float getTotal() {
+        return total;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
+    }
+
+    public String getData_add() {
+        return data_add;
+    }
+
+    public void setData_add(String data_add) {
+        this.data_add = data_add;
+    }
+
+    public boolean isNoCarrinho() {
+        return noCarrinho;
+    }
+
+    public void setNoCarrinho(boolean noCarrinho) {
+        this.noCarrinho = noCarrinho;
     }
 }
