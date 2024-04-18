@@ -1,6 +1,7 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import com.example.tela_login_projetointegrador.R;
+import com.example.tela_login_projetointegrador.database.DatabaseConnection;
+import com.example.tela_login_projetointegrador.database.ProductManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -21,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class MainActivity extends AppCompatActivity {
 
     //Código para mudar de telas:
+    private DatabaseConnection db;
     private TextView text_tela_cadastro;
     private EditText edit_email;
     private EditText edit_senha;
@@ -31,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DatabaseConnection db = new DatabaseConnection(getApplicationContext());
+        SQLiteDatabase database =  db.getWritableDatabase();
+
 
         setContentView(com.example.tela_login_projetointegrador.R.layout.activity_main);
         IniciarComponentes();

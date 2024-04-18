@@ -84,7 +84,7 @@ public class FormCadastro extends AppCompatActivity {
         snackbar.setTextColor(Color.BLACK);
         snackbar.show();
     }
-    private void openFragment(Fragment fragment) {
+    public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar

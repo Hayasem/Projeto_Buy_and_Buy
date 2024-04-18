@@ -85,11 +85,36 @@
 
     />
 
+    <ImageView
+            android:clickable="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/meus_produtos"
+            android:id="@+id/imgbtn_products"
+            app:layout_constraintTop_toBottomOf="@id/IconeEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="25dp"
+            android:layout_marginStart="20dp"
+    />
+    <TextView
+            android:layout_marginTop="12dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:id="@+id/txt_meus_produtos"
+            android:textStyle="bold"
+            android:text="Cadastrar produtos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/imgbtn_products"
+            app:layout_constraintTop_toTopOf="@id/imgbtn_products"
+            android:layout_marginStart="10dp"
+    />
+
     <Button
             android:id="@+id/bt_deslogar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/IconeEmail"
+            app:layout_constraintTop_toBottomOf="@id/imgbtn_products"
             android:backgroundTint="@color/black"
             android:textColor="@color/white"
             android:padding="20dp"
@@ -99,5 +124,12 @@
             android:textStyle="bold"
             android:textAllCaps="false"
     />
+    <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
