@@ -10,7 +10,7 @@ import com.example.tela_login_projetointegrador.model.Product;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public abstract class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     Context context;
     List<Product> produtos;
@@ -29,16 +29,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyViewHolder(LayoutInflater.from(context).inflate
                 (R.layout.products_itens, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-        holder.imageView.setImageResource(produtos.get(position).getFoto());
-        holder.nameView.setText(produtos.get(position).getNome());
-        holder.descriptionView.setText(produtos.get(position).getDescricao());
-        holder.priceView.setText(produtos.get(position).getPreco());
-
     }
 
     @Override
