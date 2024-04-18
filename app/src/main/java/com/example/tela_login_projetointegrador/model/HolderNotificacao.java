@@ -1,15 +1,39 @@
 package com.example.tela_login_projetointegrador.model;
 
 public class HolderNotificacao {
-    private String titulo;
-    private String subtitulo;
+     int idNotificacao;
+     int idUsuario;
+     String titulo;
+     String descricao;
+     String data_notif;
+     boolean visualizado;
 
-    public HolderNotificacao(String titulo, String subtitulo) {
+    public HolderNotificacao(int idNotificacao, int idUsuario, String titulo, String descricao, String data_notif, boolean visualizado) {
+        this.idNotificacao = idNotificacao;
+        this.idUsuario = idUsuario;
         this.titulo = titulo;
-        this.subtitulo = subtitulo;
+        this.descricao = descricao;
+        this.data_notif = data_notif;
+        this.visualizado = visualizado;
     }
 
     public HolderNotificacao() {
+    }
+
+    public int getIdNotificacao() {
+        return idNotificacao;
+    }
+
+    public void setIdNotificacao(int idNotificacao) {
+        this.idNotificacao = idNotificacao;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getTitulo() {
@@ -20,11 +44,27 @@ public class HolderNotificacao {
         this.titulo = titulo;
     }
 
-    public String getSubtitulo() {
-        return subtitulo;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setSubtitulo(String subtitulo) {
-        this.subtitulo = subtitulo;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getData_notif() {
+        return data_notif;
+    }
+
+    public void setData_notif(String data_notif) {
+        this.data_notif = data_notif;
+    }
+
+    public boolean isVisualizado() {
+        return visualizado;
+    }
+
+    public void setVisualizado(boolean visualizado) {
+        this.visualizado = visualizado;
     }
 }
