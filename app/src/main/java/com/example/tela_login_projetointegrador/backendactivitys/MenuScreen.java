@@ -40,7 +40,6 @@ public class MenuScreen extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_products);
         List<Product> productList = carregaDados();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyAdapter(getContext(), productList));
         recyclerView.setHasFixedSize(true);
         return view;
     }
@@ -50,7 +49,7 @@ public class MenuScreen extends Fragment {
     }
 
     private List<Product> carregaDados(){
-        List<Product> productList = new ArrayList<>();
+       /* List<Product> productList = new ArrayList<>();
         Product product1 = new Product(R.drawable.img_backpack,
                 "Mochila militar",
                 "Uma mochila perfeita para aqueles que gostam de se aventurar. Consta com 6 diferentes bolsos a fim de armazenar tudo de essêncial, a fim de atender até aqueles com mais preparo. Anti-impermeável, e fácil de se ajustar, uma dos top modelos da loja.",
@@ -105,5 +104,7 @@ public class MenuScreen extends Fragment {
                 "R$ 89,99");
         productList.add(product9);
         return productList;
+        */
+        return null;
     }
 }

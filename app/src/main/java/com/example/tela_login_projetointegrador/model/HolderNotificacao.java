@@ -67,4 +67,5 @@ public class HolderNotificacao {
     public void setVisualizado(boolean visualizado) {
         this.visualizado = visualizado;
     }
+
 }

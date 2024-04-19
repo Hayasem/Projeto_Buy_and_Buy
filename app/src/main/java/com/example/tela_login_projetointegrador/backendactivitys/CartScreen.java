@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapter.MyCartAdapter;
+import com.example.tela_login_projetointegrador.Adapter.MyViewCartHolder;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.model.CartProducts;
-
+import org.jetbrains.annotations.NotNull;
 
 
 import java.util.ArrayList;
@@ -26,7 +27,12 @@ public class CartScreen extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_CartProducts);
         List<CartProducts> cartProducts = carregaDados();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyCartAdapter(getContext(), cartProducts));
+        recyclerView.setAdapter(new MyCartAdapter(getContext(), cartProducts) {
+            @Override
+            public void onBindViewHolder(@NonNull @NotNull MyViewCartHolder holder, int position) {
+
+            }
+        });
         recyclerView.setHasFixedSize(true);
         return view;
     }
@@ -36,7 +42,7 @@ public class CartScreen extends Fragment {
     }
     private List<CartProducts> carregaDados(){
 
-        List<CartProducts> cartProducts = new ArrayList<>();
+       /* List<CartProducts> cartProducts = new ArrayList<>();
         CartProducts product1 = new CartProducts(R.drawable.img_backpack,
                 "Mochila militar", R.drawable.plus_icon, R.drawable.minus_icon,
                 "Quantidade", "R$ 149,99");
@@ -66,6 +72,7 @@ public class CartScreen extends Fragment {
                 "Quantidade", "R$ 300,00");
         cartProducts.add(product5);
         return cartProducts;
-
+*/
+        return null;
     }
 }

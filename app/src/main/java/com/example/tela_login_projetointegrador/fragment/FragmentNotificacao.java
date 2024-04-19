@@ -54,7 +54,7 @@ public class FragmentNotificacao extends Fragment {
         // Função para carregar as notificações ficticias
         private List<HolderNotificacao> carregarDados (){
         List<HolderNotificacao> listaNotificacao =new ArrayList<>();
-
+/*
         listaNotificacao.add(new HolderNotificacao("Seu pedido 12378 foi Cancelado!",
                 "O prazo para que fosse realizado a compra expirou."));
 
@@ -102,5 +102,6 @@ public class FragmentNotificacao extends Fragment {
                 "Sua compra foi realizada com sucesso."));
 
         return listaNotificacao;
+ */return null;
     }
 }
