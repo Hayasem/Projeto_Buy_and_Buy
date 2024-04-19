@@ -43,7 +43,7 @@ public class NotificacaoAdapter extends ArrayAdapter<HolderNotificacao> {
 
         // Exiba o item nas TextViews
         txtTitulo.setText(getItem(position).getTitulo());
-        txtSubtitulo.setText(getItem(position).getSubtitulo());
+        txtSubtitulo.setText(getItem(position).getDescricao());
 
         return convertView;
     }

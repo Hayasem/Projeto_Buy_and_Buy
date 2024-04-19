@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.tela_login_projetointegrador"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"

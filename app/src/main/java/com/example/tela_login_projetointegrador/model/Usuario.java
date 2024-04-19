@@ -6,13 +6,20 @@ public class Usuario {
     String cpf;
     String dataReg;
     String email;
+    String senha;
+    String hash_senha;
+    String salt;
 
-    public Usuario(int idUsuario, String nome, String cpf, String dataReg, String email) {
+    public Usuario(int idUsuario, String nome, String cpf, String dataReg, String email, String senha,
+                   String hash_senha, String salt) {
         this.idUsuario = idUsuario;
         this.nome = nome;
         this.cpf = cpf;
         this.dataReg = dataReg;
         this.email = email;
+        this.senha = senha;
+        this.hash_senha = hash_senha;
+        this.salt = salt;
     }
     public Usuario(){
 
@@ -56,5 +63,29 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getHash_senha() {
+        return hash_senha;
+    }
+
+    public void setHash_senha(String hash_senha) {
+        this.hash_senha = hash_senha;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

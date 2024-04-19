@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class MyCartAdapter extends RecyclerView.Adapter<MyViewCartHolder> {
+public abstract class MyCartAdapter extends RecyclerView.Adapter<MyViewCartHolder> {
     Context context;
     List<CartProducts> products;
     public MyCartAdapter(Context context, List<CartProducts> products) {
@@ -27,6 +27,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyViewCartHolder> {
                 (R.layout.products_cart_itens, parent, false));
     }
 
+    /*
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewCartHolder holder, int position) {
         holder.imageView.setImageResource(products.get(position).getFoto());
@@ -35,9 +36,8 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyViewCartHolder> {
         holder.minusView.setImageResource(products.get(position).getMenosIcone());
         holder.quantityView.setText(products.get(position).getQuantidade());
         holder.priceView.setText(products.get(position).getPreco());
-
     }
-
+*/
     @Override
     public int getItemCount() {
         return products.size();
