@@ -7,7 +7,6 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 public class DatabaseConnection extends SQLiteOpenHelper {
-
     private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "buyandbuy";
 
@@ -23,7 +22,11 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "nome TEXT," +
                 "cpf TEXT," +
                 "dataReg TEXT," +
-                "email TEXT)";
+                "email TEXT," +
+                "senha TEXT," +
+                "hash_senha TEXT," +
+                "data_reg NUMERIC," +
+                "salt TEXT)";
         Log.i("test01", "O cliente foi registrado");
 
         String TELEFONE_TABLE = "CREATE TABLE TELEFONE(" +
@@ -143,11 +146,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     //Método para atualizar o banco de dados
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2){
-            db.execSQL("ALTER TABLE USUARIO ADD COLUMN senha TEXT");
-            db.execSQL("ALTER TABLE USUARIO ADD COLUMN hash_senha TEXT");
-            db.execSQL("ALTER TABLE USUARIO ADD COLUMN salt TEXT");
 
-        }
     }
 }
