@@ -1,9 +1,10 @@
 package com.example.tela_login_projetointegrador.database;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.example.tela_login_projetointegrador.model.Entrega;
+import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
 
 import java.nio.charset.StandardCharsets;
@@ -22,7 +23,7 @@ public class UserManager {
         this.db = db;
     }
 
-    public Usuario getUsuario(){
+        public Usuario getUsuario(String email){
         Cursor cursor = db.rawQuery("SELECT * FROM USUARIO", null);
         if (cursor.moveToFirst()){
             Usuario usuarios = new Usuario();
@@ -43,28 +44,38 @@ public class UserManager {
         }
         return null;
     }
-    public void cadastrarUsuario(Usuario usuario){
+    public void cadastrarUsuario(Usuario usuario, Telefone telefone){
         ContentValues values = new ContentValues();
-        values.put("NOME", usuario.getNome());
-        values.put("CPF", usuario.getCpf());
-        values.put("DATA_REG", getDataAtual());
-        values.put("EMAIL", usuario.getEmail());
-        values.put("SENHA", usuario.getSenha());
+        values.put("nome", usuario.getNome());
+        values.put("cpf", usuario.getCpf());
+        values.put("data_reg", getDataAtual());
+        values.put("email", usuario.getEmail());
+        values.put("senha", usuario.getSenha());
+        values.put("telefone", telefone.getNumero());
 
         String salt = gerarSalt();
         String hashSenha = gerarHashSenha(usuario.getSenha(), salt);
 
-        values.put("HASH_SENHA", hashSenha);
-        values.put("SALT", salt);
+        values.put("hash_senha", hashSenha);
+        values.put("salt", salt);
+        long idUsuario = db.insert("USUARIO", null, values);
 
-        db.insert("USUARIO", null, values);
+        if (idUsuario != -1) {
+            cadastrarTelefone(idUsuario, telefone);
+        }
+    }
+    private void cadastrarTelefone(long idUsuario, Telefone telefone) {
+        ContentValues values = new ContentValues();
+        values.put("numero", telefone.getNumero());
+        values.put("idUsuario", idUsuario);
+        db.insert("telefone", null, values);
     }
     public boolean autenticarUsuario(String email, String senha){
-        Cursor cursor = db.rawQuery("SELECT * FROM USUARIO WHERE email = ?",
+        Cursor cursor = db.rawQuery("SELECT hash_senha, salt FROM USUARIO WHERE email = ?",
                 new String[]{email});
         if (cursor.moveToFirst()){
-            @SuppressLint("Range") String hashArmazenado = cursor.getString(cursor.getColumnIndex("hash_senha"));
-            @SuppressLint("Range") String salt = cursor.getString(cursor.getColumnIndex("salt"));
+            String hashArmazenado = cursor.getString(cursor.getColumnIndexOrThrow("hash_senha"));
+            String salt = cursor.getString(cursor.getColumnIndexOrThrow("salt"));
 
             String hashSenhaDigitada = gerarHashSenha(senha, salt);
 
@@ -73,7 +84,7 @@ public class UserManager {
         }
         return false;
     }
-    private String gerarSalt(){
+    public String gerarSalt(){
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
