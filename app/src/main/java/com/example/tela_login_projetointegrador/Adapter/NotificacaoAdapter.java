@@ -22,8 +22,8 @@ public class NotificacaoAdapter extends ArrayAdapter<HolderNotificacao> {
     private int resource;
 
     //Contrutor para receber a lista de notificações
-    public NotificacaoAdapter(@NonNull @NotNull Context context, int resource, List<HolderNotificacao> list) {
-        super(context, resource, list);
+    public NotificacaoAdapter(@NonNull @NotNull Context context, int resource) {
+        super(context, resource);
         this.context = context;
         this.resource = resource;
 

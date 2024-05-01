@@ -21,7 +21,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "idUsuario INTEGER primary key AUTOINCREMENT," +
                 "nome TEXT," +
                 "cpf TEXT," +
-                "dataReg TEXT," +
                 "email TEXT," +
                 "senha TEXT," +
                 "hash_senha TEXT," +

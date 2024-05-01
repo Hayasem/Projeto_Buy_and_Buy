@@ -51,7 +51,6 @@ public class UserManager {
         values.put("data_reg", getDataAtual());
         values.put("email", usuario.getEmail());
         values.put("senha", usuario.getSenha());
-        values.put("telefone", telefone.getNumero());
 
         String salt = gerarSalt();
         String hashSenha = gerarHashSenha(usuario.getSenha(), salt);

@@ -34,8 +34,7 @@ public class FragmentNotificacao extends Fragment {
         ListView list = view.findViewById(R.id.lvNotificacoes);
 
         // Carrega os dados de exemplo e configura o ArrayAdapter
-        List<HolderNotificacao> lista = carregarDados();
-        ArrayAdapter<HolderNotificacao> listaAdapter = new NotificacaoAdapter( getContext(), R.layout.adapternotificacao, lista);
+        ArrayAdapter<HolderNotificacao> listaAdapter = new NotificacaoAdapter( getContext(), R.layout.adapternotificacao);
 
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -51,57 +50,4 @@ public class FragmentNotificacao extends Fragment {
         return new FragmentNotificacao();
     }
 
-        // Função para carregar as notificações ficticias
-        private List<HolderNotificacao> carregarDados (){
-        List<HolderNotificacao> listaNotificacao =new ArrayList<>();
-/*
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 12378 foi Cancelado!",
-                "O prazo para que fosse realizado a compra expirou."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 12345 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 78996 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 45863 foi Cancelado!",
-                "O prazo para que fosse realizado a compra expirou."));
-
-        listaNotificacao.add(new HolderNotificacao("Aguardado confirmação de pedido!",
-                "Aguardado confirmação da loja."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 12345 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 01234 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 78996 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 78996 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 78996 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 78996 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-
-        listaNotificacao.add(new HolderNotificacao("Seu pedido 78996 foi Reservado!",
-                "Sua compra foi realizada com sucesso."));
-
-        return listaNotificacao;
- */return null;
-    }
 }

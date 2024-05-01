@@ -42,11 +42,10 @@ public class FragmentCadastroDeProdutos extends Fragment {
             String preco = precoProduto.getText().toString();
             String categoria = categoriaProduto.getText().toString();
             String descricao = descricaoProduto.getText().toString();
-            int imagens = R.drawable.calca_jeans;
             int quantidade = Integer.parseInt(quantidadeProduto.getText().toString());
 
             if (!tituloProduto.isEmpty() && !preco.isEmpty() && !categoria.isEmpty() && !descricao.isEmpty() && quantidade > 0) {
-                Cadastro_Produtos cadastroProdutos = new Cadastro_Produtos(tituloProduto, preco, categoria, descricao, imagens, quantidade);
+                Cadastro_Produtos cadastroProdutos = new Cadastro_Produtos(tituloProduto, preco, categoria, descricao, quantidade);
                 cadastroProdutosList.add(cadastroProdutos);
                 limparCampos();
             }else{
