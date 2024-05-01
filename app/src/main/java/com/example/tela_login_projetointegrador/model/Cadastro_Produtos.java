@@ -10,7 +10,7 @@
 
         public Cadastro_Produtos(String tituloProduto, String precoProduto,
                                  String categoriaProduto, String descricaoProduto,
-                                 int imagensProduto, int quantidadeProduto) {
+                                 int imagensProduto) {
             this.tituloProduto = tituloProduto;
             this.precoProduto = precoProduto;
             this.categoriaProduto = categoriaProduto;

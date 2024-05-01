@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.ProductManager;
+import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,15 +33,16 @@ public class MainActivity extends AppCompatActivity {
     private EditText edit_senha;
     private Button bt_entrar;
     private ProgressBar progressBar;
+    private UserManager userManager;
     String[] mensagens = {"Preencha todos os campos", "Login efetuado com sucesso!"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DatabaseConnection db = new DatabaseConnection(getApplicationContext());
-        SQLiteDatabase database =  db.getWritableDatabase();
-
+        DatabaseConnection databaseConnection = new DatabaseConnection(this);
+        SQLiteDatabase db =  databaseConnection.getWritableDatabase();
+        userManager = new UserManager(db);
 
         setContentView(com.example.tela_login_projetointegrador.R.layout.activity_main);
         IniciarComponentes();
@@ -67,57 +69,15 @@ public class MainActivity extends AppCompatActivity {
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
                 }else{
-                    AutenticarUsuario(view);
-                }
-            }
-        });
-
-    }
-    private void AutenticarUsuario(View view){
-
-        String email = edit_email.getText().toString();
-        String senha = edit_senha.getText().toString();
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    progressBar.setVisibility(View.VISIBLE);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            MenuScreen();
-                        }
-                    },2000);
-                }else{
-
-                    String erro;
-
-                    try {
-                        throw task.getException();
-                    }catch (Exception e){
-                        erro = "Erro ao realizar o Login, tente novamente";
-                    }
-                    Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.RED);
+                    userManager.autenticarUsuario(email, senha);
+                    Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
+                    snackbar.setBackgroundTint(Color.GREEN);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
                 }
             }
         });
     }
-
-    //Ciclo de vida:
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser usuarioAtual = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(usuarioAtual != null){
-            MenuScreen();
-        }
-    }
-
     private void MenuScreen(){
         Intent intent = new Intent(this, SecondActivity.class);
         startActivity(intent);
