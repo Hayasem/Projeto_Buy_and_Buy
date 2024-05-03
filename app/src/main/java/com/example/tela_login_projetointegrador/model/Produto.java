@@ -1,15 +1,15 @@
 package com.example.tela_login_projetointegrador.model;
 
-public class Product {
+public class Produto {
     int idProduto;
     int idUsuario;
     String titulo;
     String descricao;
     int idCategoria;
     float preco;
-    boolean status;
+    int status;
 
-    public Product(int idProduto, int idUsuario, String titulo, String descricao, int idCategoria, float preco, boolean status) {
+    public Produto(int idProduto, int idUsuario, String titulo, String descricao, int idCategoria, float preco, int status) {
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
         this.titulo = titulo;
@@ -19,7 +19,7 @@ public class Product {
         this.status = status;
     }
 
-    public Product() {
+    public Produto() {
     }
 
     public int getIdProduto() {
@@ -70,11 +70,11 @@ public class Product {
         this.preco = preco;
     }
 
-    public boolean isStatus() {
+    public int isStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

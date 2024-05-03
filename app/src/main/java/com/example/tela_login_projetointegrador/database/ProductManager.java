@@ -1,8 +1,9 @@
 package com.example.tela_login_projetointegrador.database;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.example.tela_login_projetointegrador.model.Product;
+import com.example.tela_login_projetointegrador.model.Produto;
 
 public class ProductManager {
     private SQLiteDatabase db;
@@ -11,13 +12,13 @@ public class ProductManager {
         this.db = db;
     }
 
-    public Product getProdutos() {
+    public Produto getProdutos() {
 
         Cursor cursor = db.rawQuery("SELECT * FROM PRODUTO", null);
 
         if(cursor.moveToFirst()){
 
-            Product produtos = new Product();
+            Produto produtos = new Produto();
 
             produtos.setIdProduto(cursor.getInt(0));
             produtos.setIdUsuario(cursor.getInt(1));
@@ -25,7 +26,7 @@ public class ProductManager {
             produtos.setDescricao(cursor.getString(3));
             produtos.setIdCategoria(cursor.getInt(4));
             produtos.setPreco(cursor.getFloat(5));
-            produtos.setStatus(cursor.getString(6).equals("true"));
+            produtos.setStatus(cursor.getInt(6));
 
             cursor.close();
             cursor = null;
@@ -34,4 +35,15 @@ public class ProductManager {
 
         return  null;
     }
+    public void cadastrarProduto(Produto produto) {
+        ContentValues values = new ContentValues();
+        values.put("titulo", produto.getTitulo());
+        values.put("descricao", produto.getDescricao());
+        values.put("idCategoria", produto.getIdCategoria());
+        values.put("preco", produto.getPreco());
+        values.put("status", produto.isStatus());
+
+        long idProduto = db.insert("PRODUTO", null, values);
+    }
+
 }

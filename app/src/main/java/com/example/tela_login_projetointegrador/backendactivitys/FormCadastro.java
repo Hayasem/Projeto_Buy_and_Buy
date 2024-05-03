@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
+import com.example.tela_login_projetointegrador.database.TelefoneManager;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.model.Entrega;
 import com.example.tela_login_projetointegrador.model.Telefone;
@@ -41,6 +42,7 @@ public class FormCadastro extends AppCompatActivity {
     private EditText edit_nome, editemail, edit_senha, edit_cep, edit_cpf, edit_numero;
     private Button bt_cadastrar;
     private UserManager userManager;
+    private TelefoneManager telefoneManager;
     String[] mensagens = {"Preencha todos os campos", "Cadastro realizado com sucesso!"};
 
     @Override
@@ -91,7 +93,10 @@ public class FormCadastro extends AppCompatActivity {
 
                     Telefone telefone = new Telefone();
                     telefone.setNumero(numero);
-
+                    long idUsuario = userManager.cadastrarUsuario(usuario, telefone);
+                    if (idUsuario != -1){
+                        Log.i("Cadastro realizado com sucesso!", "O usuário foi cadastrado!");
+                    }
                     boolean autenticado = userManager.autenticarUsuario(email, senha);
                     if (autenticado){
                         Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
@@ -105,16 +110,14 @@ public class FormCadastro extends AppCompatActivity {
                         snackbar.setTextColor(Color.BLACK);
                         snackbar.show();
                     }
-
-                    userManager.cadastrarUsuario(usuario, telefone);
                 }
             }
         });
         userManager = new UserManager(new DatabaseConnection(this).getWritableDatabase());
-        Usuario usuarioBuscado = userManager.getUsuario("irineu@gmail.com");
+        Usuario usuarioBuscado = userManager.getUsuario("usopp@gmail.com");
         if (usuarioBuscado != null){
             Log.i("Usuário encontrado", "Nome: " + usuarioBuscado.getNome() +
-                    "CPF: " + usuarioBuscado.getCpf());
+                    " CPF: " + usuarioBuscado.getCpf());
         }else {
             Log.i("UsuarioNaoEncontrado", "Usuário não encontrado no banco de dados.");
         }
