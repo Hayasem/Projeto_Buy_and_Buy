@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/fgmt_cadastro_de_produtos">
+        android:id="@+id/fgmt_cadastro_de_produtos"
+android:background="@drawable/background">
 
     <TextView
             android:id="@+id/tv_informe_produto"

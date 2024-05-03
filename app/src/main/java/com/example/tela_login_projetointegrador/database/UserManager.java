@@ -44,7 +44,7 @@ public class UserManager {
         }
         return null;
     }
-    public void cadastrarUsuario(Usuario usuario, Telefone telefone){
+    public long cadastrarUsuario(Usuario usuario, Telefone telefone){
         ContentValues values = new ContentValues();
         values.put("nome", usuario.getNome());
         values.put("cpf", usuario.getCpf());
@@ -62,6 +62,7 @@ public class UserManager {
         if (idUsuario != -1) {
             cadastrarTelefone(idUsuario, telefone);
         }
+        return idUsuario;
     }
     private void cadastrarTelefone(long idUsuario, Telefone telefone) {
         ContentValues values = new ContentValues();
@@ -75,7 +76,6 @@ public class UserManager {
         if (cursor.moveToFirst()){
             String hashArmazenado = cursor.getString(cursor.getColumnIndexOrThrow("hash_senha"));
             String salt = cursor.getString(cursor.getColumnIndexOrThrow("salt"));
-
             String hashSenhaDigitada = gerarHashSenha(senha, salt);
 
             cursor.close();

@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.model.CartProducts;
-import com.example.tela_login_projetointegrador.model.Product;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

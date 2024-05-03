@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class MainActivity extends AppCompatActivity {
 
     //Código para mudar de telas:
+    private FormCadastro fc;
     private DatabaseConnection db;
     private TextView text_tela_cadastro;
     private EditText edit_email;
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
                     snackbar.setBackgroundTint(Color.GREEN);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
+
+                    fc.openFragment(MenuScreen.newInstance());
                 }
             }
         });

@@ -17,14 +17,12 @@ import java.util.Objects;
 
 public class FragmentCadastrarProdutos extends Fragment {
     private Button btnCadastrarProdutos;
-    private TextView tvNenhumProduto;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_cadastrar_produtos, container, false);
-        btnCadastrarProdutos = view.findViewById(R.id.btn_cadastrar_produtos);
-        tvNenhumProduto = view.findViewById(R.id.tv_nenhum_produto);
+        View view = inflater.inflate(R.layout.fragment_cadastro_de_produtos, container, false);
+        btnCadastrarProdutos = view.findViewById(R.id.btn_confirmar_cadastro_produto);
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Perfil");
