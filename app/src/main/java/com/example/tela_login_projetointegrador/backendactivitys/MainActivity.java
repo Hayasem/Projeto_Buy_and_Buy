@@ -10,19 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
-import com.example.tela_login_projetointegrador.database.ProductManager;
 import com.example.tela_login_projetointegrador.database.UserManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.*;
-import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private UserManager userManager;
     String[] mensagens = {"Preencha todos os campos", "Login efetuado com sucesso!"};
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +70,28 @@ public class MainActivity extends AppCompatActivity {
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
                 }else{
-                    userManager.autenticarUsuario(email, senha);
+                    userManager.compararSenha(email, senha);
                     Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.GREEN);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
-
-                    fc.openFragment(MenuScreen.newInstance());
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            TelaPerfilUsuario telaPerfilUsuario = new TelaPerfilUsuario();
+                            openFragment(telaPerfilUsuario);
+                        }
+                        }, 1000);
                 }
             }
         });
     }
-    private void MenuScreen(){
-        Intent intent = new Intent(this, SecondActivity.class);
-        startActivity(intent);
-        finish();
+    public void openFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_telaPerfilUsuario, fragment);
+        transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
+        transaction.commit(); // Confirma a transação
     }
     private void IniciarComponentes(){
         text_tela_cadastro = findViewById(com.example.tela_login_projetointegrador.R.id.text_tela_cadastro);

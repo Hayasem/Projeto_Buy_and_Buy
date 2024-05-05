@@ -19,13 +19,16 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String USUARIO_TABLE = "CREATE TABLE USUARIO(" +
                 "idUsuario INTEGER primary key AUTOINCREMENT," +
+                "idTelefone INTEGER," +
                 "nome TEXT," +
                 "cpf TEXT," +
                 "email TEXT," +
                 "senha TEXT," +
+                "cep TEXT," +
                 "hash_senha TEXT," +
                 "data_reg NUMERIC," +
-                "salt TEXT)";
+                "salt TEXT," +
+                "FOREIGN KEY (idTelefone) REFERENCES TELEFONE(idTelefone))";
         Log.i("test01", "O cliente foi registrado");
 
         String TELEFONE_TABLE = "CREATE TABLE TELEFONE(" +
