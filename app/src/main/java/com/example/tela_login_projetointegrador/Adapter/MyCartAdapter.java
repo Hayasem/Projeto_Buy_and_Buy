@@ -14,10 +14,12 @@ import java.util.List;
 public abstract class MyCartAdapter extends RecyclerView.Adapter<MyViewCartHolder> {
     Context context;
     List<CartProducts> products;
+
     public MyCartAdapter(Context context, List<CartProducts> products) {
         this.context = context;
         this.products = products;
     }
+
     @NonNull
     @NotNull
     @Override
@@ -25,20 +27,5 @@ public abstract class MyCartAdapter extends RecyclerView.Adapter<MyViewCartHolde
         return new MyViewCartHolder(LayoutInflater.from(context).inflate
                 (R.layout.products_cart_itens, parent, false));
     }
-
-    /*
-    @Override
-    public void onBindViewHolder(@NonNull @NotNull MyViewCartHolder holder, int position) {
-        holder.imageView.setImageResource(products.get(position).getFoto());
-        holder.nameView.setText(products.get(position).getNome());
-        holder.plusView.setImageResource(products.get(position).getMaisIcone());
-        holder.minusView.setImageResource(products.get(position).getMenosIcone());
-        holder.quantityView.setText(products.get(position).getQuantidade());
-        holder.priceView.setText(products.get(position).getPreco());
-    }
-*/
-    @Override
-    public int getItemCount() {
-        return products.size();
-    }
 }
+

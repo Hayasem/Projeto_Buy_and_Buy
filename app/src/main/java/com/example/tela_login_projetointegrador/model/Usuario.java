@@ -2,31 +2,30 @@ package com.example.tela_login_projetointegrador.model;
 
 public class Usuario {
     int idUsuario;
+    int idTelefone;
     String nome;
     String cpf;
-    String dataReg;
     String email;
     String senha;
-    String hash_senha;
-    String salt;
     String cep;
-    String endereco;
+    String hash_senha;
+    String dataReg;
+    String salt;
 
-    public Usuario(int idUsuario, String nome, String cpf, String dataReg, String email, String senha, String hash_senha, String salt, String cep, String endereco) {
+    public Usuario(int idUsuario, int idTelefone, String nome, String cpf, String email, String senha, String cep, String hash_senha, String dataReg, String salt) {
         this.idUsuario = idUsuario;
+        this.idTelefone = idTelefone;
         this.nome = nome;
         this.cpf = cpf;
-        this.dataReg = dataReg;
         this.email = email;
         this.senha = senha;
-        this.hash_senha = hash_senha;
-        this.salt = salt;
         this.cep = cep;
-        this.endereco = endereco;
+        this.hash_senha = hash_senha;
+        this.dataReg = dataReg;
+        this.salt = salt;
     }
 
     public Usuario(){
-
     }
 
     public int getIdUsuario() {
@@ -35,6 +34,14 @@ public class Usuario {
 
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public int getIdTelefone() {
+        return idTelefone;
+    }
+
+    public void setIdTelefone(int idTelefone) {
+        this.idTelefone = idTelefone;
     }
 
     public String getNome() {
@@ -95,16 +102,7 @@ public class Usuario {
     public String getCep() {
         return cep;
     }
-
     public void setCep(String cep) {
         this.cep = cep;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
     }
 }

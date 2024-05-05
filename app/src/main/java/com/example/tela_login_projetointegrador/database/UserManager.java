@@ -3,7 +3,7 @@ package com.example.tela_login_projetointegrador.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.example.tela_login_projetointegrador.model.Entrega;
+
 import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
 
@@ -23,19 +23,41 @@ public class UserManager {
         this.db = db;
     }
 
-        public Usuario getUsuario(String email){
+
+    public long cadastrarUsuario(Usuario usuario){
+        String salt = gerarSalt();
+        String hashSenha = gerarHashSenha(usuario.getSenha(), salt);
+        ContentValues values = new ContentValues();
+        values.put("nome", usuario.getNome());
+        values.put("cpf", usuario.getCpf());
+        values.put("email", usuario.getEmail());
+        values.put("senha", usuario.getSenha());
+        values.put("cep", usuario.getCep());
+        values.put("data_reg", getDataAtual());
+        values.put("hash_senha", hashSenha);
+        values.put("salt", salt);
+
+        long resultadoCadastro = db.insert("USUARIO", null, values);
+        Telefone telefone = new Telefone();
+        if (resultadoCadastro != -1) {
+        }
+        return resultadoCadastro;
+    }
+    public Usuario consultarUsuario(int idUsuario){
         Cursor cursor = db.rawQuery("SELECT * FROM USUARIO", null);
         if (cursor.moveToFirst()){
             Usuario usuarios = new Usuario();
 
             usuarios.setIdUsuario(cursor.getInt(0));
-            usuarios.setNome(cursor.getString(1));
-            usuarios.setCpf(cursor.getString(2));
-            usuarios.setDataReg(cursor.getString(3));
+            usuarios.setIdTelefone(cursor.getInt(1));
+            usuarios.setNome(cursor.getString(2));
+            usuarios.setCpf(cursor.getString(3));
             usuarios.setEmail(cursor.getString(4));
             usuarios.setSenha(cursor.getString(5));
-            usuarios.setHash_senha(cursor.getString(6));
-            usuarios.setSalt(cursor.getString(7));
+            usuarios.setCep(cursor.getString(6));
+            usuarios.setHash_senha(cursor.getString(7));
+            usuarios.setDataReg(cursor.getString(8));
+            usuarios.setSalt(cursor.getString(9));
 
             cursor.close();
             cursor = null;
@@ -44,33 +66,8 @@ public class UserManager {
         }
         return null;
     }
-    public long cadastrarUsuario(Usuario usuario, Telefone telefone){
-        ContentValues values = new ContentValues();
-        values.put("nome", usuario.getNome());
-        values.put("cpf", usuario.getCpf());
-        values.put("data_reg", getDataAtual());
-        values.put("email", usuario.getEmail());
-        values.put("senha", usuario.getSenha());
 
-        String salt = gerarSalt();
-        String hashSenha = gerarHashSenha(usuario.getSenha(), salt);
-
-        values.put("hash_senha", hashSenha);
-        values.put("salt", salt);
-        long idUsuario = db.insert("USUARIO", null, values);
-
-        if (idUsuario != -1) {
-            cadastrarTelefone(idUsuario, telefone);
-        }
-        return idUsuario;
-    }
-    private void cadastrarTelefone(long idUsuario, Telefone telefone) {
-        ContentValues values = new ContentValues();
-        values.put("numero", telefone.getNumero());
-        values.put("idUsuario", idUsuario);
-        db.insert("telefone", null, values);
-    }
-    public boolean autenticarUsuario(String email, String senha){
+    public boolean compararSenha(String email, String senha){
         Cursor cursor = db.rawQuery("SELECT hash_senha, salt FROM USUARIO WHERE email = ?",
                 new String[]{email});
         if (cursor.moveToFirst()){

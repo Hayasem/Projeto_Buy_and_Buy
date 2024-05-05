@@ -1,14 +1,14 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.hardware.biometrics.BiometricPrompt;
+import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -17,23 +17,9 @@ import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.TelefoneManager;
 import com.example.tela_login_projetointegrador.database.UserManager;
-import com.example.tela_login_projetointegrador.model.Entrega;
 import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.Firebase;
-import com.google.firebase.auth.*;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.ktx.FirebaseKt;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class FormCadastro extends AppCompatActivity {
 
@@ -41,6 +27,7 @@ public class FormCadastro extends AppCompatActivity {
     //Objetos que serão utilizados para realização do cadastro:
     private EditText edit_nome, editemail, edit_senha, edit_cep, edit_cpf, edit_numero;
     private Button bt_cadastrar;
+    private DatabaseConnection db;
     private UserManager userManager;
     private TelefoneManager telefoneManager;
     String[] mensagens = {"Preencha todos os campos", "Cadastro realizado com sucesso!"};
@@ -83,7 +70,8 @@ public class FormCadastro extends AppCompatActivity {
                     exibirSnackbar("CEP inválido! Formato esperado: XXXXX-XXX", view);
                 } else if (!numero.matches("\\d{9}")) {
                     exibirSnackbar("Número de celular inválido! Formato esperado: (XX) XXXXXXXXX", view);
-                } else {
+                } else{
+
                     Usuario usuario = new Usuario();
                     usuario.setNome(nome);
                     usuario.setEmail(email);
@@ -93,17 +81,27 @@ public class FormCadastro extends AppCompatActivity {
 
                     Telefone telefone = new Telefone();
                     telefone.setNumero(numero);
-                    long idUsuario = userManager.cadastrarUsuario(usuario, telefone);
-                    if (idUsuario != -1){
+
+                    long getUsuario = userManager.cadastrarUsuario(usuario);
+                    if (getUsuario != -1){
                         Log.i("Cadastro realizado com sucesso!", "O usuário foi cadastrado!");
                     }
-                    boolean autenticado = userManager.autenticarUsuario(email, senha);
+                    boolean autenticado = userManager.compararSenha(email, senha);
                     if (autenticado){
                         Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
                         snackbar.setBackgroundTint(Color.GREEN);
                         snackbar.setTextColor(Color.BLACK);
                         snackbar.show();
-                        openFragment(MenuScreen.newInstance());
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(FormCadastro.this,MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }, 1000);
+
                     }else{
                         Snackbar snackbar = Snackbar.make(view, "Autenticação falhou. Verifique suas credenciais.", Snackbar.LENGTH_SHORT);
                         snackbar.setBackgroundTint(Color.RED);
@@ -113,16 +111,7 @@ public class FormCadastro extends AppCompatActivity {
                 }
             }
         });
-        userManager = new UserManager(new DatabaseConnection(this).getWritableDatabase());
-        Usuario usuarioBuscado = userManager.getUsuario("usopp@gmail.com");
-        if (usuarioBuscado != null){
-            Log.i("Usuário encontrado", "Nome: " + usuarioBuscado.getNome() +
-                    " CPF: " + usuarioBuscado.getCpf());
-        }else {
-            Log.i("UsuarioNaoEncontrado", "Usuário não encontrado no banco de dados.");
-        }
     }
-
     private void exibirSnackbar(String erro, View view) {
         Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
         snackbar.setBackgroundTint(Color.RED);
@@ -146,5 +135,6 @@ public class FormCadastro extends AppCompatActivity {
         edit_cep = findViewById(R.id.edit_cep);
         edit_numero = findViewById(R.id.edit_contato);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
+        db = new DatabaseConnection(this);
     }
 }
