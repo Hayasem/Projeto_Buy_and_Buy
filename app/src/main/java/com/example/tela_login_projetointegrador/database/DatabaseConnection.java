@@ -28,6 +28,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "hash_senha TEXT," +
                 "data_reg NUMERIC," +
                 "salt TEXT," +
+                "logged_in NUMERIC," +
                 "FOREIGN KEY (idTelefone) REFERENCES TELEFONE(idTelefone))";
         Log.i("test01", "O cliente foi registrado");
 
