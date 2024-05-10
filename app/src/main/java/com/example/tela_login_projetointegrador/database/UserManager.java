@@ -44,10 +44,10 @@ public class UserManager {
         return resultadoCadastro;
     }
     public Usuario consultarUsuario(int idUsuario){
-        Cursor cursor = db.rawQuery("SELECT * FROM USUARIO", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM USUARIO WHERE logged_in = 1", null);
         if (cursor.moveToFirst()){
-            Usuario usuarios = new Usuario();
 
+            Usuario usuarios = new Usuario();
             usuarios.setIdUsuario(cursor.getInt(0));
             usuarios.setIdTelefone(cursor.getInt(1));
             usuarios.setNome(cursor.getString(2));
@@ -79,6 +79,12 @@ public class UserManager {
             return hashArmazenado.equals(hashSenhaDigitada);
         }
         return false;
+    }
+
+    public void deslogarUsuario(){
+        ContentValues values = new ContentValues();
+        values.put("logged_in", 0);
+        db.update("USUARIO", values, "logged_in = 1", null);
     }
     public String gerarSalt(){
         SecureRandom random = new SecureRandom();

@@ -21,8 +21,6 @@ import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
-
-    //Código para mudar de telas:
     private FormCadastro fc;
     private DatabaseConnection db;
     private TextView text_tela_cadastro;
