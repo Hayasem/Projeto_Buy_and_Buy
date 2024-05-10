@@ -121,7 +121,7 @@ public class FormCadastro extends AppCompatActivity {
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
+        transaction.replace(R.id.fragmentProdutos, fragment);
         transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
         transaction.commit(); // Confirma a transação
     }

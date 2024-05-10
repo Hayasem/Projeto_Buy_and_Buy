@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.UserManager;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private UserManager userManager;
     String[] mensagens = {"Preencha todos os campos", "Login efetuado com sucesso!"};
 
+
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         userManager = new UserManager(db);
 
         setContentView(com.example.tela_login_projetointegrador.R.layout.activity_main);
+
         IniciarComponentes();
         text_tela_cadastro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,20 +82,16 @@ public class MainActivity extends AppCompatActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            TelaPerfilUsuario telaPerfilUsuario = new TelaPerfilUsuario();
-                            openFragment(telaPerfilUsuario);
+                            Intent intent = new Intent(MainActivity.this,SecondActivity.class);
+                            startActivity(intent);
                         }
                         }, 1000);
                 }
             }
         });
     }
-    public void openFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_telaPerfilUsuario, fragment);
-        transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
-        transaction.commit(); // Confirma a transação
-    }
+
+
     private void IniciarComponentes(){
         text_tela_cadastro = findViewById(com.example.tela_login_projetointegrador.R.id.text_tela_cadastro);
         edit_email = findViewById(com.example.tela_login_projetointegrador.R.id.edit_email);
