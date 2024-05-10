@@ -11,7 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.tela_login_projetointegrador.R;
+import com.example.tela_login_projetointegrador.database.DatabaseConnection;
+import com.example.tela_login_projetointegrador.database.ProductManager;
 import com.example.tela_login_projetointegrador.model.Cadastro_Produtos;
+import com.example.tela_login_projetointegrador.model.Produto;
 import com.google.android.material.snackbar.Snackbar;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +26,7 @@ public class FragmentCadastroDeProdutos extends Fragment {
     private EditText nomeProduto, precoProduto, categoriaProduto, quantidadeProduto, descricaoProduto;
     private Button BtnconfirmarCadastroProduto;
     private List<Cadastro_Produtos> cadastroProdutosList = new ArrayList<>();
+    private ProductManager productManager;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -37,6 +41,15 @@ public class FragmentCadastroDeProdutos extends Fragment {
         descricaoProduto = view.findViewById(R.id.edit_descricao_produto);
         BtnconfirmarCadastroProduto = view.findViewById(R.id.btn_confirmar_cadastro_produto);
 
+        DatabaseConnection databaseHandler = new DatabaseConnection(getContext());
+        productManager = new ProductManager(databaseHandler.getWritableDatabase());
+
+        acoes();
+        return view;
+    }
+
+    private void acoes() {
+
         BtnconfirmarCadastroProduto.setOnClickListener(v -> {
             String tituloProduto = nomeProduto.getText().toString();
             String preco = precoProduto.getText().toString();
@@ -45,15 +58,18 @@ public class FragmentCadastroDeProdutos extends Fragment {
             int quantidade = Integer.parseInt(quantidadeProduto.getText().toString());
 
             if (!tituloProduto.isEmpty() && !preco.isEmpty() && !categoria.isEmpty() && !descricao.isEmpty() && quantidade > 0) {
-                Cadastro_Produtos cadastroProdutos = new Cadastro_Produtos(tituloProduto, preco, categoria, descricao, quantidade);
-                cadastroProdutosList.add(cadastroProdutos);
+                Produto cadastroProdutos = new Produto(tituloProduto,descricao,Integer.valueOf(categoria),Float.valueOf(preco),1);
+                productManager.cadastrarProduto(cadastroProdutos);
+
+
+                //cadastroProdutosList.add(cadastroProdutos);
                 limparCampos();
             }else{
                 Snackbar.make(requireView(), "Preencha todos os campos corretamente", Snackbar.LENGTH_SHORT).show();
             }
         });
-        return view;
     }
+
     private void limparCampos() {
         nomeProduto.setText("");
         precoProduto.setText("");

@@ -1,5 +1,6 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
 import android.widget.ImageView;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.tela_login_projetointegrador.R;
@@ -13,27 +14,29 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.viewmodel.CreationExtras;
 
 import com.example.tela_login_projetointegrador.fragment.FragmentCadastrarProdutos;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 
-public class TelaPerfilUsuario extends Fragment{
+public class TelaPerfilUsuario extends Fragment {
    private TextView nomeUsuario, emailUsuario, meusProdutos;
    private ImageView viewProducts;
    private Button bt_deslogar;
    FirebaseFirestore database = FirebaseFirestore.getInstance();
    String usuarioID;
-    private FragmentManager fragmentManager;
 
-    @Nullable
+
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // foi alterado para fragment por questão de melhores praticas, uma vez que não a necessidade de atualizar a tela toda, exemplo o menu e appbar não precisa ficar
         // sendo carregado a toda mudança de tela pois eles não se alteram.
         //https://dev.to/alexandrefreire/qual-a-diferenca-entre-activity-fragmentactivity-e-fragment-216o
         View view = inflater.inflate(R.layout.activity_tela_perfil_usuario, container, false);
+
+
         nomeUsuario = view.findViewById(R.id.text_nome_usuario);
         emailUsuario =view.findViewById(R.id.text_email_usuario);
         bt_deslogar = view.findViewById(R.id.bt_deslogar);
@@ -48,7 +51,7 @@ public class TelaPerfilUsuario extends Fragment{
         viewProducts.setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragment_container, new FragmentCadastrarProdutos());
+            transaction.replace(R.id.fragmentProdutos, new FragmentCadastrarProdutos());
             transaction.addToBackStack(null);
             transaction.commit();
         });
@@ -60,11 +63,11 @@ public class TelaPerfilUsuario extends Fragment{
         return new TelaPerfilUsuario();
     }
 
-    public static TelaPerfilUsuario newInstance(FragmentManager fragmentManager){
-        TelaPerfilUsuario fragment = new TelaPerfilUsuario();
-        fragment.fragmentManager = fragmentManager;
-        return fragment;
-    }
+//    public static TelaPerfilUsuario newInstance(FragmentManager fragmentManager){
+//        TelaPerfilUsuario fragment = new TelaPerfilUsuario();
+//        fragment.fragmentManager = fragmentManager;
+//        return fragment;
+//    }
 
     //Recuperando o ID:
     @Override

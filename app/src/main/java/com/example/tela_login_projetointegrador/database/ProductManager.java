@@ -38,12 +38,14 @@ public class ProductManager {
     public void cadastrarProduto(Produto produto) {
         ContentValues values = new ContentValues();
         values.put("titulo", produto.getTitulo());
+        values.put("idUsuario",1); // para questao de teste salvando sempre 1
         values.put("descricao", produto.getDescricao());
         values.put("idCategoria", produto.getIdCategoria());
         values.put("preco", produto.getPreco());
         values.put("status", produto.isStatus());
 
         long idProduto = db.insert("PRODUTO", null, values);
+        System.out.println("produtoID: "+idProduto);
     }
 
 }

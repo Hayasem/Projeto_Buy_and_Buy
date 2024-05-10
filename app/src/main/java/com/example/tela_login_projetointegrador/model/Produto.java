@@ -19,6 +19,14 @@ public class Produto {
         this.status = status;
     }
 
+    public Produto( String titulo, String descricao, int idCategoria, float preco, int status) {
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.idCategoria = idCategoria;
+        this.preco = preco;
+        this.status = status;
+    }
+
     public Produto() {
     }
 

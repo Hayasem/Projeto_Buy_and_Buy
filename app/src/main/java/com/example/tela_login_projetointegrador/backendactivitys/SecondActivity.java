@@ -24,7 +24,7 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
 
         if (savedInstanceState == null) { // Carregar a primeira tela (Fragment)
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new MenuScreen())
+                    .replace(R.id.fragmentProdutos, new MenuScreen())
                     .commit();
         }
 
@@ -55,7 +55,7 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
 
     private void openFragment(Fragment fragment) { //metodo generico para efetuar a troca de fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
+        transaction.replace(R.id.fragmentProdutos, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
