@@ -29,6 +29,12 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
         }
 
     }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
+
     @Override
     public boolean onNavigationItemSelected( @NotNull MenuItem menuItem) {
         // metodo responsavel por fazer a navegacao entre as telas
@@ -45,7 +51,7 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
             Fragment cartScreen = CartScreen.newInstance();
             openFragment(cartScreen);
             return true;
-        }else if (menuItem.getItemId() ==R.id.telaPerfilUsuarioId) {
+        }else if (menuItem.getItemId() ==R.id.profileId) {
             Fragment telaPerfilUsuario = TelaPerfilUsuario.newInstance();
             openFragment(telaPerfilUsuario);
             return true;

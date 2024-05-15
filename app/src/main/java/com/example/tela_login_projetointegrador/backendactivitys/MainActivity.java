@@ -1,5 +1,6 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -71,19 +72,29 @@ public class MainActivity extends AppCompatActivity {
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
                 }else{
-                    userManager.compararSenha(email, senha);
-                    Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.GREEN);
-                    snackbar.setTextColor(Color.BLACK);
-                    snackbar.show();
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(MainActivity.this,SecondActivity.class);
-                            startActivity(intent);
-                        }
+                    boolean loginValido = userManager.compararSenha(email, senha);
+                    if (loginValido){
+                        ContentValues values = new ContentValues();
+                        values.put("logged_in", 1);
+                        db.update("USUARIO", values, "email = ?", new String[]{email});
+                        Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
+                        snackbar.setBackgroundTint(Color.GREEN);
+                        snackbar.setTextColor(Color.BLACK);
+                        snackbar.show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(MainActivity.this,SecondActivity.class);
+                                startActivity(intent);
+                            }
                         }, 1000);
+                    }else{
+                        Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
+                        snackbar.setBackgroundTint(Color.RED);
+                        snackbar.setTextColor(Color.BLACK);
+                        snackbar.show();
+                    }
                 }
             }
         });
