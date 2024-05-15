@@ -1,9 +1,13 @@
 package com.example.tela_login_projetointegrador.database;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.tela_login_projetointegrador.backendactivitys.MainActivity;
 import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
 

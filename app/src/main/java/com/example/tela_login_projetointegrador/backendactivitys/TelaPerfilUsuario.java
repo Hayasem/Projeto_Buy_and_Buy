@@ -15,17 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.viewmodel.CreationExtras;
 
+import com.example.tela_login_projetointegrador.Alerts.DialogUtils;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.fragment.FragmentCadastrarProdutos;
 import com.example.tela_login_projetointegrador.model.Usuario;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class TelaPerfilUsuario extends Fragment {
    private TextView nomeUsuario, emailUsuario, meusProdutos;
@@ -37,9 +34,6 @@ public class TelaPerfilUsuario extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // foi alterado para fragment por questão de melhores praticas, uma vez que não a necessidade de atualizar a tela toda, exemplo o menu e appbar não precisa ficar
-        // sendo carregado a toda mudança de tela pois eles não se alteram.
-        //https://dev.to/alexandrefreire/qual-a-diferenca-entre-activity-fragmentactivity-e-fragment-216o
         View view = inflater.inflate(R.layout.activity_tela_perfil_usuario, container, false);
 
         nomeUsuario = view.findViewById(R.id.text_nome_usuario);
@@ -83,9 +77,7 @@ public class TelaPerfilUsuario extends Fragment {
             nomeUsuario.setText(usuarioAtual.getNome());
             emailUsuario.setText(usuarioAtual.getEmail());
         }else{
-            Intent intent = new Intent(requireActivity(), MainActivity.class);
-            startActivity(intent);
-            requireActivity().finish();
+            DialogUtils.showMessage(requireContext(), "Este usuário não está registrado!");
         }
     }
 }
