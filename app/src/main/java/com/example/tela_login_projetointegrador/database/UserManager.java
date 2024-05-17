@@ -40,12 +40,7 @@ public class UserManager {
         values.put("data_reg", getDataAtual());
         values.put("hash_senha", hashSenha);
         values.put("salt", salt);
-
-        long resultadoCadastro = db.insert("USUARIO", null, values);
-        Telefone telefone = new Telefone();
-        if (resultadoCadastro != -1) {
-        }
-        return resultadoCadastro;
+        return db.insert("USUARIO", null, values);
     }
     public Usuario consultarUsuario(int idUsuario){
         Cursor cursor = db.rawQuery("SELECT * FROM USUARIO WHERE logged_in = 1", null);
@@ -114,5 +109,11 @@ public class UserManager {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         return dateFormat.format(calendar.getTime());
+    }
+
+    public void setUserLogado(String email) {
+        ContentValues values = new ContentValues();
+        values.put("logged_in", 1);
+        db.update("USUARIO", values, "email = ?", new String[]{email});
     }
 }
