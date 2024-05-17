@@ -14,15 +14,10 @@ public class TelefoneManager {
     }
 
     public long cadastrarTelefone(Telefone telefone) {
-        Usuario usuario = new Usuario();
         ContentValues values = new ContentValues();
         values.put("numero", telefone.getNumero());
-        values.put("idUsuario", usuario.getIdUsuario());
-        long resultadoTelefone = db.insert("TELEFONE", null, values);
-
-        if (resultadoTelefone != -1) {
-        }
-        return resultadoTelefone;
+        values.put("idUsuario", telefone.getIdUsuario());
+        return db.insert("TELEFONE", null, values);
     }
     public Telefone cunsultarTelefone(){
         Cursor cursor = db.rawQuery("SELECT * FROM TELEFONE",  null);
