@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Handler;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import com.example.tela_login_projetointegrador.database.TelefoneManager;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
+import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 public class FormCadastro extends AppCompatActivity {
@@ -46,77 +48,96 @@ public class FormCadastro extends AppCompatActivity {
         DatabaseConnection databaseConnection = new DatabaseConnection(this);
         SQLiteDatabase db = databaseConnection.getWritableDatabase();
         userManager = new UserManager(db);
+        telefoneManager = new TelefoneManager(db);
 
+
+        acoesClick();
+    }
+
+    private void acoesClick() {
         //Com esse comando,o botão agora consegue "escutar" eventos de click:
         //Ou seja, ele pode realizar o cadastro caso todas as informações estejam corretas;
-        bt_cadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        bt_cadastrar.setOnClickListener(view -> {
+            String nome = edit_nome.getText().toString();
+            String email = editemail.getText().toString();
+            String senha = edit_senha.getText().toString();
+            String cpf = edit_cpf.getText().toString();
+            String cep = edit_cep.getText().toString();
+            String numero = edit_numero.getText().toString();
 
-                String nome = edit_nome.getText().toString();
-                String email = editemail.getText().toString();
-                String senha = edit_senha.getText().toString();
-                String cpf = edit_cpf.getText().toString();
-                String cep = edit_cep.getText().toString();
-                String numero = edit_numero.getText().toString();
 
-                //Verificação se todos os campos estão preenchidos:
-                if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || cpf.isEmpty() ||
-                        cep.isEmpty() || numero.isEmpty()) {
-                    exibirSnackbar(mensagens[0], view);
-                } else if (!cpf.matches("\\d{11}")) {
-                    exibirSnackbar("CPF inválido! Formato esperado: XXX.XXX.XXX-XX", view);
-                } else if (!cep.matches("\\d{8}")) {
-                    exibirSnackbar("CEP inválido! Formato esperado: XXXXX-XXX", view);
-                } else if (!numero.matches("\\d{9}")) {
-                    exibirSnackbar("Número de celular inválido! Formato esperado: (XX) XXXXXXXXX", view);
-                } else{
+            if (Utils.isCampoVazio(nome) ||
+                    Utils.isCampoVazio(email) ||
+                    Utils.isCampoVazio(senha) ||
+                    Utils.isCampoVazio(cpf) ||
+                    Utils.isCampoVazio(cep) ||
+                    Utils.isCampoVazio(numero)){
+                exibirSnackbar(mensagens[0], view);
+                return;
+            }
 
-                    Usuario usuario = new Usuario();
-                    usuario.setNome(nome);
-                    usuario.setEmail(email);
-                    usuario.setSenha(senha);
-                    usuario.setCpf(cpf);
-                    usuario.setCep(cep);
+            if (!Utils.isCPFValido(cpf)) {
+                exibirSnackbar("CPF inválido! Formato esperado: XXX.XXX.XXX-XX", view);
+                return;
+            }
 
-                    Telefone telefone = new Telefone();
-                    telefone.setNumero(numero);
+            if(!Utils.isCepValido(cep)) {
+                exibirSnackbar("CEP inválido! Formato esperado: XXXXX-XXX", view);
+                return;
+            }
 
-                    long getUsuario = userManager.cadastrarUsuario(usuario);
-                    if (getUsuario != -1){
-                        Log.i("Cadastro realizado com sucesso!", "O usuário foi cadastrado!");
-                    }
-                    boolean autenticado = userManager.compararSenha(email, senha);
-                    if (autenticado){
-                        Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.GREEN);
-                        snackbar.setTextColor(Color.BLACK);
-                        snackbar.show();
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(FormCadastro.this,MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }, 1000);
+            if(!Utils.isValidaCelular(numero)) {
+                exibirSnackbar("Número de celular inválido! Formato esperado: (XX) XXXXX-XXXX", view);
+                return;
+            }
 
-                    }else{
-                        Snackbar snackbar = Snackbar.make(view, "Autenticação falhou. Verifique suas credenciais.", Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.RED);
-                        snackbar.setTextColor(Color.BLACK);
-                        snackbar.show();
-                    }
+            Usuario usuario = new Usuario();
+            usuario.setNome(nome);
+            usuario.setEmail(email);
+            usuario.setSenha(senha);
+            usuario.setCpf(cpf);
+            usuario.setCep(cep);
+
+            long usuarioId = userManager.cadastrarUsuario(usuario);
+            if (usuarioId != -1){
+                Log.i("Cadastro do usuario realizado com sucesso!", "O usuário foi cadastrado!");
+                Telefone telefone = new Telefone(Utils.limparTelefone(numero),usuarioId);
+                long result = telefoneManager.cadastrarTelefone(telefone);
+                if (result  != -1){
+                    Log.i("Cadastro do telefone realizado com sucesso!", "O telefone foi cadastrado!");
+                }else{
+                    Log.i("Erro ao salvar telefone", "Erro ao salvar telefone");
                 }
             }
+            boolean autenticado = userManager.compararSenha(email, senha);
+            if (autenticado){
+                Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
+                snackbar.setBackgroundTint(Color.GREEN);
+                snackbar.setTextColor(Color.BLACK);
+                snackbar.show();
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    Intent intent = new Intent(FormCadastro.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }, 1000);
+
+            }else{
+                Snackbar snackbar = Snackbar.make(view, "Autenticação falhou. Verifique suas credenciais.", Snackbar.LENGTH_SHORT);
+                snackbar.setBackgroundTint(Color.RED);
+                snackbar.setTextColor(Color.BLACK);
+                snackbar.show();
+            }
+
         });
     }
+
     private void exibirSnackbar(String erro, View view) {
         Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
         snackbar.setBackgroundTint(Color.RED);
         snackbar.setTextColor(Color.BLACK);
         snackbar.show();
+
     }
 
     public void openFragment(Fragment fragment) {
@@ -136,5 +157,6 @@ public class FormCadastro extends AppCompatActivity {
         edit_numero = findViewById(R.id.edit_contato);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
         db = new DatabaseConnection(this);
+        edit_numero.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 }
