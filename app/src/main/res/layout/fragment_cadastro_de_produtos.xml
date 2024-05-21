@@ -1,114 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:fillViewport="true">
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
 
+        android:id="@+id/fgmt_cadastro_de_produtos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fgmt_cadastro_de_produtos"
         android:background="@drawable/background">
 
-    <TextView
-        android:id="@+id/tv_informe_produto"
-        android:layout_width="399dp"
-        android:layout_height="91dp"
-        android:layout_margin="25dp"
-        android:width="400dp"
-        android:text="INSIRA AS INFORMAÇÕES SOBRE O SEU PRODUTO"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent"
+        <TextView
+            android:id="@+id/tv_informe_produto"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:width="400dp"
+            android:text="INSIRA AS INFORMAÇÕES SOBRE O SEU PRODUTO"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/guideline6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.454"
 
-        app:layout_constraintTop_toBottomOf="@id/tv_informe_produto"
-        app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_informe_produto"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/containerComponents"
-        style="@style/Container_Cadastro_Produtos_Components"
-        android:layout_width="366dp"
-        android:layout_height="387dp"
+        <View
+            android:id="@+id/containerComponents"
+            style="@style/Container_Cadastro_Produtos_Components"
+            android:layout_width="0dp"
+            android:layout_height="387dp"
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_informe_produto" />
+            app:layout_constraintBottom_toTopOf="@+id/guideline7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
-    <EditText
+        <EditText
             android:id="@+id/edit_nome_produto"
             style="@style/edit_text"
-            app:layout_constraintTop_toTopOf="@id/containerComponents"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
             android:hint="Produto:"
-            android:textColorHint="#878787"
             android:inputType="text"
             android:textColor="@color/black"
-    />
-    <EditText
+            android:textColorHint="#878787"
+            app:layout_constraintEnd_toEndOf="@id/containerComponents"
+            app:layout_constraintStart_toStartOf="@id/containerComponents"
+            app:layout_constraintTop_toTopOf="@id/containerComponents" />
+
+        <EditText
             android:id="@+id/edit_preco_produto"
             style="@style/edit_text"
-            app:layout_constraintTop_toBottomOf="@id/edit_nome_produto"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
             android:hint="Preço:"
-            android:textColorHint="#878787"
             android:inputType="numberDecimal"
             android:textColor="@color/black"
-    />
-    <EditText
+            android:textColorHint="#878787"
+            app:layout_constraintEnd_toEndOf="@id/containerComponents"
+            app:layout_constraintStart_toStartOf="@id/containerComponents"
+            app:layout_constraintTop_toBottomOf="@id/edit_nome_produto" />
+
+        <EditText
             android:id="@+id/edit_categoria_produto"
             style="@style/edit_text"
-            app:layout_constraintTop_toBottomOf="@id/edit_preco_produto"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
             android:hint="Categoria:"
-            android:textColorHint="#878787"
             android:inputType="text"
             android:textColor="@color/black"
-            tools:ignore="NotSibling"/>
-    <EditText
+            android:textColorHint="#878787"
+            app:layout_constraintEnd_toEndOf="@id/containerComponents"
+            app:layout_constraintStart_toStartOf="@id/containerComponents"
+            app:layout_constraintTop_toBottomOf="@id/edit_preco_produto"
+            tools:ignore="NotSibling" />
+
+        <EditText
             android:id="@+id/edit_descricao_produto"
             style="@style/edit_text"
             android:hint="Pequena Descrição:"
-            android:textColorHint="#878787"
             android:inputType="text"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/edit_categoria_produto"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
+            android:textColorHint="#878787"
             app:layout_constraintEnd_toEndOf="@id/containerComponents"
+            app:layout_constraintStart_toStartOf="@id/containerComponents"
+            app:layout_constraintTop_toBottomOf="@id/edit_categoria_produto"
 
-    />
-    <EditText
+            />
+
+        <EditText
             android:id="@+id/edit_quantidade_produto"
             style="@style/edit_text"
-            android:hint="Quantidade:"
-            android:textColorHint="#878787"
+            android:hint="Quantidade"
             android:inputType="number"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/edit_descricao_produto"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
+            android:textColorHint="#878787"
             app:layout_constraintEnd_toEndOf="@id/containerComponents"
+            app:layout_constraintStart_toStartOf="@id/containerComponents"
+            app:layout_constraintTop_toBottomOf="@id/edit_descricao_produto"
 
-    />
+            />
 
-    <Button
-        android:id="@+id/btn_confirmar_cadastro_produto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Confirmar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/containerComponents" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btn_confirmar_cadastro_produto"
+            android:layout_width="275dp"
+            android:layout_height="82dp"
+            android:backgroundTint="@color/black"
+            android:text="Confirmar"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/guideline9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1504788" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
