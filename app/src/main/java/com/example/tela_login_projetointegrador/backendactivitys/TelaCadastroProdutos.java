@@ -3,26 +3,34 @@ package com.example.tela_login_projetointegrador.backendactivitys;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.ProductManager;
-import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.model.Produto;
+import com.example.tela_login_projetointegrador.model.Telefone;
+import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 public class TelaCadastroProdutos extends AppCompatActivity {
     private FormCadastro cf;
     private ProductManager productManager;
 
-    private EditText edit_nome_produto, edit_preco_produto, edit_categoria_produto, edit_descricao_produto,
-            edit_quantidade_produto;
+    private EditText edit_titulo_produto, edit_preco_produto, edit_categoria_produto,
+            edit_descricao_produto, edit_quantidade_produto;
     private Button btn_confirmar_cadastro_produto;
 
-    String[] mensagens = {"Preencha todos os campos", "Produto Cadastrado com sucesso"};
+    String[] mensagens = {"Preencha todos os campos!", "Produto Cadastrado com sucesso!", "Insira uma disponibilidade válida!"};
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -36,27 +44,41 @@ public class TelaCadastroProdutos extends AppCompatActivity {
         btn_confirmar_cadastro_produto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String titulo = edit_nome_produto.getText().toString();
+                String titulo = edit_titulo_produto.getText().toString();
                 String descricao = edit_descricao_produto.getText().toString();
                 String preco = edit_preco_produto.getText().toString();
                 String categoria = edit_categoria_produto.getText().toString();
+                String quantidade  = edit_quantidade_produto.getText().toString();
 
-                if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty() || categoria.isEmpty()) {
+                if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty() || categoria.isEmpty() || quantidade.isEmpty()) {
                     exibirSnackbar(mensagens[0], v);
-                }else{
+
+                } else if ("0".equals(quantidade)) {
+                    exibirSnackbar(mensagens[2], v);
+
+                } else{
                     Snackbar snackbar = Snackbar.make(v, mensagens[1], Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.GREEN);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
+
+                    int quantidadeInt = Integer.parseInt(quantidade);
+                    int status = quantidadeInt >= 1 ? 1 : 0;
 
                     Produto produto = new Produto();
                     produto.setTitulo(titulo);
                     produto.setDescricao(descricao);
                     produto.setPreco(Float.parseFloat(preco));
                     produto.setIdCategoria(Integer.parseInt(categoria));
-                    productManager.cadastrarProduto(produto);
-                }
+                    produto.setQuantidade(Integer.parseInt(quantidade));
+                    produto.setStatus(status);
 
+
+                   long produtoId = productManager.cadastrarProduto(produto);
+                    if (produtoId != -1){
+                        Log.i("Cadastro de produto realizado com sucesso!", "O produto foi cadastrado!");
+                    }
+                }
             }
         });
     }
@@ -67,7 +89,7 @@ public class TelaCadastroProdutos extends AppCompatActivity {
         snackbar.show();
     }
     private void iniciarComponentes(){
-        edit_nome_produto = findViewById(R.id.edit_nome_produto);
+        edit_titulo_produto = findViewById(R.id.edit_nome_produto);
         edit_preco_produto = findViewById(R.id.edit_preco_produto);
         edit_categoria_produto = findViewById(R.id.edit_categoria_produto);
         edit_descricao_produto = findViewById(R.id.edit_descricao_produto);

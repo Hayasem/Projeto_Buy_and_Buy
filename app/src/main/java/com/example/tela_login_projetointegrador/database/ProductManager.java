@@ -12,14 +12,11 @@ public class ProductManager {
         this.db = db;
     }
 
-    public Produto getProdutos() {
-
-        Cursor cursor = db.rawQuery("SELECT * FROM PRODUTO", null);
-
+    public Produto consultarProduto(int idProduto) {
+        Cursor cursor = db.rawQuery("SELECT * FROM PRODUTO WHERE status = 1", null);
         if(cursor.moveToFirst()){
 
             Produto produtos = new Produto();
-
             produtos.setIdProduto(cursor.getInt(0));
             produtos.setIdUsuario(cursor.getInt(1));
             produtos.setTitulo(cursor.getString(2));
@@ -27,15 +24,16 @@ public class ProductManager {
             produtos.setIdCategoria(cursor.getInt(4));
             produtos.setPreco(cursor.getFloat(5));
             produtos.setStatus(cursor.getInt(6));
+            produtos.setQuantidade(cursor.getInt(7));
 
             cursor.close();
             cursor = null;
+
             return produtos;
         }
-
         return  null;
     }
-    public void cadastrarProduto(Produto produto) {
+    public long cadastrarProduto(Produto produto) {
         ContentValues values = new ContentValues();
         values.put("titulo", produto.getTitulo());
         values.put("idUsuario",1); // para questao de teste salvando sempre 1
@@ -43,9 +41,14 @@ public class ProductManager {
         values.put("idCategoria", produto.getIdCategoria());
         values.put("preco", produto.getPreco());
         values.put("status", produto.isStatus());
+        values.put("quantidade", produto.getQuantidade());
+        return db.insert("PRODUTO", null, values);
+    }
 
-        long idProduto = db.insert("PRODUTO", null, values);
-        System.out.println("produtoID: "+idProduto);
+    public void removerProduto(){
+        ContentValues values = new ContentValues();
+        values.put("status", 0);
+        db.update("PRODUTO", values, "status = 0", null);
     }
 
 }

@@ -32,7 +32,7 @@ public class FormCadastro extends AppCompatActivity {
     private DatabaseConnection db;
     private UserManager userManager;
     private TelefoneManager telefoneManager;
-    String[] mensagens = {"Preencha todos os campos", "Cadastro realizado com sucesso!"};
+    String[] mensagens = {"Preencha todos os campos!", "Cadastro realizado com sucesso!"};
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {

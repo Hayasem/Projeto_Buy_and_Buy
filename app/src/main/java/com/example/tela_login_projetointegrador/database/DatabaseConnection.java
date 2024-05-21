@@ -78,6 +78,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "idCategoria INTEGER," +
                 "preco REAL," +
                 "status INTEGER," +
+                "quantidade INTEGER," +
                 "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario))";
 
         String AVALIACAO_TABLE = "CREATE TABLE AVALIACAO(" +

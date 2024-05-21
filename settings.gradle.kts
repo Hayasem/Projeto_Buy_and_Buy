@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tela_Login_ProjetoIntegrador"
 include(":app")
+
  

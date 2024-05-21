@@ -3,6 +3,8 @@ package com.example.tela_login_projetointegrador.utils;
 public class Utils {
 
 
+    /*Validações Usuários*/
+
     public static boolean isCampoVazio(String campo){
         return campo.isEmpty();
     }
@@ -24,6 +26,4 @@ public class Utils {
     public static String limparTelefone(String numero) {
        return numero.replace("-","").replace(" ","");
     }
-
-
 }
