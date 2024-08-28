@@ -54,7 +54,7 @@ public class UserManager {
             usuarios.setEmail(cursor.getString(4));
             usuarios.setSenha(cursor.getString(5));
             usuarios.setCep(cursor.getString(6));
-            usuarios.setHash_senha(cursor.getString(7));
+            usuarios.setHash_senha(cursor.getString(7));         
             usuarios.setDataReg(cursor.getString(8));
             usuarios.setSalt(cursor.getString(9));
 

@@ -73,19 +73,15 @@
 
         <TextView
             android:id="@+id/text_email_usuario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
 
-            android:layout_marginTop="54dp"
-            android:layout_marginEnd="200dp"
             android:text=""
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/IconeEmail"
-            app:layout_constraintTop_toBottomOf="@+id/text_nome_usuario" />
+            tools:layout_editor_absoluteX="173dp"
+            tools:layout_editor_absoluteY="337dp" />
 
         <ImageView
             android:id="@+id/imgbtn_products"
