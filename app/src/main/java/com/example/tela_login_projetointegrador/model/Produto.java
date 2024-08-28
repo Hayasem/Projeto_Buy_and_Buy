@@ -8,9 +8,9 @@ public class Produto {
     int idCategoria;
     float preco;
     int status;
-    int quantidade;
+    String imagem;
 
-    public Produto(int idProduto, int idUsuario, String titulo, String descricao, int idCategoria, float preco, int status, int quantidade) {
+    public Produto(int idProduto, int idUsuario, String titulo, String descricao, int idCategoria, float preco, int status,String imagem) {
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
         this.titulo = titulo;
@@ -18,16 +18,15 @@ public class Produto {
         this.idCategoria = idCategoria;
         this.preco = preco;
         this.status = status;
-        this.quantidade = quantidade;
+        this.imagem = imagem;
     }
 
-    public Produto( String titulo, String descricao, int idCategoria, float preco, int status, int quantidade) {
+    public Produto( String titulo, String descricao, int idCategoria, float preco, int status) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.idCategoria = idCategoria;
         this.preco = preco;
         this.status = status;
-        this.quantidade = quantidade;
     }
 
     public Produto() {
@@ -89,10 +88,11 @@ public class Produto {
         this.status = status;
     }
 
-    public int getQuantidade() {
-        return quantidade;
+    public String getImagem() {
+        return imagem;
     }
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
     }
 }

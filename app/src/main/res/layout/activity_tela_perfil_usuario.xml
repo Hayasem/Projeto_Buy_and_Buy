@@ -49,14 +49,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="46dp"
+            android:layout_marginEnd="200dp"
             android:text=""
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/iconeuser"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/iconeuser" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iconeuser"
+            app:layout_constraintTop_toBottomOf="@+id/containerUser" />
 
         <ImageView
             android:id="@+id/IconeEmail"
@@ -71,27 +73,24 @@
 
         <TextView
             android:id="@+id/text_email_usuario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
 
-            android:layout_marginStart="16dp"
             android:text=""
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/IconeEmail"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/IconeEmail" />
+            tools:layout_editor_absoluteX="173dp"
+            tools:layout_editor_absoluteY="337dp" />
 
         <ImageView
             android:id="@+id/imgbtn_products"
+            android:contentDescription="Botão de cadastro de produtos"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="256dp"
             android:clickable="true"
-            android:contentDescription="Botão de cadastro de produtos"
             android:src="@drawable/meus_produtos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,14 +100,15 @@
             android:id="@+id/txt_meus_produtos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="58dp"
+            android:layout_marginEnd="110dp"
             android:text="Cadastrar produtos"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imgbtn_products"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/imgbtn_products" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgbtn_products"
+            app:layout_constraintTop_toBottomOf="@+id/text_email_usuario" />
 
         <Button
             android:id="@+id/bt_deslogar"
@@ -126,20 +126,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imgbtn_products" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25304136" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.75" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
