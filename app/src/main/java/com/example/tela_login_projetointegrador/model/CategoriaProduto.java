@@ -1,30 +1,32 @@
 package com.example.tela_login_projetointegrador.model;
 
-public class Categoria {
-    int idCategoria;
-    String nome_categoria;
+public class CategoriaProduto {
+    private int id;
+    private String descricao;
 
-    public Categoria(int idCategoria, String nome_categoria) {
-        this.idCategoria = idCategoria;
-        this.nome_categoria = nome_categoria;
+    public CategoriaProduto(int id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
     }
 
-    public Categoria() {
+    public int getId() {
+        return id;
     }
 
-    public int getIdCategoria() {
-        return idCategoria;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public String getNome_categoria() {
-        return nome_categoria;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public void setNome_categoria(String nome_categoria) {
-        this.nome_categoria = nome_categoria;
+    @Override
+    public String toString() {
+        return descricao;  // Isso é o que será mostrado no Spinner
     }
 }

@@ -8,8 +8,9 @@ public class Produto {
     int idCategoria;
     float preco;
     int status;
+    String imagem;
 
-    public Produto(int idProduto, int idUsuario, String titulo, String descricao, int idCategoria, float preco, int status) {
+    public Produto(int idProduto, int idUsuario, String titulo, String descricao, int idCategoria, float preco, int status,String imagem) {
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
         this.titulo = titulo;
@@ -17,6 +18,7 @@ public class Produto {
         this.idCategoria = idCategoria;
         this.preco = preco;
         this.status = status;
+        this.imagem = imagem;
     }
 
     public Produto( String titulo, String descricao, int idCategoria, float preco, int status) {
@@ -84,5 +86,13 @@ public class Produto {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
     }
 }
