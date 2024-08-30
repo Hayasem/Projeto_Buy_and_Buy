@@ -5,20 +5,19 @@
         private String precoProduto;
         private String categoriaProduto;
         private String descricaoProduto;
-        private int imagensProduto;
-        private int quantidadeProduto;
 
-        public Cadastro_Produtos(String tituloProduto, String precoProduto,
-                                 String categoriaProduto, String descricaoProduto,
-                                 int imagensProduto) {
+       private boolean disponivelProduto;
+
+        public Cadastro_Produtos(String tituloProduto, String precoProduto, String categoriaProduto, String descricaoProduto, boolean disponivelProduto) {
             this.tituloProduto = tituloProduto;
             this.precoProduto = precoProduto;
             this.categoriaProduto = categoriaProduto;
             this.descricaoProduto = descricaoProduto;
-            this.imagensProduto = imagensProduto;
-            this.quantidadeProduto = quantidadeProduto;
+            this.disponivelProduto = disponivelProduto;
         }
+        public Cadastro_Produtos(){
 
+        }
         public String getTituloProduto() {
             return tituloProduto;
         }
@@ -51,19 +50,11 @@
             this.descricaoProduto = descricaoProduto;
         }
 
-        public int getImagensProduto() {
-            return imagensProduto;
+        public boolean isDisponivelProduto() {
+            return disponivelProduto;
         }
 
-        public void setImagensProduto(int imagensProduto) {
-            this.imagensProduto = imagensProduto;
-        }
-
-        public int getQuantidadeProduto() {
-            return quantidadeProduto;
-        }
-
-        public void setQuantidadeProduto(int quantidadeProduto) {
-            this.quantidadeProduto = quantidadeProduto;
+        public void setDisponivelProduto(boolean disponivelProduto) {
+            this.disponivelProduto = disponivelProduto;
         }
     }

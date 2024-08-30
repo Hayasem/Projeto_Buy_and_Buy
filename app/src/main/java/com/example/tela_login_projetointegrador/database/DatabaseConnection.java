@@ -65,10 +65,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "valido INTEGER," +
                 "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario))";
 
-        String CATEGORIA_TABLE = "CREATE TABLE CATEGORIA(" +
-                "idCategoria INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "nome_categoria TEXT)";
-
         String PRODUTO_TABLE = "CREATE TABLE PRODUTO(" +
                 "idProduto INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "idUsuario INTEGER," +
@@ -77,6 +73,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "idCategoria INTEGER," +
                 "preco REAL," +
                 "status INTEGER," +
+                "imagem TEXT,"+
                 "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario))";
 
         String AVALIACAO_TABLE = "CREATE TABLE AVALIACAO(" +
@@ -136,7 +133,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL(PEDIDO_TABLE);
         db.execSQL(CARRINHO_TABLE);
         db.execSQL(PRODUTO_TABLE);
-        db.execSQL(CATEGORIA_TABLE);
         db.execSQL(USUARIO_TABLE);
         db.execSQL(TELEFONE_TABLE);
         db.execSQL(END_ENTREGA_TABLE);

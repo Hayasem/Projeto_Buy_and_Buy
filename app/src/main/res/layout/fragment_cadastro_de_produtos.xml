@@ -16,11 +16,11 @@
 
     <TextView
         android:id="@+id/tv_informe_produto"
-        android:layout_width="399dp"
-        android:layout_height="91dp"
+        android:layout_width="370dp"
+        android:layout_height="83dp"
         android:layout_margin="25dp"
         android:width="400dp"
-        android:text="INSIRA AS INFORMAÇÕES SOBRE O SEU PRODUTO"
+        android:text="Cadastro de produtos"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="34sp"
@@ -35,8 +35,8 @@
     <View
         android:id="@+id/containerComponents"
         style="@style/Container_Cadastro_Produtos_Components"
-        android:layout_width="366dp"
-        android:layout_height="387dp"
+        android:layout_width="372dp"
+        android:layout_height="515dp"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
@@ -65,17 +65,27 @@
             android:inputType="numberDecimal"
             android:textColor="@color/black"
     />
-    <EditText
-            android:id="@+id/edit_categoria_produto"
-            style="@style/edit_text"
-            app:layout_constraintTop_toBottomOf="@id/edit_preco_produto"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
-            android:hint="Categoria:"
-            android:textColorHint="#878787"
-            android:inputType="text"
-            android:textColor="@color/black"
-            tools:ignore="NotSibling"/>
+<!--    <EditText-->
+<!--            android:id="@+id/edit_categoria_produto"-->
+<!--            style="@style/edit_text"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/edit_preco_produto"-->
+<!--            app:layout_constraintStart_toStartOf="@id/containerComponents"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/containerComponents"-->
+<!--            android:hint="Categoria:"-->
+<!--            android:textColorHint="#878787"-->
+<!--            android:inputType="text"-->
+<!--            android:textColor="@color/black"-->
+<!--            tools:ignore="NotSibling"/>-->
+
+    <Spinner
+        android:id="@+id/spinner_categoria_produto"
+        style="@style/edit_text"
+        android:layout_width="340dp"
+        android:layout_height="63dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="@id/containerComponents"
+        app:layout_constraintStart_toStartOf="@id/containerComponents"
+        app:layout_constraintTop_toBottomOf="@id/edit_preco_produto" />
     <EditText
             android:id="@+id/edit_descricao_produto"
             style="@style/edit_text"
@@ -83,7 +93,7 @@
             android:textColorHint="#878787"
             android:inputType="text"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/edit_categoria_produto"
+            app:layout_constraintTop_toBottomOf="@id/spinner_categoria_produto"
             app:layout_constraintStart_toStartOf="@id/containerComponents"
             app:layout_constraintEnd_toEndOf="@id/containerComponents"
 
@@ -110,5 +120,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/containerComponents" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="151dp"
+        android:layout_height="121dp"
+        android:layout_marginStart="220dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_quantidade_produto"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="48dp"
+        android:text="Imagem do produto"
+        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/edit_quantidade_produto" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
