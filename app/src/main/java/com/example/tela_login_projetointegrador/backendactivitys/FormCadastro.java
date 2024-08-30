@@ -149,12 +149,12 @@ public class FormCadastro extends AppCompatActivity {
 
     //Recuperando pelo id:
     private void iniciarComponentes(){
-        edit_nome = findViewById(com.example.tela_login_projetointegrador.R.id.edit_nome);
-        editemail = findViewById(com.example.tela_login_projetointegrador.R.id.editemail);
-        edit_senha = findViewById(com.example.tela_login_projetointegrador.R.id.edit_senha);
-        edit_cpf = findViewById(R.id.edit_cpf);
-        edit_cep = findViewById(R.id.edit_cep);
-        edit_numero = findViewById(R.id.edit_contato);
+        edit_nome = findViewById(R.id.input_edit_nome);
+        editemail = findViewById(R.id.input_edit_email);
+        edit_senha = findViewById(R.id.input_edit_senha);
+        edit_cpf = findViewById(R.id.input_edit_cpf);
+        edit_cep = findViewById(R.id.input_edit_cep);
+        edit_numero = findViewById(R.id.input_edit_telefone);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
         db = new DatabaseConnection(this);
         edit_numero.addTextChangedListener(new PhoneNumberFormattingTextWatcher());

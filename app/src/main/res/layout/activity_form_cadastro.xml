@@ -26,100 +26,197 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
     />
-    <View
-        android:id="@+id/containerComponents"
-        style="@style/Container_Cadastro_Components"
-        app:layout_constraintTop_toBottomOf="@id/title_cadastrese"
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/container_components"
+        app:layout_constraintBottom_toTopOf="@id/bt_cadastrar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_cadastrese">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_nome"
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:helperText="Preencha esse campo"
+                app:helperTextTextColor="@color/vermelho"
+                app:layout_constraintEnd_toEndOf="@id/containerComponents"
+                app:layout_constraintStart_toStartOf="@id/containerComponents"
+                app:layout_constraintTop_toTopOf="@id/containerComponents">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_nome"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Nome:"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:textColorHint="@color/black">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_email"
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                app:helperText="Preencha esse campo"
+                app:helperTextTextColor="@color/vermelho"
+                app:layout_constraintEnd_toEndOf="@id/containerComponents"
+                app:layout_constraintStart_toStartOf="@id/containerComponents"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_nome">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_email"
+                    android:hint="Email:"
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:textColorHint="@color/black">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_senha"
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                app:helperText="Preencha esse campo"
+                app:helperTextTextColor="@color/vermelho"
+                app:layout_constraintEnd_toEndOf="@id/containerComponents"
+                app:layout_constraintStart_toStartOf="@id/containerComponents"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_email"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_senha"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Senha:"
+                    android:inputType="textVisiblePassword"
+                    android:lines="1"
+                    android:textColorHint="@color/black">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_cpf"
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="11"
+                app:helperText="Preencha esse campo"
+                app:helperTextTextColor="@color/vermelho"
+                app:layout_constraintEnd_toEndOf="@id/containerComponents"
+                app:layout_constraintStart_toStartOf="@id/containerComponents"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_senha">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_cpf"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="CPF:"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:textColorHint="@color/black">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_cep"
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="8"
+                app:helperText="Preencha esse campo"
+                app:helperTextTextColor="@color/vermelho"
+                app:layout_constraintEnd_toEndOf="@id/containerComponents"
+                app:layout_constraintStart_toStartOf="@id/containerComponents"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_cpf">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_cep"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="CEP:"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:textColorHint="@color/black">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_telefone"
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                app:helperText="Preencha esse campo"
+                app:helperTextTextColor="@color/vermelho"
+                app:layout_constraintEnd_toEndOf="@id/containerComponents"
+                app:layout_constraintStart_toStartOf="@id/containerComponents"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_cep">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_telefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Contato:"
+                    android:inputType="phone"
+                    android:lines="1"
+                    android:textColorHint="@color/cinza">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_cadastrar"
+        style="@style/button"
+        android:layout_marginBottom="16dp"
+        android:text="Cadastrar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
-    />
-
-    <EditText
-            android:id="@+id/edit_nome"
-            style="@style/edit_text"
-            app:layout_constraintTop_toTopOf="@id/containerComponents"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
-            android:hint="Nome:"
-            android:textColorHint="#878787"
-            android:inputType="text"
-            android:textColor="@color/black"
-    />
-    <EditText
-            android:id="@+id/editemail"
-            style="@style/edit_text"
-            app:layout_constraintTop_toBottomOf="@id/edit_nome"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
-            android:hint="Email:"
-            android:textColorHint="#878787"
-            android:inputType="textEmailAddress"
-            android:drawableRight="@drawable/ic_email"
-            android:textColor="@color/black"
-    />
-    <EditText
-            android:id="@+id/edit_senha"
-            style="@style/edit_text"
-            app:layout_constraintTop_toBottomOf="@id/editemail"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
-            android:hint="Senha:"
-            android:textColorHint="#878787"
-            android:inputType="numberPassword"
-            android:drawableRight="@drawable/ic_eye"
-            android:textColor="@color/black"
-    />
-
-    <EditText
-        android:id="@+id/edit_cpf"
-        style="@style/edit_text"
-        android:hint="CPF:"
-        android:inputType="number"
-        android:textColor="@color/black"
-        android:textColorHint="#878787"
-        app:layout_constraintEnd_toEndOf="@id/containerComponents"
-        app:layout_constraintStart_toStartOf="@id/containerComponents"
-        app:layout_constraintTop_toBottomOf="@id/edit_senha"
-
-        />
-
-    <EditText
-        android:id="@+id/edit_cep"
-        style="@style/edit_text"
-        android:hint="CEP:"
-        android:inputType="number"
-        android:textColor="@color/black"
-        android:textColorHint="#878787"
-        app:layout_constraintEnd_toEndOf="@id/containerComponents"
-        app:layout_constraintStart_toStartOf="@id/containerComponents"
-        app:layout_constraintTop_toBottomOf="@id/edit_cpf"
-
-        />
-    <EditText
-            android:id="@+id/edit_contato"
-            style="@style/edit_text"
-            android:hint="Telefone:"
-            android:textColorHint="#878787"
-            android:inputType="phone"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/edit_cep"
-            app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintEnd_toEndOf="@id/containerComponents"
-
-    />
-    <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/bt_cadastrar"
-            style="@style/button"
-            app:layout_constraintTop_toBottomOf="@id/containerComponents"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="30dp"
-            android:text="Cadastrar"
-
-    />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
