@@ -79,11 +79,15 @@ public class FormCadastro extends AppCompatActivity {
             if (!Utils.isCPFValido(cpf)) {
                 exibirSnackbar("CPF inválido! Formato esperado: XXX.XXX.XXX-XX", view);
                 return;
+            }else{
+                cpf = formatarCPF(cpf);
             }
 
             if(!Utils.isCepValido(cep)) {
                 exibirSnackbar("CEP inválido! Formato esperado: XXXXX-XXX", view);
                 return;
+            }else{
+                cpf = formatarCEP(cep);
             }
 
             if(!Utils.isValidaCelular(numero)) {
@@ -130,6 +134,14 @@ public class FormCadastro extends AppCompatActivity {
             }
 
         });
+    }
+
+    private String formatarCPF(String cpf) {
+        return cpf.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
+    }
+
+    private String formatarCEP(String cep) {
+        return cep.replaceAll("(\\d{5})(\\d{2})", "$1-$2");
     }
 
     private void exibirSnackbar(String erro, View view) {

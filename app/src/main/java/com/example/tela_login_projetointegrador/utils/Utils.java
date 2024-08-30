@@ -12,8 +12,6 @@ public class Utils {
     public static boolean isCPFValido(String cpf) {
         return cpf.matches("\\d{11}");
     }
-
-
     public static boolean isCepValido(String cep) {
         return cep.matches("\\d{8}");
     }
