@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Tela_Login_ProjetoIntegrador"
+rootProject.name = "Projeto_Buy_and_Buy"
 include(":app")
 
  
