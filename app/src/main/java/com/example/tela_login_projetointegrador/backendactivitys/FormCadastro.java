@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.tela_login_projetointegrador.Format.CepTextWatcher;
+import com.example.tela_login_projetointegrador.Format.CpfTextWatcher;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.TelefoneManager;
@@ -49,8 +52,6 @@ public class FormCadastro extends AppCompatActivity {
         SQLiteDatabase db = databaseConnection.getWritableDatabase();
         userManager = new UserManager(db);
         telefoneManager = new TelefoneManager(db);
-
-
         acoesClick();
     }
 
@@ -79,15 +80,11 @@ public class FormCadastro extends AppCompatActivity {
             if (!Utils.isCPFValido(cpf)) {
                 exibirSnackbar("CPF inválido! Formato esperado: XXX.XXX.XXX-XX", view);
                 return;
-            }else{
-                cpf = formatarCPF(cpf);
             }
 
             if(!Utils.isCepValido(cep)) {
                 exibirSnackbar("CEP inválido! Formato esperado: XXXXX-XXX", view);
                 return;
-            }else{
-                cpf = formatarCEP(cep);
             }
 
             if(!Utils.isValidaCelular(numero)) {
@@ -136,20 +133,11 @@ public class FormCadastro extends AppCompatActivity {
         });
     }
 
-    private String formatarCPF(String cpf) {
-        return cpf.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
-    }
-
-    private String formatarCEP(String cep) {
-        return cep.replaceAll("(\\d{5})(\\d{2})", "$1-$2");
-    }
-
     private void exibirSnackbar(String erro, View view) {
         Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
         snackbar.setBackgroundTint(Color.RED);
         snackbar.setTextColor(Color.BLACK);
         snackbar.show();
-
     }
 
     public void openFragment(Fragment fragment) {
@@ -169,6 +157,8 @@ public class FormCadastro extends AppCompatActivity {
         edit_numero = findViewById(R.id.input_edit_telefone);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
         db = new DatabaseConnection(this);
+        edit_cpf.addTextChangedListener(new CpfTextWatcher());
+        edit_cep.addTextChangedListener(new CepTextWatcher());
         edit_numero.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 }
