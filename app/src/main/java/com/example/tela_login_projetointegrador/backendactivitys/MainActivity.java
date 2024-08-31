@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void IniciarComponentes(){
         text_tela_cadastro = findViewById(com.example.tela_login_projetointegrador.R.id.text_tela_cadastro);
-        edit_email = findViewById(com.example.tela_login_projetointegrador.R.id.edit_email);
-        edit_senha = findViewById(com.example.tela_login_projetointegrador.R.id.edit_senha);
+        edit_email = findViewById(R.id.input_edit_email);
+        edit_senha = findViewById(R.id.input_edit_senha);
         bt_entrar = findViewById(com.example.tela_login_projetointegrador.R.id.bt_entrar);
     }
 }
