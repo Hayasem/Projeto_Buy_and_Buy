@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tela_login_projetointegrador.Format.CepTextWatcher;
 import com.example.tela_login_projetointegrador.Format.CpfTextWatcher;
+import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.TelefoneManager;
@@ -25,12 +26,14 @@ import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
 import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class FormCadastro extends AppCompatActivity {
 
 
     //Objetos que serão utilizados para realização do cadastro:
     private EditText edit_nome, editemail, edit_senha, edit_cep, edit_cpf, edit_numero;
+    private TextInputLayout helper_text;
     private Button bt_cadastrar;
     private DatabaseConnection db;
     private UserManager userManager;
@@ -156,9 +159,11 @@ public class FormCadastro extends AppCompatActivity {
         edit_cep = findViewById(R.id.input_edit_cep);
         edit_numero = findViewById(R.id.input_edit_telefone);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
+        helper_text = findViewById(R.id.input_layout_senha);
         db = new DatabaseConnection(this);
         edit_cpf.addTextChangedListener(new CpfTextWatcher());
         edit_cep.addTextChangedListener(new CepTextWatcher());
+        edit_senha.addTextChangedListener(new SenhaTextWatcher(helper_text));
         edit_numero.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 }
