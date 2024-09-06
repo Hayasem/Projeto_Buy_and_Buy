@@ -1,9 +1,15 @@
 package com.example.tela_login_projetointegrador.Format;
 
+import static androidx.core.content.ContextCompat.*;
+
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+
+import androidx.core.content.ContextCompat;
+
+import com.example.tela_login_projetointegrador.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class SenhaTextWatcher implements TextWatcher {
@@ -41,15 +47,17 @@ public class SenhaTextWatcher implements TextWatcher {
 
 
             if (hasUppercase && hasSpecialChar) {
-                helper_text.setHintTextColor(ColorStateList.valueOf(Color.GREEN));
                 helper_text.setHelperText("Senha forte. Pode dar prosseguimento");
-                helper_text.setHelperTextColor(ColorStateList.valueOf(Color.GREEN));
-                helper_text.setBoxStrokeColor(Color.GREEN);
+                helper_text.setHelperTextColor(ColorStateList.valueOf(getColor(helper_text.getContext(), R.color.verde)));
+                helper_text.setHintTextColor(ColorStateList.valueOf(getColor(helper_text.getContext(), R.color.verde)));
+                helper_text.setBoxStrokeColor(ContextCompat.getColor(helper_text.getContext(), R.color.verde));
+                helper_text.setDefaultHintTextColor(ColorStateList.valueOf(getColor(helper_text.getContext(), R.color.verde)));
             }else{
-                helper_text.setHintTextColor(ColorStateList.valueOf(Color.YELLOW));
                 helper_text.setHelperText("Senha média. Utilize caracteres especiais");
-                helper_text.setHelperTextColor(ColorStateList.valueOf(Color.YELLOW));
-                helper_text.setBoxStrokeColor(Color.YELLOW);
+                helper_text.setHintTextColor(ColorStateList.valueOf(getColor(helper_text.getContext(), R.color.alaranjado)));
+                helper_text.setDefaultHintTextColor(ColorStateList.valueOf(getColor(helper_text.getContext(), R.color.alaranjado)));
+                helper_text.setHelperTextColor(ColorStateList.valueOf(getColor(helper_text.getContext(), R.color.alaranjado)));
+                helper_text.setBoxStrokeColor(ContextCompat.getColor(helper_text.getContext(), R.color.alaranjado));
             }
         }
     }

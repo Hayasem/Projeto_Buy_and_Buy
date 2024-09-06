@@ -9,5 +9,7 @@
     <color name="cinza">#808080</color>
     <color name="cinza_claro">#fafafa</color>
     <color name="vermelho">#EF1010</color>
+    <color name="alaranjado">#FF9800</color>
+    <color name="verde">#4CAF50</color>
 
 </resources>

@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tela_login_projetointegrador.Format.CepTextWatcher;
 import com.example.tela_login_projetointegrador.Format.CpfTextWatcher;
+import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
@@ -29,11 +30,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class FormCadastro extends AppCompatActivity {
-
-
+    private AppCompatActivity binding;
     //Objetos que serão utilizados para realização do cadastro:
     private EditText edit_nome, editemail, edit_senha, edit_cep, edit_cpf, edit_numero;
-    private TextInputLayout helper_text;
+    private TextInputLayout helper_text, layout_nome, layout_contato, layout_email, layout_cep, layout_cpf;
     private Button bt_cadastrar;
     private DatabaseConnection db;
     private UserManager userManager;
@@ -56,6 +56,7 @@ public class FormCadastro extends AppCompatActivity {
         userManager = new UserManager(db);
         telefoneManager = new TelefoneManager(db);
         acoesClick();
+
     }
 
     private void acoesClick() {
@@ -92,6 +93,10 @@ public class FormCadastro extends AppCompatActivity {
 
             if(!Utils.isValidaCelular(numero)) {
                 exibirSnackbar("Número de celular inválido! Formato esperado: (XX) XXXXX-XXXX", view);
+                return;
+            }
+            if (!Utils.isEmailvalido(email)){
+                exibirSnackbar("Endereço de email inválido", view);
                 return;
             }
 
@@ -152,6 +157,9 @@ public class FormCadastro extends AppCompatActivity {
 
     //Recuperando pelo id:
     private void iniciarComponentes(){
+        layout_nome = findViewById(R.id.input_layout_nome);
+        layout_contato = findViewById(R.id.input_layout_telefone);
+        layout_email = findViewById(R.id.input_layout_email);
         edit_nome = findViewById(R.id.input_edit_nome);
         editemail = findViewById(R.id.input_edit_email);
         edit_senha = findViewById(R.id.input_edit_senha);
@@ -164,6 +172,7 @@ public class FormCadastro extends AppCompatActivity {
         edit_cpf.addTextChangedListener(new CpfTextWatcher());
         edit_cep.addTextChangedListener(new CepTextWatcher());
         edit_senha.addTextChangedListener(new SenhaTextWatcher(helper_text));
+        editemail.addTextChangedListener(new EmailTextWatcher(layout_email));
         edit_numero.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 }

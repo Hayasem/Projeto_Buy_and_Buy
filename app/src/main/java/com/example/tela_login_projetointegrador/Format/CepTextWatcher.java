@@ -32,6 +32,7 @@ public class CepTextWatcher implements TextWatcher {
             format.append(text);
         }
         ((Editable) s).replace(0, s.length(), format);
+
     }
 
     @Override
