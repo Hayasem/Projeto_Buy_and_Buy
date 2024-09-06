@@ -16,13 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
+import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class MainActivity extends AppCompatActivity {
     private TextView text_tela_cadastro;
+    private TextInputLayout layout_email, layout_senha;
     private EditText edit_email;
     private EditText edit_senha;
     private Button bt_entrar;
@@ -89,11 +93,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void IniciarComponentes(){
+        layout_email = findViewById(R.id.input_layout_email);
+        layout_senha = findViewById(R.id.input_layout_senha);
         text_tela_cadastro = findViewById(com.example.tela_login_projetointegrador.R.id.text_tela_cadastro);
         edit_email = findViewById(R.id.input_edit_email);
         edit_senha = findViewById(R.id.input_edit_senha);
         bt_entrar = findViewById(com.example.tela_login_projetointegrador.R.id.bt_entrar);
+        edit_email.addTextChangedListener(new EmailTextWatcher(layout_email));
+        edit_senha.addTextChangedListener(new SenhaTextWatcher(layout_senha));
     }
 }

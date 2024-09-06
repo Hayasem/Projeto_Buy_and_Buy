@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.tela_login_projetointegrador.Format.CepTextWatcher;
 import com.example.tela_login_projetointegrador.Format.CpfTextWatcher;
 import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
+import com.example.tela_login_projetointegrador.Format.NomeTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
@@ -169,6 +170,7 @@ public class FormCadastro extends AppCompatActivity {
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
         helper_text = findViewById(R.id.input_layout_senha);
         db = new DatabaseConnection(this);
+        edit_nome.addTextChangedListener(new NomeTextWatcher(layout_nome));
         edit_cpf.addTextChangedListener(new CpfTextWatcher());
         edit_cep.addTextChangedListener(new CepTextWatcher());
         edit_senha.addTextChangedListener(new SenhaTextWatcher(helper_text));
