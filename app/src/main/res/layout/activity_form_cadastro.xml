@@ -209,7 +209,7 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     app:counterEnabled="true"
-                    app:counterMaxLength="13"
+                    app:counterMaxLength="15"
                     app:boxStrokeColor="@color/vermelho"
                     android:layout_marginEnd="32dp"
                     app:helperText="Preencha esse campo"

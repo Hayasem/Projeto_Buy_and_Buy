@@ -41,7 +41,6 @@ public class EmailTextWatcher implements TextWatcher {
             layout_email.setHintTextColor(ColorStateList.valueOf(ContextCompat.getColor(layout_email.getContext(), R.color.vermelho)));
         }
     }
-
     @Override
     public void afterTextChanged(Editable s) {
 

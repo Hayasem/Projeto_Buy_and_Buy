@@ -1,5 +1,8 @@
 package com.example.tela_login_projetointegrador.Format;
 
+import static androidx.core.content.ContextCompat.getColor;
+
+import android.content.res.ColorStateList;
 import android.text.Editable;
 import android.text.TextWatcher;
 
@@ -9,7 +12,12 @@ import com.example.tela_login_projetointegrador.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class CepTextWatcher implements TextWatcher {
+    private final TextInputLayout layout_cep;
     private boolean isUpdating;
+
+    public CepTextWatcher(TextInputLayout layoutCep) {
+        layout_cep = layoutCep;
+    }
 
 
     @Override
@@ -39,6 +47,20 @@ public class CepTextWatcher implements TextWatcher {
         }
         ((Editable) s).replace(0, s.length(), format);
 
+        if(text.length() == 8){
+            layout_cep.setHelperText("CEP válido");
+            layout_cep.setHelperTextColor(ColorStateList.valueOf(getColor(layout_cep.getContext(), R.color.verde)));
+            layout_cep.setHintTextColor(ColorStateList.valueOf(getColor(layout_cep.getContext(), R.color.verde)));
+            layout_cep.setBoxStrokeColor(ContextCompat.getColor(layout_cep.getContext(), R.color.verde));
+            layout_cep.setDefaultHintTextColor(ColorStateList.valueOf(getColor(layout_cep.getContext(), R.color.verde)));
+        }else{
+            layout_cep.setHelperText("Por favor, digite um CEP válido");
+            layout_cep.setHelperTextColor(ColorStateList.valueOf(getColor(layout_cep.getContext(), R.color.vermelho)));
+            layout_cep.setHintTextColor(ColorStateList.valueOf(getColor(layout_cep.getContext(), R.color.vermelho)));
+            layout_cep.setBoxStrokeColor(ContextCompat.getColor(layout_cep.getContext(), R.color.vermelho));
+            layout_cep.setDefaultHintTextColor(ColorStateList.valueOf(getColor(layout_cep.getContext(), R.color.vermelho)));
+        }
+        isUpdating = false;
     }
 
     @Override
