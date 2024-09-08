@@ -43,7 +43,8 @@ public class UserManager {
         return db.insert("USUARIO", null, values);
     }
     public Usuario consultarUsuario(int idUsuario){
-        Cursor cursor = db.rawQuery("SELECT * FROM USUARIO WHERE logged_in = 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM USUARIO WHERE idUsuario = ?",
+                new String[]{String.valueOf(idUsuario)});
         if (cursor.moveToFirst()){
 
             Usuario usuarios = new Usuario();
@@ -66,6 +67,8 @@ public class UserManager {
         return null;
     }
 
+// Método para salvar o email e senha no Banco de Dados:
+//---------------------------------------------------------------------------------------------
     public boolean compararSenha(String email, String senha){
         Cursor cursor = db.rawQuery("SELECT hash_senha, salt FROM USUARIO WHERE email = ?",
                 new String[]{email});
@@ -80,6 +83,16 @@ public class UserManager {
         return false;
     }
 
+//Método para verificar se o email inserido pelo usuário já está cadastrado:
+//----------------------------------------------------------------------------------------------
+    public boolean isEmailCadastrado(String email){
+        String query = "SELECT 1 FROM USUARIO WHERE email = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+        boolean emailExiste = cursor.moveToFirst();
+        cursor.close();
+        return emailExiste;
+    }
+//---------------------------------------------------------------------------------------------
     public void deslogarUsuario(){
         ContentValues values = new ContentValues();
         values.put("logged_in", 0);

@@ -32,9 +32,11 @@ import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+
+//Classe e objetos que serão utilizados para realização do cadastro:
+//--------------------------------------------------------------------------------------------------
 public class FormCadastro extends AppCompatActivity {
     private AppCompatActivity binding;
-    //Objetos que serão utilizados para realização do cadastro:
     private EditText edit_nome, editemail, edit_senha, edit_cep, edit_cpf, edit_numero;
     private TextInputLayout helper_text, layout_nome, layout_contato, layout_email, layout_cep, layout_cpf;
     private Button bt_cadastrar;
@@ -43,6 +45,8 @@ public class FormCadastro extends AppCompatActivity {
     private TelefoneManager telefoneManager;
     String[] mensagens = {"Preencha todos os campos!", "Cadastro realizado com sucesso!"};
 
+//--------------------------------------------------------------------------------------------------
+//Métodos importantes para iniciar o ciclo de vida da activity:
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
@@ -61,10 +65,10 @@ public class FormCadastro extends AppCompatActivity {
         acoesClick();
 
     }
-
+//--------------------------------------------------------------------------------------------------
+//Com esse comando,o botão agora consegue "escutar" eventos de click:
+//Ou seja, ele pode realizar o cadastro caso todas as informações estejam corretas;
     private void acoesClick() {
-        //Com esse comando,o botão agora consegue "escutar" eventos de click:
-        //Ou seja, ele pode realizar o cadastro caso todas as informações estejam corretas;
         bt_cadastrar.setOnClickListener(view -> {
             String nome = edit_nome.getText().toString();
             String email = editemail.getText().toString();
@@ -73,7 +77,8 @@ public class FormCadastro extends AppCompatActivity {
             String cep = edit_cep.getText().toString();
             String numero = edit_numero.getText().toString();
 
-
+//--------------------------------------------------------------------------------------------------
+// Condicional que trabalhará realizando determinadas validações das informações inseridas:
             if (Utils.isCampoVazio(nome) ||
                     Utils.isCampoVazio(email) ||
                     Utils.isCampoVazio(senha) ||
@@ -102,13 +107,20 @@ public class FormCadastro extends AppCompatActivity {
                 exibirSnackbar("Endereço de email inválido", view);
                 return;
             }
-
+//--------------------------------------------------------------------------------------------------
+//Condicional que verifica se o email inserido pelo usuário já existe no Banco de Dados:
+            if (userManager.isEmailCadastrado(email)){
+                exibirSnackbar("Esse email já foi cadastrado!", view);
+            }
+//--------------------------------------------------------------------------------------------------
+//Instancia de um novo usuário:
             Usuario usuario = new Usuario();
             usuario.setNome(nome);
             usuario.setEmail(email);
             usuario.setSenha(senha);
             usuario.setCpf(cpf);
             usuario.setCep(cep);
+//--------------------------------------------------------------------------------------------------
 
             long usuarioId = userManager.cadastrarUsuario(usuario);
             if (usuarioId != -1){

@@ -24,6 +24,8 @@ import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+//Classe Principal, e objetos da classe:
+//--------------------------------------------------------------------------------------------
 public class MainActivity extends AppCompatActivity {
     private TextView text_tela_cadastro;
     private TextInputLayout layout_email, layout_senha;
@@ -33,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private UserManager userManager;
     String[] mensagens = {"Preencha todos os campos", "Login efetuado com sucesso!"};
 
+//---------------------------------------------------------------------------------------------
 
+// Métodos essenciais para o ciclo de vida da Activity:
+//---------------------------------------------------------------------------------------------
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
@@ -52,7 +57,10 @@ public class MainActivity extends AppCompatActivity {
         IniciarComponentes();
         acoesClick();
     }
+//---------------------------------------------------------------------------------------------
 
+// Métodos da tela de login, para iniciá-la e para realizar o login:
+//---------------------------------------------------------------------------------------------
     private void acoesClick() {
         text_tela_cadastro.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this,FormCadastro.class);
@@ -72,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 boolean loginValido = userManager.compararSenha(email, senha);
                 if (loginValido){
-
                     userManager.setUserLogado(email);
                     Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.GREEN);
@@ -92,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+//---------------------------------------------------------------------------------------------
     private void IniciarComponentes(){
         layout_email = findViewById(R.id.input_layout_email);
         layout_senha = findViewById(R.id.input_layout_senha);

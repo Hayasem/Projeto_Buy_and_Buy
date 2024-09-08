@@ -23,6 +23,7 @@ import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.fragment.FragmentCadastrarProdutos;
 import com.example.tela_login_projetointegrador.model.Usuario;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class TelaPerfilUsuario extends Fragment {
    private TextView nomeUsuario, emailUsuario, meusProdutos;
