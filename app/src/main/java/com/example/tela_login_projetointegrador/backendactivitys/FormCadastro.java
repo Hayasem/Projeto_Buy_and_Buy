@@ -111,6 +111,7 @@ public class FormCadastro extends AppCompatActivity {
 //Condicional que verifica se o email inserido pelo usuário já existe no Banco de Dados:
             if (userManager.isEmailCadastrado(email)){
                 exibirSnackbar("Esse email já foi cadastrado!", view);
+                return;
             }
 //--------------------------------------------------------------------------------------------------
 //Instancia de um novo usuário:

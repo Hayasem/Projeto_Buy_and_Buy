@@ -13,7 +13,6 @@
             android:id="@+id/containerUser"
             android:layout_width="150dp"
             android:layout_height="150dp"
-
             android:layout_marginTop="64dp"
             android:background="@drawable/container_user"
             app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imagem_perfil_usuario"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/user"
@@ -32,11 +31,9 @@
             app:tint="#878787" />
 
         <ImageView
-            android:id="@+id/iconeuser"
+            android:id="@+id/iconeUser"
             android:layout_width="50dp"
             android:layout_height="50dp"
-
-
             android:layout_marginTop="32dp"
             android:layout_marginEnd="256dp"
             android:src="@drawable/user"
@@ -48,15 +45,14 @@
             android:id="@+id/text_nome_usuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginStart="8dp"
             android:text=""
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/iconeuser"
-            app:layout_constraintStart_toEndOf="@+id/iconeuser"
-            app:layout_constraintTop_toTopOf="@+id/iconeuser" />
+            app:layout_constraintBottom_toBottomOf="@+id/iconeUser"
+            app:layout_constraintStart_toEndOf="@+id/iconeUser"
+            app:layout_constraintTop_toTopOf="@+id/iconeUser" />
 
         <ImageView
             android:id="@+id/IconeEmail"
@@ -67,17 +63,18 @@
             android:src="@drawable/ic_email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iconeuser" />
+            app:layout_constraintTop_toBottomOf="@+id/iconeUser" />
 
         <TextView
             android:id="@+id/text_email_usuario"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text=""
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/IconeEmail"
             app:layout_constraintStart_toEndOf="@+id/IconeEmail"
             app:layout_constraintTop_toTopOf="@+id/IconeEmail" />
