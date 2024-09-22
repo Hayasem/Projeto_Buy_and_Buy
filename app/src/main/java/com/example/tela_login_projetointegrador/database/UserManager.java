@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class UserManager {
-    private SQLiteDatabase db;
+    private final SQLiteDatabase db;
 
     public UserManager(SQLiteDatabase db) {
         this.db = db;

@@ -1,20 +1,18 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
+import android.text.InputType;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
@@ -23,6 +21,17 @@ import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Properties;
+import java.util.Random;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 //Classe Principal, e objetos da classe:
 //--------------------------------------------------------------------------------------------
@@ -51,9 +60,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseConnection databaseConnection = new DatabaseConnection(this);
         SQLiteDatabase db =  databaseConnection.getWritableDatabase();
         userManager = new UserManager(db);
-
-        setContentView(com.example.tela_login_projetointegrador.R.layout.activity_main);
-
+        setContentView(R.layout.activity_main);
         IniciarComponentes();
         acoesClick();
     }
@@ -79,17 +86,11 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
             }else{
                 boolean loginValido = userManager.compararSenha(email, senha);
-                if (loginValido){
+                if (loginValido) {
                     userManager.setUserLogado(email);
-                    Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.GREEN);
-                    snackbar.setTextColor(Color.BLACK);
-                    snackbar.show();
-                    Handler handler = new Handler();
-                    handler.postDelayed(() -> {
-                        Intent intent = new Intent(MainActivity.this,SecondActivity.class);
-                        startActivity(intent);
-                    }, 1000);
+                    String codigoVerificacao = gerarCodigoVerificacao();
+                    enviarCodigoporEmail(email, codigoVerificacao);
+                    criarJanelaCodigo(codigoVerificacao);
                 }else{
                     Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.RED);
@@ -98,6 +99,69 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    private String gerarCodigoVerificacao(){
+        Random random = new Random();
+        int codigo = 100000 + random.nextInt(900000);
+        return String.valueOf(codigo);
+    }
+    private void criarJanelaCodigo(String codigoCorreto){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Verificação de código");
+
+        final EditText campoCodigo = new EditText(MainActivity.this);
+        campoCodigo.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(campoCodigo);
+
+        builder.setPositiveButton("Verificar", (dialog, which) -> {
+            String codigoInserido = campoCodigo.getText().toString();
+            if (codigoInserido.equals(codigoCorreto)) {
+                Snackbar.make(campoCodigo, "Verificação bem-sucedida!", Snackbar.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, MenuScreen.class);
+                startActivity(intent);
+            } else {
+                Snackbar.make(campoCodigo, "Código incorreto. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+    private void enviarCodigoporEmail(String emailDestino, String codigoVerificacao) {
+        final String username = "buybuy@gmail.com";
+        final String password = "Buybuy@123";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(emailDestino));
+            message.setSubject("Código de Verificação");
+            message.setText("Seu código de verificação é: " + codigoVerificacao);
+
+            new Thread(() -> {
+                try {
+                    Transport.send(message);
+                    Log.d("Email", "E-mail enviado com sucesso");
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                    Log.d("Email", "Falha ao enviar o e-mail");
+                }
+            }).start();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 //---------------------------------------------------------------------------------------------
     private void IniciarComponentes(){
