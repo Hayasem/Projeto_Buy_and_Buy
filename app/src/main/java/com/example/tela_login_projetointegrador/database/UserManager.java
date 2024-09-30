@@ -99,7 +99,13 @@ public class UserManager {
         db.update("USUARIO", values, "logged_in = 1", null);
     }
     public String gerarSalt(){
-        SecureRandom random = new SecureRandom();
+        SecureRandom random;
+        try {
+            random = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            random = new SecureRandom(); // fallback para o padrão
+        }
         byte[] salt = new byte[16];
         random.nextBytes(salt);
         return Base64.getEncoder().encodeToString(salt);

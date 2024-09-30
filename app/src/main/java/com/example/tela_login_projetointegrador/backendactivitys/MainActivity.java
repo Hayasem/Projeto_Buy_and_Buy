@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void enviarCodigoporEmail(String emailDestino, String codigoVerificacao) {
         final String username = "buybuy@gmail.com";
-        final String password = "Buybuy@123";
+        final String password = "ewwg yyfl aemm hitu";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
