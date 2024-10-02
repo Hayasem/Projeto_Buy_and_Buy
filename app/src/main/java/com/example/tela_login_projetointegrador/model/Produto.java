@@ -1,6 +1,13 @@
 package com.example.tela_login_projetointegrador.model;
 
-public class Produto {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
+
+public class Produto implements Serializable {
     int idProduto;
     int idUsuario;
     String titulo;
@@ -95,4 +102,6 @@ public class Produto {
     public void setImagem(String imagem) {
         this.imagem = imagem;
     }
+
+
 }

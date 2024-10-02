@@ -1,7 +1,10 @@
 package com.example.tela_login_projetointegrador.database;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example.tela_login_projetointegrador.model.Pedido;
 import com.example.tela_login_projetointegrador.model.Pedido_itens;
 
 public class PedidosItensManager {
@@ -17,15 +20,25 @@ public class PedidosItensManager {
 
             itens.setIdItensPedidos(cursor.getInt(0));
             itens.setIdPedido(cursor.getInt(1));
-            itens.setData(cursor.getString(2));
             itens.setValorUnit(cursor.getFloat(3));
             itens.setIdProduto(cursor.getInt(4));
             itens.setQuantidade(cursor.getInt(5));
 
             cursor.close();
-            cursor = null;
             return itens;
         }
         return null;
+    }
+
+
+    public void cadastrarItensPedido(Pedido_itens pedidoItens) {
+        ContentValues values = new ContentValues();
+        values.put("idPedido", pedidoItens.getIdPedido());
+        values.put("valorUnit", pedidoItens.getValorUnit());
+        values.put("idProduto", pedidoItens.getIdProduto());
+        values.put("quantidade", pedidoItens.getQuantidade());
+
+        long idItem = db.insert("PEDIDO_ITENS", null, values);
+        System.out.println("itemID: "+idItem);
     }
 }

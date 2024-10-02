@@ -3,7 +3,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Base64;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,30 +13,34 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tela_login_projetointegrador.ProdutosInterface;
 import com.example.tela_login_projetointegrador.R;
+import com.example.tela_login_projetointegrador.fragment.FragmentProdutoDetalhe;
 import com.example.tela_login_projetointegrador.model.Produto;
-
-import org.jetbrains.annotations.NotNull;
+import com.example.tela_login_projetointegrador.utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Objects;
 
 public class ProdutosAdapter extends ArrayAdapter<Produto> {
 
     private Context myContext;
     private int myResource;
     private ProdutosInterface produtosInterface;
+    private final FragmentManager fragmentManager;
 
-    public ProdutosAdapter(Context context, int myResource, List<Produto> produtos, ProdutosInterface produtosInterface){
+    public ProdutosAdapter(Context context, int myResource, List<Produto> produtos, ProdutosInterface produtosInterface, FragmentManager supportFragmentManager){
         super(context,myResource,produtos);
         this.myContext = context;
         this.myResource = myResource;
         this.produtosInterface=produtosInterface;
+        this.fragmentManager = supportFragmentManager;
     }
 
     @NonNull
@@ -59,7 +63,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
         // Verifique se o produto não é nulo antes de acessar suas propriedades
         if (produto != null) {
             // Aqui você pode carregar a imagem a partir do caminho salvo
-            Bitmap bitmap = loadImageFromInternalStorage(produto.getImagem());
+            Bitmap bitmap = Utils.loadImageFromInternalStorage(produto.getImagem());
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
@@ -71,18 +75,25 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
             priceView.setText(String.valueOf(produto.getPreco()));
         }
 
+        itemView.setOnClickListener(v -> {
+            Produto produtos = getItem(position);
+            if (produtos != null) {
+                // Notifique a fragment
+                produtosInterface.onProdutoSelected(produtos);
+            }
+        });
+
         return itemView;
     }
 
-    private Bitmap loadImageFromInternalStorage(String path) {
-        try {
-            File imageFile = new File(path);
-            return BitmapFactory.decodeStream(new FileInputStream(imageFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public void openFragment(Fragment fragment) {
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.fragmentProdutos, fragment);
+//        transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
+//        transaction.commit(); // Confirma a transação
+//    }
+
+
 
 
 }

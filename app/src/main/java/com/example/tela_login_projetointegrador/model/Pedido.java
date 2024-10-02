@@ -3,19 +3,16 @@ package com.example.tela_login_projetointegrador.model;
 public class Pedido {
     int idPedido;
     String data;
-    float valorTotal;
-    int idProduto;
     int idUsuario;
+    String statusPedido;
 
     public Pedido() {
     }
 
-    public Pedido(int idPedido, String data, float valorTotal, int idProduto, int idUsuario) {
-        this.idPedido = idPedido;
+    public Pedido( String data, int idUsuario,String statusPedido) {
         this.data = data;
-        this.valorTotal = valorTotal;
-        this.idProduto = idProduto;
         this.idUsuario = idUsuario;
+        this.statusPedido = statusPedido;
     }
 
     public int getIdPedido() {
@@ -34,27 +31,19 @@ public class Pedido {
         this.data = data;
     }
 
-    public float getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(float valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public int getIdProduto() {
-        return idProduto;
-    }
-
-    public void setIdProduto(int idProduto) {
-        this.idProduto = idProduto;
-    }
-
     public int getIdUsuario() {
         return idUsuario;
     }
 
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public String getStatusPedido() {
+        return statusPedido;
+    }
+
+    public void setStatusPedido(String statusPedido) {
+        this.statusPedido = statusPedido;
     }
 }
