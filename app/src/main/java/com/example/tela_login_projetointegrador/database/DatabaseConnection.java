@@ -28,6 +28,8 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "data_reg NUMERIC," +
                 "salt TEXT," +
                 "logged_in NUMERIC," +
+                "tentativas_login INTEGER DEFAULT 0," +
+                "bloqueado_ate TEXT," +
                 "FOREIGN KEY (idTelefone) REFERENCES TELEFONE(idTelefone))";
         Log.i("test01", "O cliente foi registrado");
 
@@ -48,6 +50,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "pais TEXT," +
                 "cep TEXT," +
                 "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario))";
+
 
         String NOTIFICACAO_TABLE = "CREATE TABLE NOTIFICACAO(" +
                 "idNotificacao INTEGER PRIMARY KEY AUTOINCREMENT," +

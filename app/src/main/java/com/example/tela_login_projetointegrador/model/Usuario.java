@@ -11,8 +11,9 @@ public class Usuario {
     String hash_senha;
     String dataReg;
     String salt;
+    Integer tentativasLogin;
 
-    public Usuario(int idUsuario, int idTelefone, String nome, String cpf, String email, String senha, String cep, String hash_senha, String dataReg, String salt) {
+    public Usuario(int idUsuario, int idTelefone, String nome, String cpf, String email, String senha, String cep, String hash_senha, String dataReg, String salt, Integer tentativasLogin) {
         this.idUsuario = idUsuario;
         this.idTelefone = idTelefone;
         this.nome = nome;
@@ -23,9 +24,18 @@ public class Usuario {
         this.hash_senha = hash_senha;
         this.dataReg = dataReg;
         this.salt = salt;
+        this.tentativasLogin = tentativasLogin;
     }
 
     public Usuario(){
+    }
+
+    public Integer getTentativasLogin() {
+        return tentativasLogin;
+    }
+
+    public void setTentativasLogin(Integer tentativasLogin) {
+        this.tentativasLogin = tentativasLogin;
     }
 
     public int getIdUsuario() {

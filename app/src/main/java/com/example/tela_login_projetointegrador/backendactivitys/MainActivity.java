@@ -30,6 +30,7 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -85,17 +86,35 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.setTextColor(Color.BLACK);
                 snackbar.show();
             }else{
-                boolean loginValido = userManager.compararSenha(email, senha);
-                if (loginValido) {
-                    userManager.setUserLogado(email);
-                    String codigoVerificacao = gerarCodigoVerificacao();
-                    enviarCodigoporEmail(email, codigoVerificacao);
-                    criarJanelaCodigo(codigoVerificacao);
-                }else{
-                    Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
+                if(userManager.estaBloqueado(email)){
+                    Snackbar snackbar = Snackbar.make(view, "Conta bloqueada. Tente novamente mais tarde.", Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.RED);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
+                }else{
+                    boolean loginValido = userManager.compararSenha(email, senha);
+                    if (loginValido) {
+                        userManager.setUserLogado(email);
+                        String codigoVerificacao = gerarCodigoVerificacao();
+                        enviarCodigoporEmail(email, codigoVerificacao);
+                        criarJanelaCodigo(codigoVerificacao);
+                        userManager.resetarTentativas(email);
+                    }else{
+                        userManager.incrementarTentativas(email);
+                        int tentativas = userManager.obterTentativas(email);
+                        Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
+                        snackbar.setBackgroundTint(Color.RED);
+                        snackbar.setTextColor(Color.BLACK);
+                        snackbar.show();
+
+                        if (tentativas >= 3) {
+                            userManager.bloquearConta(email);
+                            snackbar = Snackbar.make(view, "Conta bloqueada após 3 tentativas falhas. Tente novamente em 15 minutos.", Snackbar.LENGTH_SHORT);
+                            snackbar.setBackgroundTint(Color.RED);
+                            snackbar.setTextColor(Color.BLACK);
+                            snackbar.show();
+                        }
+                    }
                 }
             }
         });
@@ -112,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         final EditText campoCodigo = new EditText(MainActivity.this);
         campoCodigo.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(campoCodigo);
-
         builder.setPositiveButton("Verificar", (dialog, which) -> {
             String codigoInserido = campoCodigo.getText().toString();
             if (codigoInserido.equals(codigoCorreto)) {
@@ -149,18 +167,8 @@ public class MainActivity extends AppCompatActivity {
                     InternetAddress.parse(emailDestino));
             message.setSubject("Código de Verificação");
             message.setText("Seu código de verificação é: " + codigoVerificacao);
-
-            new Thread(() -> {
-                try {
-                    Transport.send(message);
-                    Log.d("Email", "E-mail enviado com sucesso");
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                    Log.d("Email", "Falha ao enviar o e-mail");
-                }
-            }).start();
         } catch (MessagingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 //---------------------------------------------------------------------------------------------
