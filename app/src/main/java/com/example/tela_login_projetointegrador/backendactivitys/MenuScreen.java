@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import com.example.tela_login_projetointegrador.ProdutosInterface;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.ProductManager;
+import com.example.tela_login_projetointegrador.fragment.FragmentProdutoDetalhe;
 import com.example.tela_login_projetointegrador.model.Produto;
 
 import java.util.ArrayList;
@@ -57,7 +60,20 @@ public class MenuScreen extends Fragment implements ProdutosInterface {
 
     @Override
     public void getProdutos(List<Produto> produtos) {
-        ProdutosAdapter produtosAdapter = new ProdutosAdapter(getContext(),R.layout.products_itens,produtos,this);
+        ProdutosAdapter produtosAdapter = new ProdutosAdapter(getContext(),R.layout.products_itens,produtos,this,requireActivity().getSupportFragmentManager());
         lvProdutos.setAdapter(produtosAdapter);
+    }
+
+    @Override
+    public void onProdutoSelected(Produto produto) {
+        Fragment produtoDetalheFragment = new FragmentProdutoDetalhe();
+        Bundle args = new Bundle();
+        args.putSerializable("produto", produto);
+        produtoDetalheFragment.setArguments(args);
+
+        FragmentTransaction transaction = requireFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentProdutos, produtoDetalheFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

@@ -68,15 +68,15 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 "valido INTEGER," +
                 "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario))";
 
-        String PRODUTO_TABLE = "CREATE TABLE PRODUTO(" +
-                "idProduto INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "idUsuario INTEGER," +
-                "titulo TEXT," +
-                "descricao TEXT," +
-                "idCategoria INTEGER," +
-                "preco REAL," +
-                "status INTEGER," +
-                "imagem TEXT,"+
+        String PRODUTO_TABLE = "CREATE TABLE PRODUTO (" +
+                "idProduto INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "idUsuario INTEGER, " +
+                "titulo TEXT, " +
+                "descricao TEXT, " +
+                "idCategoria INTEGER, " +
+                "preco REAL, " +
+                "status INTEGER, " +
+                "imagem TEXT, " +
                 "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario))";
 
         String AVALIACAO_TABLE = "CREATE TABLE AVALIACAO(" +
@@ -92,11 +92,9 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         String PEDIDO_TABLE = "CREATE TABLE PEDIDO(" +
                 "idPedido INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "data TEXT," +
-                "valorTotal REAL," +
-                "idProduto INTEGER," +
                 "idUsuario INTEGER," +
-                "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario)," +
-                "FOREIGN KEY (idProduto) REFERENCES PRODUTO(idProduto))";
+                "statusPedido String," +
+                "FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario))";
 
         String CARRINHO_TABLE = "CREATE TABLE CARRINHO(" +
                 "idCarrinho INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -124,7 +122,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         String PEDIDO_ITENS_TABLE = "CREATE TABLE PEDIDO_ITENS(" +
                 "idItensPedidos INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "idPedido INTEGER," +
-                "data TEXT," +
                 "valorUnit REAL," +
                 "idProduto INTEGER," +
                 "quantidade INTEGER," +

@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.example.tela_login_projetointegrador.model.CartProducts;
 
-public class CartProductsManager {
+public class  CartProductsManager {
     SQLiteDatabase db;
 
     public CartProductsManager(SQLiteDatabase db) {

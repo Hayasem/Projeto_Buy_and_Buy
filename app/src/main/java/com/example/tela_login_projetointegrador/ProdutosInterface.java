@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProdutosInterface {
     void getProdutos(List<Produto> produtos);
+
+    void onProdutoSelected(Produto produto);
 }

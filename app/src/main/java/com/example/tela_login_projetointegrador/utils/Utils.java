@@ -1,16 +1,5 @@
 package com.example.tela_login_projetointegrador.utils;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.util.Patterns;
-
-import androidx.core.content.ContextCompat;
-
-import com.example.tela_login_projetointegrador.R;
-import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.regex.Pattern;
-
 public class Utils {
 
 
@@ -19,6 +8,7 @@ public class Utils {
     public static boolean isEmailvalido(String email){
         return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
     public static boolean isCampoVazio(String campo){
         return campo.isEmpty();
     }
@@ -33,12 +23,29 @@ public class Utils {
     }
 
     public static boolean isValidaCelular(String numero) {
-        numero = numero.replace("-","").replace(" ","");
-        numero = numero.replaceAll("\\D", "");
+        numero = numero.replace("-", "").replace(" ", "");
         return numero.matches("\\d{11}");
     }
 
     public static String limparTelefone(String numero) {
-       return numero.replace("-","").replace(" ","");
+        return numero.replace("-", "").replace(" ", "");
+    }
+
+    public static Bitmap loadImageFromInternalStorage(String path) {
+        try {
+            File imageFile = new File(path);
+            return BitmapFactory.decodeStream(new FileInputStream(imageFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+
+        }
+        return null;
+    }
+
+    public static String obterDataHoraAtual() {
+        LocalDateTime agora = LocalDateTime.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return agora.format(formato);
     }
 }
