@@ -3,6 +3,7 @@ package com.example.tela_login_projetointegrador.backendactivitys;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -22,6 +23,7 @@ import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.File;
 import java.util.Properties;
 import java.util.Random;
 
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db =  databaseConnection.getWritableDatabase();
         userManager = new UserManager(db);
         setContentView(R.layout.activity_main);
+
         IniciarComponentes();
         acoesClick();
     }
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 // Métodos da tela de login, para iniciá-la e para realizar o login:
 //---------------------------------------------------------------------------------------------
     private void acoesClick() {
+
+
         text_tela_cadastro.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this,FormCadastro.class);
             startActivity(intent);
@@ -144,32 +149,42 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
         builder.show();
     }
-    private void enviarCodigoporEmail(String emailDestino, String codigoVerificacao) {
-        final String username = "buybuy@gmail.com";
-        final String password = "ewwg yyfl aemm hitu";
+    private void enviarCodigoporEmail(final String emailDestino, final String codigoVerificacao) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                final String username = "barbaraffarias01@gmail.com";
+                final String password = "92356277Ba!";
 
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+                Properties props = new Properties();
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.enable", "true");
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(emailDestino));
-            message.setSubject("Código de Verificação");
-            message.setText("Seu código de verificação é: " + codigoVerificacao);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+                Session session = Session.getInstance(props,
+                        new javax.mail.Authenticator() {
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(username, password);
+                            }
+                        });
+                try {
+                    Message message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(username));
+                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailDestino));
+                    message.setSubject("Código de Verificação");
+                    message.setText("Seu código de verificação é: " + codigoVerificacao);
+
+                    // Enviar a mensagem
+                    Transport.send(message);
+
+                    System.out.println("E-mail enviado com sucesso!");
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
     }
 //---------------------------------------------------------------------------------------------
     private void IniciarComponentes(){

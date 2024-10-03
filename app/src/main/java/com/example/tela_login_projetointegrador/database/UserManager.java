@@ -11,6 +11,7 @@ import com.example.tela_login_projetointegrador.backendactivitys.MainActivity;
 import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -87,6 +88,8 @@ public class UserManager {
 
 //Método para verificar se o email inserido pelo usuário já está cadastrado:
 //----------------------------------------------------------------------------------------------
+
+
     public boolean isEmailCadastrado(String email){
         String query = "SELECT 1 FROM USUARIO WHERE email = ?";
         Cursor cursor = db.rawQuery(query, new String[]{email});
