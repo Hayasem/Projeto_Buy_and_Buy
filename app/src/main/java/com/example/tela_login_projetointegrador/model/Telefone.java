@@ -5,7 +5,7 @@ public class Telefone {
     String numero;
     long idUsuario;
 
-    public Telefone( String numero, long idUsuario) {
+    public Telefone(String numero, String idUsuario) {
         this.numero = numero;
         this.idUsuario = idUsuario;
     }

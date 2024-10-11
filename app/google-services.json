@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "645117218420",
-    "project_id": "pitelalogin",
-    "storage_bucket": "pitelalogin.appspot.com"
+    "project_number": "305989874011",
+    "project_id": "buy-and-buy-atualizado",
+    "storage_bucket": "buy-and-buy-atualizado.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:645117218420:android:0a7ed7355d8070f4490b21",
+        "mobilesdk_app_id": "1:305989874011:android:bf99fbc5ba204987112a7e",
         "android_client_info": {
           "package_name": "com.example.tela_login_projetointegrador"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAO4pOomKI_oTyLhEAzS1n8oqQvyog_XKQ"
+          "current_key": "AIzaSyDn_-ZHfEG268B8E5lCLhu3znW7ymW6L2M"
         }
       ],
       "services": {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -31,16 +32,20 @@ import com.example.tela_login_projetointegrador.model.Usuario;
 import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 
 //Classe e objetos que serão utilizados para realização do cadastro:
 //--------------------------------------------------------------------------------------------------
 public class FormCadastro extends AppCompatActivity {
-    private AppCompatActivity binding;
     private EditText edit_nome, editemail, edit_senha, edit_cep, edit_cpf, edit_numero;
     private TextInputLayout helper_text, layout_nome, layout_contato, layout_email, layout_cep, layout_cpf;
     private Button bt_cadastrar;
-    private DatabaseConnection db;
     private UserManager userManager;
     private TelefoneManager telefoneManager;
     String[] mensagens = {"Preencha todos os campos!", "Cadastro realizado com sucesso!"};
@@ -57,11 +62,7 @@ public class FormCadastro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(com.example.tela_login_projetointegrador.R.layout.activity_form_cadastro);
         iniciarComponentes();
-
-        DatabaseConnection databaseConnection = new DatabaseConnection(this);
-        SQLiteDatabase db = databaseConnection.getWritableDatabase();
-        userManager = new UserManager(db);
-        telefoneManager = new TelefoneManager(db);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         acoesClick();
 
     }
@@ -84,7 +85,7 @@ public class FormCadastro extends AppCompatActivity {
                     Utils.isCampoVazio(senha) ||
                     Utils.isCampoVazio(cpf) ||
                     Utils.isCampoVazio(cep) ||
-                    Utils.isCampoVazio(numero)){
+                    Utils.isCampoVazio(numero)) {
                 exibirSnackbar(mensagens[0], view);
                 return;
             }
@@ -94,66 +95,67 @@ public class FormCadastro extends AppCompatActivity {
                 return;
             }
 
-            if(!Utils.isCepValido(cep)) {
+            if (!Utils.isCepValido(cep)) {
                 exibirSnackbar("CEP inválido! Formato esperado: XXXXX-XXX", view);
                 return;
             }
 
-            if(!Utils.isValidaCelular(numero)) {
+            if (!Utils.isValidaCelular(numero)) {
                 exibirSnackbar("Número de celular inválido! Formato esperado: (XX) XXXXX-XXXX", view);
                 return;
             }
-            if (!Utils.isEmailvalido(email)){
+            if (!Utils.isEmailvalido(email)) {
                 exibirSnackbar("Endereço de email inválido", view);
                 return;
             }
 //--------------------------------------------------------------------------------------------------
 //Condicional que verifica se o email inserido pelo usuário já existe no Banco de Dados:
-            if (userManager.isEmailCadastrado(email)){
-                exibirSnackbar("Esse email já foi cadastrado!", view);
-                return;
-            }
-//--------------------------------------------------------------------------------------------------
-//Instancia de um novo usuário:
-            Usuario usuario = new Usuario();
-            usuario.setNome(nome);
-            usuario.setEmail(email);
-            usuario.setSenha(senha);
-            usuario.setCpf(cpf);
-            usuario.setCep(cep);
-//--------------------------------------------------------------------------------------------------
+            userManager.isEmailCadastrado(email, new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        exibirSnackbar("Esse email já existe!", view);
+                    } else {
+                        //Instancia de um novo usuário:
+                        Usuario usuario = new Usuario();
+                        usuario.setNome(nome);
+                        usuario.setEmail(email);
+                        usuario.setSenha(senha);
+                        usuario.setCpf(cpf);
+                        usuario.setCep(cep);
 
-            long usuarioId = userManager.cadastrarUsuario(usuario);
-            if (usuarioId != -1){
-                Log.i("Cadastro do usuario realizado com sucesso!", "O usuário foi cadastrado!");
-                Telefone telefone = new Telefone(Utils.limparTelefone(numero),usuarioId);
-                long result = telefoneManager.cadastrarTelefone(telefone);
-                if (result  != -1){
-                    Log.i("Cadastro do telefone realizado com sucesso!", "O telefone foi cadastrado!");
-                }else{
-                    Log.i("Erro ao salvar telefone", "Erro ao salvar telefone");
+                        userManager.cadastrarUsuario(usuario, task -> {
+                            if (task.isSuccessful()) {
+                                Log.i("Cadastro", "Usuário cadastrado com sucesso!");
+                                Telefone telefone = new Telefone(Utils.limparTelefone(numero), usuario.getIdUsuario());
+                                long result = telefoneManager.cadastrarTelefone(telefone);
+                                if (result != -1) {
+                                    Log.i("Cadastro", "Telefone cadastrado com sucesso!");
+                                } else {
+                                    Log.e("Erro", "Erro ao salvar telefone");
+                                }
+                                exibirSnackbar(mensagens[1], view);
+                                // Redirecionar para MainActivity
+                                new Handler().postDelayed(() -> {
+                                    Intent intent = new Intent(FormCadastro.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }, 1000);
+                            } else {
+                                // Cadastro falhou
+                                Log.e("Erro", "Erro ao cadastrar usuário: " + Objects.requireNonNull(task.getException()).getMessage());
+                                exibirSnackbar("Erro ao cadastrar usuário: " + task.getException().getMessage(), view);
+                            }
+                        });
+                    }
                 }
-            }
-            boolean autenticado = userManager.compararSenha(email, senha);
-            if (autenticado){
-                Snackbar snackbar = Snackbar.make(view, mensagens[1], Snackbar.LENGTH_SHORT);
-                snackbar.setBackgroundTint(Color.GREEN);
-                snackbar.setTextColor(Color.BLACK);
-                snackbar.show();
-                Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                    Intent intent = new Intent(FormCadastro.this,MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }, 1000);
 
-            }else{
-                Snackbar snackbar = Snackbar.make(view, "Autenticação falhou. Verifique suas credenciais.", Snackbar.LENGTH_SHORT);
-                snackbar.setBackgroundTint(Color.RED);
-                snackbar.setTextColor(Color.BLACK);
-                snackbar.show();
-            }
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Erro", "Erro ao consultar email: " + error.getMessage());
+                    exibirSnackbar("Erro ao verificar email: " + error.getMessage(), view);
+                }
+            });
         });
     }
 
@@ -187,7 +189,6 @@ public class FormCadastro extends AppCompatActivity {
         edit_numero = findViewById(R.id.input_edit_telefone);
         bt_cadastrar = findViewById(R.id.bt_cadastrar);
         helper_text = findViewById(R.id.input_layout_senha);
-        db = new DatabaseConnection(this);
         edit_nome.addTextChangedListener(new NomeTextWatcher(layout_nome));
         edit_numero.addTextChangedListener(new TelefoneTextWatcher(layout_contato));
         edit_cpf.addTextChangedListener(new CpfTextWatcher(layout_cpf));

@@ -1,15 +1,10 @@
 package com.example.tela_login_projetointegrador.database;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.content.ContentValues;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.example.tela_login_projetointegrador.backendactivitys.MainActivity;
-import com.example.tela_login_projetointegrador.model.Telefone;
 import com.example.tela_login_projetointegrador.model.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -21,83 +16,43 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class UserManager {
-    private final SQLiteDatabase db;
+    private DatabaseReference firebaseDatabase;
 
-    public UserManager(SQLiteDatabase db) {
-        this.db = db;
+    public UserManager(DatabaseReference firebaseDatabase) {
+        this.firebaseDatabase = firebaseDatabase;
     }
 
+    public void cadastrarUsuario(Usuario usuario, OnCompleteListener<Void> listener){
+        String idUsuario = firebaseDatabase.child("usuarios").push().getKey();
+        usuario.setIdUsuario(idUsuario);
 
-    public long cadastrarUsuario(Usuario usuario){
-        String salt = gerarSalt();
-        String hashSenha = gerarHashSenha(usuario.getSenha(), salt);
-        ContentValues values = new ContentValues();
-        values.put("nome", usuario.getNome());
-        values.put("cpf", usuario.getCpf());
-        values.put("email", usuario.getEmail());
-        values.put("senha", usuario.getSenha());
-        values.put("cep", usuario.getCep());
-        values.put("data_reg", getDataAtual());
-        values.put("hash_senha", hashSenha);
-        values.put("salt", salt);
-        return db.insert("USUARIO", null, values);
+        assert idUsuario != null;
+        firebaseDatabase.child("usuarios").child(idUsuario).setValue(usuario).addOnCompleteListener(listener);
     }
-    public Usuario consultarUsuario(int idUsuario){
-        Cursor cursor = db.rawQuery("SELECT * FROM USUARIO WHERE idUsuario = ?",
-                new String[]{String.valueOf(idUsuario)});
-        if (cursor.moveToFirst()){
-
-            Usuario usuarios = new Usuario();
-            usuarios.setIdUsuario(cursor.getInt(0));
-            usuarios.setIdTelefone(cursor.getInt(1));
-            usuarios.setNome(cursor.getString(2));
-            usuarios.setCpf(cursor.getString(3));
-            usuarios.setEmail(cursor.getString(4));
-            usuarios.setSenha(cursor.getString(5));
-            usuarios.setCep(cursor.getString(6));
-            usuarios.setHash_senha(cursor.getString(7));         
-            usuarios.setDataReg(cursor.getString(8));
-            usuarios.setSalt(cursor.getString(9));
-
-            cursor.close();
-            cursor = null;
-
-            return usuarios;
-        }
-        return null;
+    public void consultarUsuario(String idUsuario, ValueEventListener listener) {
+        firebaseDatabase.child("usuarios").child(idUsuario).addListenerForSingleValueEvent(listener);
     }
 
 // Método para salvar o email e senha no Banco de Dados:
 //---------------------------------------------------------------------------------------------
-    public boolean compararSenha(String email, String senha){
-        Cursor cursor = db.rawQuery("SELECT hash_senha, salt FROM USUARIO WHERE email = ?",
-                new String[]{email});
-        if (cursor.moveToFirst()){
-            String hashArmazenado = cursor.getString(cursor.getColumnIndexOrThrow("hash_senha"));
-            String salt = cursor.getString(cursor.getColumnIndexOrThrow("salt"));
-            String hashSenhaDigitada = gerarHashSenha(senha, salt);
-
-            cursor.close();
-            return hashArmazenado.equals(hashSenhaDigitada);
+        public void compararSenha(String email, String senha, ValueEventListener listener){
+            firebaseDatabase.child("usuarios").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(listener);
         }
+//Método para verificar se o email inserido pelo usuário já está cadastrado:
+//----------------------------------------------------------------------------------------------
+    public boolean isEmailCadastrado(String email, ValueEventListener listener) {
+        firebaseDatabase.child("usuarios").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(listener);
         return false;
     }
 
-//Método para verificar se o email inserido pelo usuário já está cadastrado:
-//----------------------------------------------------------------------------------------------
-    public boolean isEmailCadastrado(String email){
-        String query = "SELECT 1 FROM USUARIO WHERE email = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{email});
-        boolean emailExiste = cursor.moveToFirst();
-        cursor.close();
-        return emailExiste;
-    }
 //---------------------------------------------------------------------------------------------
-    public void deslogarUsuario(){
-        ContentValues values = new ContentValues();
-        values.put("logged_in", 0);
-        db.update("USUARIO", values, "logged_in = 1", null);
+//Método para deslogar o usuário
+    public void deslogarUsuario() {
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    if (firebaseAuth.getCurrentUser() != null){
+        firebaseAuth.signOut();
     }
+}
     public String gerarSalt(){
         SecureRandom random;
         try {
@@ -128,11 +83,5 @@ public class UserManager {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         return dateFormat.format(calendar.getTime());
-    }
-
-    public void setUserLogado(String email) {
-        ContentValues values = new ContentValues();
-        values.put("logged_in", 1);
-        db.update("USUARIO", values, "email = ?", new String[]{email});
     }
 }
