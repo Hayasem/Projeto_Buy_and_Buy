@@ -25,7 +25,16 @@ public class Usuario {
         this.salt = salt;
     }
 
-    public Usuario(){
+    public Usuario(String idUsuario, String nome, String cpf, String email, String senha, String cep,
+                   String hash_senha, String dataReg) {
+        this.idUsuario = idUsuario;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
+        this.cep = cep;
+        this.hash_senha = hash_senha;
+        this.dataReg = dataReg;
     }
 
     public String getIdUsuario() {

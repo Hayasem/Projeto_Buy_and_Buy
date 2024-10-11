@@ -1,11 +1,9 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +22,6 @@ import com.example.tela_login_projetointegrador.Format.NomeTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.Format.TelefoneTextWatcher;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.TelefoneManager;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.model.Telefone;
@@ -34,6 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -47,6 +45,8 @@ public class FormCadastro extends AppCompatActivity {
     private TextInputLayout helper_text, layout_nome, layout_contato, layout_email, layout_cep, layout_cpf;
     private Button bt_cadastrar;
     private UserManager userManager;
+    private DatabaseReference userRef;
+    private DatabaseReference telefoneRef;
     private TelefoneManager telefoneManager;
     String[] mensagens = {"Preencha todos os campos!", "Cadastro realizado com sucesso!"};
 
@@ -62,7 +62,10 @@ public class FormCadastro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(com.example.tela_login_projetointegrador.R.layout.activity_form_cadastro);
         iniciarComponentes();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = firebaseDatabase.getReference("usuarios");
+        telefoneRef = firebaseDatabase.getReference("telefones");
+
         acoesClick();
 
     }
@@ -77,6 +80,7 @@ public class FormCadastro extends AppCompatActivity {
             String cpf = edit_cpf.getText().toString();
             String cep = edit_cep.getText().toString();
             String numero = edit_numero.getText().toString();
+
 
 //--------------------------------------------------------------------------------------------------
 // Condicional que trabalhará realizando determinadas validações das informações inseridas:
@@ -110,42 +114,27 @@ public class FormCadastro extends AppCompatActivity {
             }
 //--------------------------------------------------------------------------------------------------
 //Condicional que verifica se o email inserido pelo usuário já existe no Banco de Dados:
-            userManager.isEmailCadastrado(email, new ValueEventListener() {
+            userRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         exibirSnackbar("Esse email já existe!", view);
                     } else {
-                        //Instancia de um novo usuário:
-                        Usuario usuario = new Usuario();
-                        usuario.setNome(nome);
-                        usuario.setEmail(email);
-                        usuario.setSenha(senha);
-                        usuario.setCpf(cpf);
-                        usuario.setCep(cep);
+                        UserManager userManager = new UserManager(userRef);
+                        String salt = userManager.gerarSalt();
+                        String hashSenha = userManager.gerarHashSenha(senha, salt);
+                        String dataRegistro = userManager.getDataAtual();
+                        String userId = userRef.push().getKey();  // Gera uma chave única
+                        Usuario usuario = new Usuario(userId, nome, cpf, email, senha, cep, hashSenha, dataRegistro);
 
-                        userManager.cadastrarUsuario(usuario, task -> {
+                        assert userId != null;
+                        userRef.child(userId).setValue(usuario).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Log.i("Cadastro", "Usuário cadastrado com sucesso!");
-                                Telefone telefone = new Telefone(Utils.limparTelefone(numero), usuario.getIdUsuario());
-                                long result = telefoneManager.cadastrarTelefone(telefone);
-                                if (result != -1) {
-                                    Log.i("Cadastro", "Telefone cadastrado com sucesso!");
+                                exibirSnackbar("Cadastro efetuado com sucesso!", view);
+                                salvarTelefone(userId, numero, view);
                                 } else {
-                                    Log.e("Erro", "Erro ao salvar telefone");
+                                exibirSnackbar("Erro ao cadastrar usuário!" + task.getException().getMessage(), view);
                                 }
-                                exibirSnackbar(mensagens[1], view);
-                                // Redirecionar para MainActivity
-                                new Handler().postDelayed(() -> {
-                                    Intent intent = new Intent(FormCadastro.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }, 1000);
-                            } else {
-                                // Cadastro falhou
-                                Log.e("Erro", "Erro ao cadastrar usuário: " + Objects.requireNonNull(task.getException()).getMessage());
-                                exibirSnackbar("Erro ao cadastrar usuário: " + task.getException().getMessage(), view);
-                            }
                         });
                     }
                 }
@@ -172,6 +161,26 @@ public class FormCadastro extends AppCompatActivity {
         transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
         transaction.commit(); // Confirma a transação
     }
+    private void salvarTelefone(String userId, String numero, View view) {
+        String telefoneId = telefoneRef.push().getKey();  // Gera uma chave única para o telefone
+        Telefone telefone = new Telefone(telefoneId, Utils.limparTelefone(numero), userId);
+
+        assert telefoneId != null;
+        telefoneRef.child(telefoneId).setValue(telefone).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                exibirSnackbar("Telefone cadastrado com sucesso!", view);
+                // Redireciona para a tela principal após o cadastro
+                new Handler().postDelayed(() -> {
+                    Intent intent = new Intent(FormCadastro.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }, 1000);
+            } else {
+                exibirSnackbar("Erro ao cadastrar telefone: " + Objects.requireNonNull(task.getException()).getMessage(), view);
+            }
+        });
+    }
+
 
     //Recuperando pelo id:
     private void iniciarComponentes(){

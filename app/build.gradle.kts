@@ -1,7 +1,11 @@
+import com.android.build.gradle.internal.packaging.defaultExcludes
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
 }
+
+
 
 android {
     namespace = "com.example.tela_login_projetointegrador"
@@ -19,6 +23,14 @@ android {
     packaging{
         resources.excludes.add("META-INF/NOTICE.md")
         resources.excludes.add("META-INF/LICENSE.md")
+        resources.excludes.add("META-INF/DEPENDENCIES")
+        resources.excludes.add("META-INF/LICENSE")
+        resources.excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/license.txt")
+        resources.excludes.add("META-INF/NOTICE")
+        resources.excludes.add("META-INF/NOTICE.txt")
+        resources.excludes.add("META-INF/notice.txt")
+        resources.excludes.add("META-INF/ASL2.0")
     }
 
     buildTypes {
@@ -35,10 +47,7 @@ android {
 
 dependencies {
 
-    implementation("com.twilio.sdk:twilio:8.29.0")
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.sun.mail:android-mail:1.6.7")
-    implementation("com.sun.mail:android-activation:1.6.7")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("org.postgresql:postgresql:42.2.24")
     implementation("com.google.android.material:material:1.12.0")
@@ -54,4 +63,5 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation ("com.google.firebase:firebase-database:21.0.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+
 }

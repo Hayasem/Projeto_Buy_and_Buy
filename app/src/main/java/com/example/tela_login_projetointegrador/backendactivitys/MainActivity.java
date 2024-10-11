@@ -17,28 +17,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 //Classe Principal, e objetos da classe:
 //--------------------------------------------------------------------------------------------
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth auth;
     private TextView text_tela_cadastro;
     private TextInputLayout layout_email, layout_senha;
     private EditText edit_email;
@@ -60,9 +51,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        DatabaseConnection databaseConnection = new DatabaseConnection(this);
-        SQLiteDatabase db =  databaseConnection.getWritableDatabase();
-        userManager = new UserManager(db);
+        auth = FirebaseAuth.getInstance();
+
         setContentView(R.layout.activity_main);
         IniciarComponentes();
         acoesClick();
@@ -87,18 +77,25 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.setBackgroundTint(Color.RED);
                 snackbar.setTextColor(Color.BLACK);
                 snackbar.show();
-            }else{
-                boolean loginValido = userManager.compararSenha(email, senha);
-                if (loginValido) {
-                    userManager.setUserLogado(email);
-                    String codigoVerificacao = gerarCodigoVerificacao();
-                    criarJanelaCodigo(codigoVerificacao);
-                }else{
-                    Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.RED);
-                    snackbar.setTextColor(Color.BLACK);
-                    snackbar.show();
-                }
+            }else {
+                auth.signInWithEmailAndPassword(email, senha).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            if (user.isEmailVerified()){
+                                String codigoVerificacao = gerarCodigoVerificacao();
+                                criarJanelaCodigo(codigoVerificacao);
+                            }else{
+                                enviarEmailVerificacao(user);
+                            }
+                        }
+                    }else{
+                        Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
+                        snackbar.setBackgroundTint(Color.RED);
+                        snackbar.setTextColor(Color.BLACK);
+                        snackbar.show();
+                    }
+                });
             }
         });
     }
@@ -128,43 +125,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
         builder.show();
     }
-    private void enviarCodigoporEmail(String emailDestino, String codigoVerificacao) {
-        final String emailRemetente = "buyandbuystoreoficial@gmail.com";
-        final String password = "ewwg yyfl aemm hitu";
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication(){
-                return new PasswordAuthentication(emailRemetente, password);
+    private void enviarEmailVerificacao(FirebaseUser user) {
+        user.sendEmailVerification().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Snackbar.make(bt_entrar, "E-mail de verificação enviado. Verifique sua caixa de entrada.", Snackbar.LENGTH_LONG).show();
+            }else{
+                Snackbar.make(bt_entrar, "Falha ao enviar o e-mail de verificação.", Snackbar.LENGTH_LONG).show();
             }
-                });
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(emailRemetente,"Buy&Buy Store"));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(emailDestino));
-            message.setSubject("Código de Verificação");
-            message.setText("Seu código de verificação é: " + codigoVerificacao);
-
-            new Thread(() -> {
-                try {
-                    Transport.send(message);
-                    Log.d("Email", "E-mail enviado com sucesso");
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                    Log.d("Email", "Falha ao enviar o e-mail");
-                }
-            }).start();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 //---------------------------------------------------------------------------------------------
     private void IniciarComponentes(){

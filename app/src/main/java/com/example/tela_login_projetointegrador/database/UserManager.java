@@ -40,9 +40,8 @@ public class UserManager {
         }
 //Método para verificar se o email inserido pelo usuário já está cadastrado:
 //----------------------------------------------------------------------------------------------
-    public boolean isEmailCadastrado(String email, ValueEventListener listener) {
+    public void isEmailCadastrado(String email, ValueEventListener listener) {
         firebaseDatabase.child("usuarios").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(listener);
-        return false;
     }
 
 //---------------------------------------------------------------------------------------------
@@ -65,7 +64,7 @@ public class UserManager {
         random.nextBytes(salt);
         return Base64.getEncoder().encodeToString(salt);
     }
-    private String gerarHashSenha(String senha, String salt){
+    public String gerarHashSenha(String senha, String salt){
         try{
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest((senha + salt).getBytes(StandardCharsets.UTF_8));
@@ -79,7 +78,7 @@ public class UserManager {
             return null;
         }
     }
-    private String getDataAtual(){
+    public String getDataAtual(){
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         return dateFormat.format(calendar.getTime());

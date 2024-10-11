@@ -1,23 +1,20 @@
 package com.example.tela_login_projetointegrador.model;
 
 public class Telefone {
-    int idTelefone;
+    String idTelefone;
     String numero;
-    long idUsuario;
+    String idUsuario;
 
-    public Telefone(String numero, String idUsuario) {
+    public Telefone(String numero, String idUsuario, String userId) {
         this.numero = numero;
         this.idUsuario = idUsuario;
     }
 
-    public Telefone() {
-    }
-
-    public int getIdTelefone() {
+    public String getIdTelefone() {
         return idTelefone;
     }
 
-    public void setIdTelefone(int idTelefone) {
+    public void setIdTelefone(String idTelefone) {
         this.idTelefone = idTelefone;
     }
 
@@ -29,11 +26,11 @@ public class Telefone {
         this.numero = numero;
     }
 
-    public long getIdUsuario() {
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 }

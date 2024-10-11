@@ -28,14 +28,23 @@ import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.fragment.FragmentCadastrarProdutos;
 import com.example.tela_login_projetointegrador.model.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 public class TelaPerfilUsuario extends Fragment {
    private TextView nomeUsuario, emailUsuario, meusProdutos;
    private ImageView viewProducts;
    private Button bt_deslogar;
-    private DatabaseConnection db;
-   private UserManager userManager;
-   int idUsuario;
+   private FirebaseAuth auth;
+   private DatabaseReference usuariosRef;
+   String idUsuario;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,15 +55,14 @@ public class TelaPerfilUsuario extends Fragment {
         bt_deslogar = view.findViewById(R.id.bt_deslogar);
         meusProdutos = view.findViewById(R.id.txt_meus_produtos);
         viewProducts = view.findViewById(R.id.imgbtn_products);
-
-        DatabaseConnection databaseConnection = new DatabaseConnection(requireContext());
-        SQLiteDatabase db = databaseConnection.getReadableDatabase();
-        userManager = new UserManager(db);
+        auth = FirebaseAuth.getInstance();
+        usuariosRef = FirebaseDatabase.getInstance().getReference("usuarios");
 
         bt_deslogar.setOnClickListener(view1 -> {
-            userManager.deslogarUsuario();
+            auth.signOut();
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
+            requireActivity().finish();
         });
         viewProducts.setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
@@ -77,12 +85,28 @@ public class TelaPerfilUsuario extends Fragment {
     public void onStart() {
         super.onStart();
 
-        Usuario usuarioAtual = userManager.consultarUsuario(idUsuario);
-        if (usuarioAtual != null){
-            nomeUsuario.setText(usuarioAtual.getNome());
-            emailUsuario.setText(usuarioAtual.getEmail());
-        }else{
-            DialogUtils.showMessage(requireContext(), "Este usuário não está registrado!");
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null){
+            String userId = currentUser.getUid();
+            usuariosRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String nome = dataSnapshot.child("nome").getValue(String.class);
+                        String email = currentUser.getEmail();
+                        nomeUsuario.setText(nome);
+                        emailUsuario.setText(email);
+                    } else {
+                        DialogUtils.showMessage(requireContext(), "Este usuário não está registrado!");
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    DialogUtils.showMessage(requireContext(), "Erro ao carregar dados do usuário.");
+                }
+            });
+        } else {
+            DialogUtils.showMessage(requireContext(), "Usuário não autenticado.");
         }
     }
 }
