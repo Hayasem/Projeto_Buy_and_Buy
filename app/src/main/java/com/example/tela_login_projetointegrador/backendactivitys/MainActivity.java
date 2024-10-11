@@ -17,26 +17,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.UserManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Properties;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 //Classe Principal, e objetos da classe:
 //--------------------------------------------------------------------------------------------
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth auth;
     private TextView text_tela_cadastro;
     private TextInputLayout layout_email, layout_senha;
     private EditText edit_email;
@@ -57,10 +50,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        auth = FirebaseAuth.getInstance();
 
-        DatabaseConnection databaseConnection = new DatabaseConnection(this);
-        SQLiteDatabase db =  databaseConnection.getWritableDatabase();
-        userManager = new UserManager(db);
         setContentView(R.layout.activity_main);
         IniciarComponentes();
         acoesClick();
@@ -85,37 +77,25 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.setBackgroundTint(Color.RED);
                 snackbar.setTextColor(Color.BLACK);
                 snackbar.show();
-            }else{
-                if(userManager.estaBloqueado(email)){
-                    Snackbar snackbar = Snackbar.make(view, "Conta bloqueada. Tente novamente mais tarde.", Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.RED);
-                    snackbar.setTextColor(Color.BLACK);
-                    snackbar.show();
-                }else{
-                    boolean loginValido = userManager.compararSenha(email, senha);
-                    if (loginValido) {
-                        userManager.setUserLogado(email);
-                        String codigoVerificacao = gerarCodigoVerificacao();
-                        enviarCodigoporEmail(email, codigoVerificacao);
-                        criarJanelaCodigo(codigoVerificacao);
-                        userManager.resetarTentativas(email);
+            }else {
+                auth.signInWithEmailAndPassword(email, senha).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            if (user.isEmailVerified()){
+                                String codigoVerificacao = gerarCodigoVerificacao();
+                                criarJanelaCodigo(codigoVerificacao);
+                            }else{
+                                enviarEmailVerificacao(user);
+                            }
+                        }
                     }else{
-                        userManager.incrementarTentativas(email);
-                        int tentativas = userManager.obterTentativas(email);
                         Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
                         snackbar.setBackgroundTint(Color.RED);
                         snackbar.setTextColor(Color.BLACK);
                         snackbar.show();
-
-                        if (tentativas >= 3) {
-                            userManager.bloquearConta(email);
-                            snackbar = Snackbar.make(view, "Conta bloqueada após 3 tentativas falhas. Tente novamente em 15 minutos.", Snackbar.LENGTH_SHORT);
-                            snackbar.setBackgroundTint(Color.RED);
-                            snackbar.setTextColor(Color.BLACK);
-                            snackbar.show();
-                        }
                     }
-                }
+                });
             }
         });
     }
@@ -131,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText campoCodigo = new EditText(MainActivity.this);
         campoCodigo.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(campoCodigo);
+
         builder.setPositiveButton("Verificar", (dialog, which) -> {
             String codigoInserido = campoCodigo.getText().toString();
             if (codigoInserido.equals(codigoCorreto)) {
@@ -144,32 +125,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
         builder.show();
     }
-    private void enviarCodigoporEmail(String emailDestino, String codigoVerificacao) {
-        final String username = "buybuy@gmail.com";
-        final String password = "ewwg yyfl aemm hitu";
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(emailDestino));
-            message.setSubject("Código de Verificação");
-            message.setText("Seu código de verificação é: " + codigoVerificacao);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+    private void enviarEmailVerificacao(FirebaseUser user) {
+        user.sendEmailVerification().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Snackbar.make(bt_entrar, "E-mail de verificação enviado. Verifique sua caixa de entrada.", Snackbar.LENGTH_LONG).show();
+            }else{
+                Snackbar.make(bt_entrar, "Falha ao enviar o e-mail de verificação.", Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 //---------------------------------------------------------------------------------------------
     private void IniciarComponentes(){

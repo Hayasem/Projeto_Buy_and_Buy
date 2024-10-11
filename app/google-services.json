@@ -1,26 +1,45 @@
 {
   "project_info": {
-    "project_number": "645117218420",
-    "project_id": "pitelalogin",
-    "storage_bucket": "pitelalogin.appspot.com"
+    "project_number": "305989874011",
+    "firebase_url": "https://buy-and-buy-atualizado-default-rtdb.firebaseio.com",
+    "project_id": "buy-and-buy-atualizado",
+    "storage_bucket": "buy-and-buy-atualizado.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:645117218420:android:0a7ed7355d8070f4490b21",
+        "mobilesdk_app_id": "1:305989874011:android:bf99fbc5ba204987112a7e",
         "android_client_info": {
           "package_name": "com.example.tela_login_projetointegrador"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "305989874011-grd8u92bmm4djftks9j07udnvvf9s5jg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tela_login_projetointegrador",
+            "certificate_hash": "db19ebea4decb521de597b55dde74437909ec282"
+          }
+        },
+        {
+          "client_id": "305989874011-5ba0t3mcodb3eqcdln1eit23enb70fda.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAO4pOomKI_oTyLhEAzS1n8oqQvyog_XKQ"
+          "current_key": "AIzaSyDn_-ZHfEG268B8E5lCLhu3znW7ymW6L2M"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305989874011-5ba0t3mcodb3eqcdln1eit23enb70fda.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

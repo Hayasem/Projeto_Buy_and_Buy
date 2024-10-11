@@ -1,8 +1,8 @@
 package com.example.tela_login_projetointegrador.model;
 
 public class Usuario {
-    int idUsuario;
-    int idTelefone;
+    private String idUsuario;
+    private String idTelefone;
     String nome;
     String cpf;
     String email;
@@ -11,9 +11,8 @@ public class Usuario {
     String hash_senha;
     String dataReg;
     String salt;
-    Integer tentativasLogin;
 
-    public Usuario(int idUsuario, int idTelefone, String nome, String cpf, String email, String senha, String cep, String hash_senha, String dataReg, String salt, Integer tentativasLogin) {
+    public Usuario(String idUsuario, String idTelefone, String nome, String cpf, String email, String senha, String cep, String hash_senha, String dataReg, String salt) {
         this.idUsuario = idUsuario;
         this.idTelefone = idTelefone;
         this.nome = nome;
@@ -24,33 +23,33 @@ public class Usuario {
         this.hash_senha = hash_senha;
         this.dataReg = dataReg;
         this.salt = salt;
-        this.tentativasLogin = tentativasLogin;
     }
 
-    public Usuario(){
+    public Usuario(String idUsuario, String nome, String cpf, String email, String senha, String cep,
+                   String hash_senha, String dataReg) {
+        this.idUsuario = idUsuario;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
+        this.cep = cep;
+        this.hash_senha = hash_senha;
+        this.dataReg = dataReg;
     }
 
-    public Integer getTentativasLogin() {
-        return tentativasLogin;
-    }
-
-    public void setTentativasLogin(Integer tentativasLogin) {
-        this.tentativasLogin = tentativasLogin;
-    }
-
-    public int getIdUsuario() {
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    public int getIdTelefone() {
+    public String getIdTelefone() {
         return idTelefone;
     }
 
-    public void setIdTelefone(int idTelefone) {
+    public void setIdTelefone(String idTelefone) {
         this.idTelefone = idTelefone;
     }
 
