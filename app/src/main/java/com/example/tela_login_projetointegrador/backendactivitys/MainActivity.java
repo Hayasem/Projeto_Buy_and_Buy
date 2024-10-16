@@ -105,7 +105,20 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }else{
 
-                           tratarException(task,null);
+                            Exception exception = task.getException();
+                            if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+                                Log.e("LoginError", "Credenciais inválidas", exception);
+                                Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT).show();
+                            } else if (exception instanceof FirebaseAuthInvalidUserException) {
+                                Log.e("LoginError", "Usuário não encontrado ou desativado", exception);
+                                Snackbar.make(view, "Usuário não encontrado ou desativado.", Snackbar.LENGTH_SHORT).show();
+                            } else if (exception instanceof FirebaseAuthEmailException) {
+                                Log.e("LoginError", "Erro relacionado ao e-mail", exception);
+                                Snackbar.make(view, "Erro ao enviar email de verificação. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+                            } else {
+                                Log.e("LoginError", "Erro no login", exception);
+                                Snackbar.make(view, "Erro inesperado. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }catch (Exception e){
@@ -117,22 +130,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void tratarException(Task<AuthResult> task, View view) {
-        Exception exception = task.getException();
-        if (exception instanceof FirebaseAuthInvalidCredentialsException) {
-            Log.e("LoginError", "Credenciais inválidas", exception);
-            Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT).show();
-        } else if (exception instanceof FirebaseAuthInvalidUserException) {
-            Log.e("LoginError", "Usuário não encontrado ou desativado", exception);
-            Snackbar.make(view, "Usuário não encontrado ou desativado.", Snackbar.LENGTH_SHORT).show();
-        } else if (exception instanceof FirebaseAuthEmailException) {
-            Log.e("LoginError", "Erro relacionado ao e-mail", exception);
-            Snackbar.make(view, "Erro ao enviar email de verificação. Tente novamente.", Snackbar.LENGTH_SHORT).show();
-        } else {
-            Log.e("LoginError", "Erro no login", exception);
-            Snackbar.make(view, "Erro inesperado. Tente novamente.", Snackbar.LENGTH_SHORT).show();
-        }
-    }
 
     private void navegaHome() {
         Intent intent = new Intent(MainActivity.this,SecondActivity.class);
