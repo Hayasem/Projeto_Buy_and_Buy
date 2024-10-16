@@ -51,4 +51,22 @@ public class Utils {
     public static String limparTelefone(String numero) {
        return numero.replace("-","").replace(" ","");
     }
+
+    public static Bitmap loadImageFromInternalStorage(String path) {
+        try {
+            File imageFile = new File(path);
+            return BitmapFactory.decodeStream(new FileInputStream(imageFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+
+        }
+        return null;
+    }
+
+    public static String obterDataHoraAtual() {
+        LocalDateTime agora = LocalDateTime.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return agora.format(formato);
+    }
 }

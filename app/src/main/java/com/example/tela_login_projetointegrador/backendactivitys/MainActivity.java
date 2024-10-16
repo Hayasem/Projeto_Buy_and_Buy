@@ -7,23 +7,34 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.UserManager;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Firebase;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Objects;
 import java.util.Random;
 
 //Classe Principal, e objetos da classe:
@@ -50,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
+
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         auth = FirebaseAuth.getInstance();
 
@@ -78,59 +91,97 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.setTextColor(Color.BLACK);
                 snackbar.show();
             }else {
-                auth.signInWithEmailAndPassword(email, senha).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        if (user != null) {
-                            if (user.isEmailVerified()){
-                                String codigoVerificacao = gerarCodigoVerificacao();
-                                criarJanelaCodigo(codigoVerificacao);
-                            }else{
-                                enviarEmailVerificacao(user);
+                try{
+                    auth.signInWithEmailAndPassword(email, senha).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            if (user != null) {
+                                if (user.isEmailVerified()){
+                                    navegaHome();
+
+                                }else{
+                                    enviarEmailVerificacao(user);
+                                }
                             }
+                        }else{
+
+                           tratarException(task,null);
                         }
-                    }else{
-                        Snackbar snackbar = Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.RED);
-                        snackbar.setTextColor(Color.BLACK);
-                        snackbar.show();
-                    }
-                });
+                    });
+                }catch (Exception e){
+                    Log.e("LoginError", "Erro ao tentar logar", e);
+                    Snackbar.make(view, "Erro inesperado. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
+
+    private void tratarException(Task<AuthResult> task, View view) {
+        Exception exception = task.getException();
+        if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+            Log.e("LoginError", "Credenciais inválidas", exception);
+            Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT).show();
+        } else if (exception instanceof FirebaseAuthInvalidUserException) {
+            Log.e("LoginError", "Usuário não encontrado ou desativado", exception);
+            Snackbar.make(view, "Usuário não encontrado ou desativado.", Snackbar.LENGTH_SHORT).show();
+        } else if (exception instanceof FirebaseAuthEmailException) {
+            Log.e("LoginError", "Erro relacionado ao e-mail", exception);
+            Snackbar.make(view, "Erro ao enviar email de verificação. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+        } else {
+            Log.e("LoginError", "Erro no login", exception);
+            Snackbar.make(view, "Erro inesperado. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    private void navegaHome() {
+        Intent intent = new Intent(MainActivity.this,SecondActivity.class);
+        startActivity(intent);
+    }
+
+    public void openFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentMain, fragment);
+        transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
+        transaction.commit(); // Confirma a transação
+    }
+
     private String gerarCodigoVerificacao(){
         Random random = new Random();
         int codigo = 100000 + random.nextInt(900000);
         return String.valueOf(codigo);
     }
-    private void criarJanelaCodigo(String codigoCorreto){
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Verificação de código");
-
-        final EditText campoCodigo = new EditText(MainActivity.this);
-        campoCodigo.setInputType(InputType.TYPE_CLASS_NUMBER);
-        builder.setView(campoCodigo);
-
-        builder.setPositiveButton("Verificar", (dialog, which) -> {
-            String codigoInserido = campoCodigo.getText().toString();
-            if (codigoInserido.equals(codigoCorreto)) {
-                Snackbar.make(campoCodigo, "Verificação bem-sucedida!", Snackbar.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, MenuScreen.class);
-                startActivity(intent);
-            } else {
-                Snackbar.make(campoCodigo, "Código incorreto. Tente novamente.", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
-        builder.show();
-    }
+//    private void criarJanelaCodigo(String codigoCorreto){
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//        builder.setTitle("Verificação de código");
+//
+//        final EditText campoCodigo = new EditText(MainActivity.this);
+//        campoCodigo.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        builder.setView(campoCodigo);
+//
+//        builder.setPositiveButton("Verificar", (dialog, which) -> {
+//            String codigoInserido = campoCodigo.getText().toString();
+//            if (codigoInserido.equals(codigoCorreto)) {
+//                Snackbar.make(campoCodigo, "Verificação bem-sucedida!", Snackbar.LENGTH_SHORT).show();
+//                Intent intent = new Intent(MainActivity.this, MenuScreen.class);
+//                startActivity(intent);
+//            } else {
+//                Snackbar.make(campoCodigo, "Código incorreto. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+//            }
+//        });
+//        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+//        builder.show();
+//    }
     private void enviarEmailVerificacao(FirebaseUser user) {
         user.sendEmailVerification().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 Snackbar.make(bt_entrar, "E-mail de verificação enviado. Verifique sua caixa de entrada.", Snackbar.LENGTH_LONG).show();
             }else{
-                Snackbar.make(bt_entrar, "Falha ao enviar o e-mail de verificação.", Snackbar.LENGTH_LONG).show();
+                Exception exception = task.getException();
+                assert exception != null;
+
+                Log.i("Error Send Email", Objects.requireNonNull(exception.getLocalizedMessage()));
+                Snackbar.make(bt_entrar, "Falha ao enviar o e-mail de verificação "+ exception.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
     }

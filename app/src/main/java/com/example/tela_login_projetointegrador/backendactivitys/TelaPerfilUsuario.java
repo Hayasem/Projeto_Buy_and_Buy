@@ -85,28 +85,28 @@ public class TelaPerfilUsuario extends Fragment {
     public void onStart() {
         super.onStart();
 
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null){
-            String userId = currentUser.getUid();
-            usuariosRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        String nome = dataSnapshot.child("nome").getValue(String.class);
-                        String email = currentUser.getEmail();
-                        nomeUsuario.setText(nome);
-                        emailUsuario.setText(email);
-                    } else {
-                        DialogUtils.showMessage(requireContext(), "Este usuário não está registrado!");
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    DialogUtils.showMessage(requireContext(), "Erro ao carregar dados do usuário.");
-                }
-            });
-        } else {
-            DialogUtils.showMessage(requireContext(), "Usuário não autenticado.");
-        }
+//        FirebaseUser currentUser = auth.getCurrentUser();
+//        if (currentUser != null){
+//            String userId = currentUser.getUid();
+//            usuariosRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    if (dataSnapshot.exists()) {
+//                        String nome = dataSnapshot.child("nome").getValue(String.class);
+//                        String email = currentUser.getEmail();
+//                        nomeUsuario.setText(nome);
+//                        emailUsuario.setText(email);
+//                    } else {
+//                        DialogUtils.showMessage(requireContext(), "Este usuário não está registrado!");
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    DialogUtils.showMessage(requireContext(), "Erro ao carregar dados do usuário.");
+//                }
+//            });
+//        } else {
+//            DialogUtils.showMessage(requireContext(), "Usuário não autenticado.");
+//        }
     }
 }

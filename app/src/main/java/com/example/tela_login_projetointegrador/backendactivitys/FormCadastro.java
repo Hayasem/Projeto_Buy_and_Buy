@@ -29,6 +29,9 @@ import com.example.tela_login_projetointegrador.model.Usuario;
 import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +51,7 @@ public class FormCadastro extends AppCompatActivity {
     private DatabaseReference userRef;
     private DatabaseReference telefoneRef;
     private TelefoneManager telefoneManager;
+    private FirebaseAuth auth;
     String[] mensagens = {"Preencha todos os campos!", "Cadastro realizado com sucesso!"};
 
 //--------------------------------------------------------------------------------------------------
@@ -62,9 +66,10 @@ public class FormCadastro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(com.example.tela_login_projetointegrador.R.layout.activity_form_cadastro);
         iniciarComponentes();
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        userRef = firebaseDatabase.getReference("usuarios");
-        telefoneRef = firebaseDatabase.getReference("telefones");
+        auth = FirebaseAuth.getInstance();
+        //FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+//        userRef = firebaseDatabase.getReference("usuarios");
+//        telefoneRef = firebaseDatabase.getReference("telefones");
 
         acoesClick();
 
@@ -112,39 +117,71 @@ public class FormCadastro extends AppCompatActivity {
                 exibirSnackbar("Endereço de email inválido", view);
                 return;
             }
+
+
+            auth.createUserWithEmailAndPassword(email, senha) // serviço correto para salvar o usuario
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Usuário criado com sucesso
+                            FirebaseUser user = auth.getCurrentUser();
+
+                            if (user != null) {
+                                // Enviar e-mail de verificação, se necessário
+                                user.sendEmailVerification().addOnCompleteListener(emailTask -> {
+                                    if (emailTask.isSuccessful()) {
+                                        Snackbar.make(view, "Verifique seu e-mail para validar a conta.", Snackbar.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.e("AuthError", "Erro ao enviar email de verificação", emailTask.getException());
+                                    }
+                                });
+                            }
+
+                        } else {
+                            // Tratando erros de cadastro
+                            Exception exception = task.getException();
+                            if (exception instanceof FirebaseAuthUserCollisionException) {
+                                Log.e("AuthError", "O e-mail já está sendo usado", exception);
+                                Snackbar.make(view, "Este e-mail já está sendo utilizado.", Snackbar.LENGTH_SHORT).show();
+                            } else {
+                                Log.e("AuthError", "Erro ao criar usuário", exception);
+                                Snackbar.make(view, "Erro ao criar conta. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
 //--------------------------------------------------------------------------------------------------
 //Condicional que verifica se o email inserido pelo usuário já existe no Banco de Dados:
-            userRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        exibirSnackbar("Esse email já existe!", view);
-                    } else {
-                        UserManager userManager = new UserManager(userRef);
-                        String salt = userManager.gerarSalt();
-                        String hashSenha = userManager.gerarHashSenha(senha, salt);
-                        String dataRegistro = userManager.getDataAtual();
-                        String userId = userRef.push().getKey();  // Gera uma chave única
-                        Usuario usuario = new Usuario(userId, nome, cpf, email, senha, cep, hashSenha, dataRegistro);
-
-                        assert userId != null;
-                        userRef.child(userId).setValue(usuario).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                exibirSnackbar("Cadastro efetuado com sucesso!", view);
-                                salvarTelefone(userId, numero, view);
-                                } else {
-                                exibirSnackbar("Erro ao cadastrar usuário!" + task.getException().getMessage(), view);
-                                }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Erro", "Erro ao consultar email: " + error.getMessage());
-                    exibirSnackbar("Erro ao verificar email: " + error.getMessage(), view);
-                }
-            });
+//            userRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    if (snapshot.exists()) {
+//                        exibirSnackbar("Esse email já existe!", view);
+//                    } else {
+//                        UserManager userManager = new UserManager(userRef);
+//                        String salt = userManager.gerarSalt();
+//                        String hashSenha = userManager.gerarHashSenha(senha, salt);
+//                        String dataRegistro = userManager.getDataAtual();
+//                        String userId = userRef.push().getKey();  // Gera uma chave única
+//                        Usuario usuario = new Usuario(userId, nome, cpf, email, senha, cep, hashSenha, dataRegistro);
+//
+//                        assert userId != null;
+//                        userRef.child(userId).setValue(usuario).addOnCompleteListener(task -> {
+//                            if (task.isSuccessful()) {
+//                                exibirSnackbar("Cadastro efetuado com sucesso!", view);
+//                                salvarTelefone(userId, numero, view);
+//                                } else {
+//                                exibirSnackbar("Erro ao cadastrar usuário!" + task.getException().getMessage(), view);
+//                                }
+//                        });
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//                    Log.e("Erro", "Erro ao consultar email: " + error.getMessage());
+//                    exibirSnackbar("Erro ao verificar email: " + error.getMessage(), view);
+//                }
+//            });
         });
     }
 
