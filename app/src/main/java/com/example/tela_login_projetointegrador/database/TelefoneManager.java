@@ -1,8 +1,12 @@
 package com.example.tela_login_projetointegrador.database;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -21,18 +25,18 @@ public class TelefoneManager {
         this.databaseReference = FirebaseDatabase.getInstance().getReference("telefones");
     }
 
-    public void cadastrarTelefone(Telefone telefone) {
-        String telefoneId = databaseReference.push().getKey();
-        telefone.setIdTelefone(telefoneId);
-        assert telefoneId != null;
-        databaseReference.child(telefoneId).setValue(telefone).addOnCompleteListener(aVoid -> {
-            System.out.println("Telefone cadastrado com sucesso!");
-        }).addOnFailureListener(e ->{
-            System.out.println("Erro ao cadastrar o telefone: " + e.getMessage());
+    public void cadastrarTelefone(String userId, String numeroTelefone, View view ) {
+       String telefoneId = databaseReference.push().getKey();
+       Telefone telefone = new Telefone(telefoneId, userId, numeroTelefone);
+        databaseReference.child(telefoneId).setValue(telefone).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.i(TAG, "Telefone cadastrado com sucesso!");
+            } else {
+                Log.i(TAG, "Erro ao cadastrar telefone: " + task.getException().getMessage());
+            }
+        }).addOnFailureListener(e -> {
+            Log.i(TAG, "Erro ao cadastrar telefone: " + e.getMessage());
         });
-    }
-    public void consultarTelefone(String telefoneId, ValueEventListener listener) {
-        databaseReference.child(telefoneId).addListenerForSingleValueEvent(listener);
     }
     public static ValueEventListener getTelefoneListener() {
         return new

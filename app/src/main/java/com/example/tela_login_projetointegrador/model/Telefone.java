@@ -5,10 +5,12 @@ public class Telefone {
     String numero;
     String idUsuario;
 
-    public Telefone(String numero, String idUsuario, String userId) {
+    public Telefone(String idTelefone, String idUsuario, String numero ) {
         this.numero = numero;
         this.idUsuario = idUsuario;
+        this.idTelefone = idTelefone;
     }
+
 
     public String getIdTelefone() {
         return idTelefone;

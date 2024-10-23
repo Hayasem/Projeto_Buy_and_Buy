@@ -31,6 +31,7 @@
     import com.example.tela_login_projetointegrador.utils.Utils;
     import com.google.android.material.snackbar.Snackbar;
     import com.google.android.material.textfield.TextInputLayout;
+    import com.google.firebase.Firebase;
     import com.google.firebase.auth.FirebaseAuth;
     import com.google.firebase.auth.FirebaseAuthUserCollisionException;
     import com.google.firebase.auth.FirebaseUser;
@@ -178,8 +179,7 @@
         }
         private void salvarTelefone(String userId, String numero, View view) {
             TelefoneManager telefoneManager = new TelefoneManager(telefoneRef);  // Gera uma chave única para o telefone
-            Telefone telefone = new Telefone(null, Utils.limparTelefone(numero), userId);
-            telefoneManager.cadastrarTelefone(telefone);
+            telefoneManager.cadastrarTelefone(userId, numero, view);
         }
     
         //Recuperando pelo id:
