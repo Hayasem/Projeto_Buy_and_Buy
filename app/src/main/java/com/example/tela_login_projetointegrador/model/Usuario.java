@@ -12,9 +12,10 @@ public class Usuario {
     String dataReg;
     String salt;
 
-    public Usuario(String idUsuario, String idTelefone, String nome, String cpf, String email, String senha, String cep, String hash_senha, String dataReg, String salt) {
+    public Usuario(String idUsuario, String nome, String cpf, String email, String senha,
+                   String cep, String dataReg, String hash_senha, String salt)
+    {
         this.idUsuario = idUsuario;
-        this.idTelefone = idTelefone;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
@@ -23,18 +24,6 @@ public class Usuario {
         this.hash_senha = hash_senha;
         this.dataReg = dataReg;
         this.salt = salt;
-    }
-
-    public Usuario(String idUsuario, String nome, String cpf, String email, String senha, String cep,
-                   String hash_senha, String dataReg) {
-        this.idUsuario = idUsuario;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.email = email;
-        this.senha = senha;
-        this.cep = cep;
-        this.hash_senha = hash_senha;
-        this.dataReg = dataReg;
     }
 
     public String getIdUsuario() {
@@ -69,14 +58,6 @@ public class Usuario {
         this.cpf = cpf;
     }
 
-    public String getDataReg() {
-        return dataReg;
-    }
-
-    public void setDataReg(String dataReg) {
-        this.dataReg = dataReg;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -88,8 +69,17 @@ public class Usuario {
     public String getSenha() {
         return senha;
     }
+
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 
     public String getHash_senha() {
@@ -100,6 +90,14 @@ public class Usuario {
         this.hash_senha = hash_senha;
     }
 
+    public String getDataReg() {
+        return dataReg;
+    }
+
+    public void setDataReg(String dataReg) {
+        this.dataReg = dataReg;
+    }
+
     public String getSalt() {
         return salt;
     }
@@ -107,11 +105,6 @@ public class Usuario {
     public void setSalt(String salt) {
         this.salt = salt;
     }
-
-    public String getCep() {
-        return cep;
-    }
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
 }
+
+

@@ -136,12 +136,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openFragment(Fragment fragment) {
+    /*public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentMain, fragment);
         transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
         transaction.commit(); // Confirma a transação
-    }
+    }*/
 
     private String gerarCodigoVerificacao(){
         Random random = new Random();
