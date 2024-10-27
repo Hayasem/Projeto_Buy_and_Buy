@@ -139,6 +139,8 @@
                                     user.sendEmailVerification().addOnCompleteListener(emailTask -> {
                                         if (emailTask.isSuccessful()) {
                                            exibirToast("Verifique sua caixa de email!");
+                                            Intent intent = new Intent(this, MainActivity.class); //voltar para tela de login após efetuar cadastro com sucesso !
+                                            startActivity(intent);
                                         } else {
                                             Log.e("AuthError", "Erro ao enviar email de verificação", emailTask.getException());
                                         }
@@ -171,12 +173,7 @@
             toast.setGravity(Gravity.CENTER, 0,0);
             toast.show();
         }
-        public void openFragment(Fragment fragment) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragmentProdutos, fragment);
-            transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
-            transaction.commit(); // Confirma a transação
-        }
+
         private void salvarTelefone(String userId, String numero, View view) {
             TelefoneManager telefoneManager = new TelefoneManager(telefoneRef);  // Gera uma chave única para o telefone
             telefoneManager.cadastrarTelefone(userId, numero, view);

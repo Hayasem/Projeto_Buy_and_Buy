@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         auth = FirebaseAuth.getInstance();
 
         setContentView(R.layout.activity_main);
@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                             if (user != null) {
                                 if (user.isEmailVerified()){
                                     navegaHome();
-
                                 }else{
                                     enviarEmailVerificacao(user);
                                 }
@@ -136,43 +135,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /*public void openFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentMain, fragment);
-        transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
-        transaction.commit(); // Confirma a transação
-    }*/
-
     private String gerarCodigoVerificacao(){
         Random random = new Random();
         int codigo = 100000 + random.nextInt(900000);
         return String.valueOf(codigo);
     }
-//    private void criarJanelaCodigo(String codigoCorreto){
-//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//        builder.setTitle("Verificação de código");
-//
-//        final EditText campoCodigo = new EditText(MainActivity.this);
-//        campoCodigo.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        builder.setView(campoCodigo);
-//
-//        builder.setPositiveButton("Verificar", (dialog, which) -> {
-//            String codigoInserido = campoCodigo.getText().toString();
-//            if (codigoInserido.equals(codigoCorreto)) {
-//                Snackbar.make(campoCodigo, "Verificação bem-sucedida!", Snackbar.LENGTH_SHORT).show();
-//                Intent intent = new Intent(MainActivity.this, MenuScreen.class);
-//                startActivity(intent);
-//            } else {
-//                Snackbar.make(campoCodigo, "Código incorreto. Tente novamente.", Snackbar.LENGTH_SHORT).show();
-//            }
-//        });
-//        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
-//        builder.show();
-//    }
+
     private void enviarEmailVerificacao(FirebaseUser user) {
         user.sendEmailVerification().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 Snackbar.make(bt_entrar, "E-mail de verificação enviado. Verifique sua caixa de entrada.", Snackbar.LENGTH_LONG).show();
+
+
+
             }else{
                 Exception exception = task.getException();
                 assert exception != null;
