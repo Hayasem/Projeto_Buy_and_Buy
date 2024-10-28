@@ -34,9 +34,39 @@ public class Utils {
     }
 
     public static boolean isCPFValido(String cpf) {
-        cpf = cpf.replaceAll("\\D", "");
-        return cpf.matches("\\d{11}");
+        // Remover caracteres não numéricos
+        cpf = cpf.replaceAll("[^0-9]", "");
+
+        // CPF deve ter 11 dígitos
+        if (cpf.length() != 11) {
+            return false;
+        }
+
+        // Verifica se todos os dígitos são iguais (ex: 111.111.111-11)
+        if (cpf.chars().distinct().count() == 1) {
+            return false;
+        }
+
+        // Cálculo do primeiro dígito verificador
+        int firstDigit = calculateDigit(cpf.substring(0, 9), 10);
+        // Cálculo do segundo dígito verificador
+        int secondDigit = calculateDigit(cpf.substring(0, 9) + firstDigit, 11);
+
+        // Verifica se os dígitos verificadores estão corretos
+        return cpf.equals(cpf.substring(0, 9) + firstDigit + secondDigit);
     }
+
+    private static int calculateDigit(String base, int weight) {
+        int sum = 0;
+
+        for (char digit : base.toCharArray()) {
+            sum += Character.getNumericValue(digit) * weight--;
+        }
+
+        int remainder = sum % 11;
+        return remainder < 2 ? 0 : 11 - remainder;
+    }
+
     public static boolean isCepValido(String cep) {
         cep = cep.replaceAll("\\D", "");
         return cep.matches("\\d{8}");

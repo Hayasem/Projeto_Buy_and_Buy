@@ -1,6 +1,7 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
@@ -49,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     private UserManager userManager;
     String[] mensagens = {"Preencha todos os campos", "Login efetuado com sucesso!"};
 
+    private static final String PREFS_NAME = "LoginPrefs";
+    private static final String KEY_ATTEMPTS = "attempts";
+    private static final int MAXIMO_TENTATIVAS = 3; // Máximo de tentativas
+
+    private SharedPreferences sharedPreferences;
 //---------------------------------------------------------------------------------------------
 
 // Métodos essenciais para o ciclo de vida da Activity:
@@ -65,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         auth = FirebaseAuth.getInstance();
+
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         setContentView(R.layout.activity_main);
         IniciarComponentes();
@@ -97,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = auth.getCurrentUser();
                             if (user != null) {
                                 if (user.isEmailVerified()){
+                                    resetAttempts();
                                     navegaHome();
                                 }else{
                                     enviarEmailVerificacao(user);
@@ -108,12 +119,17 @@ public class MainActivity extends AppCompatActivity {
                             if (exception instanceof FirebaseAuthInvalidCredentialsException) {
                                 Log.e("LoginError", "Credenciais inválidas", exception);
                                 Snackbar.make(view, "Email ou senha incorretos.", Snackbar.LENGTH_SHORT).show();
+                                validaTentativas();
+
+
                             } else if (exception instanceof FirebaseAuthInvalidUserException) {
                                 Log.e("LoginError", "Usuário não encontrado ou desativado", exception);
                                 Snackbar.make(view, "Usuário não encontrado ou desativado.", Snackbar.LENGTH_SHORT).show();
                             } else if (exception instanceof FirebaseAuthEmailException) {
                                 Log.e("LoginError", "Erro relacionado ao e-mail", exception);
                                 Snackbar.make(view, "Erro ao enviar email de verificação. Tente novamente.", Snackbar.LENGTH_SHORT).show();
+                            }else if (exception instanceof FirebaseTooManyRequestsException){
+                                showToast("Você excedeu o número máximo de tentativas.");
                             } else {
                                 Log.e("LoginError", "Erro no login", exception);
                                 Snackbar.make(view, "Erro inesperado. Tente novamente.", Snackbar.LENGTH_SHORT).show();
@@ -140,6 +156,20 @@ public class MainActivity extends AppCompatActivity {
         int codigo = 100000 + random.nextInt(900000);
         return String.valueOf(codigo);
     }
+
+
+    private void validaTentativas() {
+
+        incrementAttempts();
+
+        int attemptsLeft = MAXIMO_TENTATIVAS - getAttempts();
+        if (attemptsLeft <= 0) {
+            // Usuário bloqueado
+            showToast("Você excedeu o número máximo de tentativas.");
+        }
+    }
+
+
 
     private void enviarEmailVerificacao(FirebaseUser user) {
         user.sendEmailVerification().addOnCompleteListener(task -> {
@@ -168,4 +198,24 @@ public class MainActivity extends AppCompatActivity {
         edit_email.addTextChangedListener(new EmailTextWatcher(layout_email));
         edit_senha.addTextChangedListener(new SenhaTextWatcher(layout_senha));
     }
+
+
+    private void incrementAttempts() {
+        int attempts = getAttempts();
+        attempts++;
+        sharedPreferences.edit().putInt(KEY_ATTEMPTS, attempts).apply();
+    }
+
+    private void resetAttempts() {
+        sharedPreferences.edit().putInt(KEY_ATTEMPTS, 0).apply();
+    }
+
+    private int getAttempts() {
+        return sharedPreferences.getInt(KEY_ATTEMPTS, 0);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
 }
