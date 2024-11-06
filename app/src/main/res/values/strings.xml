@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Tela_Login_ProjetoIntegrador</string>
-    <string name="entrar">Entrar</string>
-    <string name="texto_cadastro">Crie uma conta aqui</string>
+    <string name="Entrar">entrar</string>
+    <string name="criar_senha">Crie sua nova senha</string>
+    <string name="texto_cadastro">Não possui uma conta ainda?</string>
+    <string name="texto_botao_cadastro">Cadastre-se!</string>
     <string name="title_cadastro">Cadastre-se</string>
     <string name="mochila_do_ex_rcito">Mochila do exército</string>
     <string name="aaaaaaaaaaaaaa">AAAAAAAAAAAAAA</string>

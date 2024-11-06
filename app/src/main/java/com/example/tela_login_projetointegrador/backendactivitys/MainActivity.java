@@ -44,7 +44,7 @@ import java.util.Random;
 //--------------------------------------------------------------------------------------------
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
-    private TextView text_tela_cadastro;
+    private TextView text_tela_cadastro, text_button_tela_cadastro, text_esqueci_senha;
     private TextInputLayout layout_email, layout_senha;
     private EditText edit_email;
     private EditText edit_senha;
@@ -85,9 +85,17 @@ public class MainActivity extends AppCompatActivity {
 // Métodos da tela de login, para iniciá-la e para realizar o login:
 //---------------------------------------------------------------------------------------------
     private void acoesClick() {
-        text_tela_cadastro.setOnClickListener(view -> {
+        text_button_tela_cadastro.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this,FormCadastro.class);
             startActivity(intent);
+        });
+
+        text_esqueci_senha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,activity_recuperar_senha.class);
+                startActivity(intent);
+            }
         });
 
         bt_entrar.setOnClickListener(view -> {
@@ -191,12 +199,14 @@ public class MainActivity extends AppCompatActivity {
     private void IniciarComponentes(){
         layout_email = findViewById(R.id.input_layout_email);
         layout_senha = findViewById(R.id.input_layout_senha);
+        text_button_tela_cadastro = findViewById(R.id.text_botao_cadastro);
         text_tela_cadastro = findViewById(com.example.tela_login_projetointegrador.R.id.text_tela_cadastro);
         edit_email = findViewById(R.id.input_edit_email);
         edit_senha = findViewById(R.id.input_edit_senha);
         bt_entrar = findViewById(com.example.tela_login_projetointegrador.R.id.bt_entrar);
         edit_email.addTextChangedListener(new EmailTextWatcher(layout_email));
         edit_senha.addTextChangedListener(new SenhaTextWatcher(layout_senha));
+        text_esqueci_senha = findViewById(R.id.text_esqueci_senha);
     }
 
 
