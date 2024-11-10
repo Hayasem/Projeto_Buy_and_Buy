@@ -19,9 +19,9 @@ public class PedidosItensManager {
             Pedido_itens itens = new Pedido_itens();
 
             itens.setIdItensPedidos(cursor.getInt(0));
-            itens.setIdPedido(cursor.getInt(1));
+            itens.setIdPedido(cursor.getString(1));
             itens.setValorUnit(cursor.getFloat(3));
-            itens.setIdProduto(cursor.getInt(4));
+            itens.setIdProduto(cursor.getString(4));
             itens.setQuantidade(cursor.getInt(5));
 
             cursor.close();

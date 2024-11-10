@@ -1,15 +1,25 @@
 package com.example.tela_login_projetointegrador.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Produto implements Serializable {
-    int idProduto;
-    int idUsuario;
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> mapaProduto = new HashMap<>();
+        mapaProduto.put("idProduto", idProduto);
+        mapaProduto.put("idUsuario", idUsuario);
+        mapaProduto.put("titulo", titulo);
+        mapaProduto.put("descricao", descricao);
+        mapaProduto.put("idCategoria", idCategoria);
+        mapaProduto.put("preco", preco);
+        mapaProduto.put("status", status);
+        mapaProduto.put("imagem", imagem);
+        return mapaProduto;
+    }
+    String idProduto;
+    String idUsuario;
     String titulo;
     String descricao;
     int idCategoria;
@@ -17,7 +27,7 @@ public class Produto implements Serializable {
     int status;
     String imagem;
 
-    public Produto(int idProduto, int idUsuario, String titulo, String descricao, int idCategoria, float preco, int status,String imagem) {
+    public Produto(String idProduto, String idUsuario, String titulo, String descricao, int idCategoria, float preco, int status, String imagem) {
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
         this.titulo = titulo;
@@ -28,30 +38,22 @@ public class Produto implements Serializable {
         this.imagem = imagem;
     }
 
-    public Produto( String titulo, String descricao, int idCategoria, float preco, int status) {
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.idCategoria = idCategoria;
-        this.preco = preco;
-        this.status = status;
-    }
-
     public Produto() {
     }
 
-    public int getIdProduto() {
+    public String getIdProduto() {
         return idProduto;
     }
 
-    public void setIdProduto(int idProduto) {
+    public void setIdProduto(String idProduto) {
         this.idProduto = idProduto;
     }
 
-    public int getIdUsuario() {
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 

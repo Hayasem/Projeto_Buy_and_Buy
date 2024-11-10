@@ -23,7 +23,7 @@ public class PedidoManager {
         if (cursor.moveToFirst()){
             Pedido pedido = new Pedido();
 
-            pedido.setIdPedido(cursor.getInt(0));
+            pedido.setIdPedido(cursor.getString(0));
             pedido.setData(cursor.getString(1));
             pedido.setIdUsuario(cursor.getInt(2));
             pedido.setStatusPedido(cursor.getString(3));
@@ -46,7 +46,7 @@ public class PedidoManager {
         List<Pedido> pedidosList = new ArrayList<>();
         if (cursor.moveToNext()){
             Pedido pedido = new Pedido();
-            pedido.setIdPedido(cursor.getInt(0));
+            pedido.setIdPedido(cursor.getString(0));
             pedido.setData(cursor.getString(1));
             pedido.setIdUsuario(cursor.getInt(2));
             pedido.setStatusPedido(cursor.getString(3));

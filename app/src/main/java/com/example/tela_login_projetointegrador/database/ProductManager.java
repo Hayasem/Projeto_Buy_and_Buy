@@ -23,8 +23,8 @@ public class ProductManager {
 
             Produto produtos = new Produto();
 
-            produtos.setIdProduto(cursor.getInt(0));
-            produtos.setIdUsuario(cursor.getInt(1));
+            produtos.setIdProduto(cursor.getString(0));
+            produtos.setIdUsuario(cursor.getString(1));
             produtos.setTitulo(cursor.getString(2));
             produtos.setDescricao(cursor.getString(3));
             produtos.setIdCategoria(cursor.getInt(4));
@@ -49,8 +49,8 @@ public class ProductManager {
 
            while(cursor.moveToNext()) {
                Produto produtos = new Produto();
-               produtos.setIdProduto(cursor.getInt(0));
-               produtos.setIdUsuario(cursor.getInt(1));
+               produtos.setIdProduto(cursor.getString(0));
+               produtos.setIdUsuario(cursor.getString(1));
                produtos.setTitulo(cursor.getString(2));
                produtos.setDescricao(cursor.getString(3));
                produtos.setIdCategoria(cursor.getInt(4));

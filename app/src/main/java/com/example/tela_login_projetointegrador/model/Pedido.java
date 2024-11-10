@@ -1,7 +1,7 @@
 package com.example.tela_login_projetointegrador.model;
 
 public class Pedido {
-    int idPedido;
+    String idPedido;
     String data;
     int idUsuario;
     String statusPedido;
@@ -15,11 +15,11 @@ public class Pedido {
         this.statusPedido = statusPedido;
     }
 
-    public int getIdPedido() {
+    public String getIdPedido() {
         return idPedido;
     }
 
-    public void setIdPedido(int idPedido) {
+    public void setIdPedido(String idPedido) {
         this.idPedido = idPedido;
     }
 

@@ -68,8 +68,8 @@ public class FragmentProdutoDetalhe extends Fragment {
             List<Pedido> pedidosList = pedidoManager.getPedidoByStatus(StatusPedido.ABERTO); // se não tiver pedido com status aberto eu tenho que criar um novo pedido, caso ao contrato eu uso o pedido em aberto
             if(pedidosList.isEmpty()){
                 Pedido pedido = new  Pedido(Utils.obterDataHoraAtual(),1,StatusPedido.ABERTO.toString());
-                long pedidoID = pedidoManager.cadastrarPedido(pedido);
-                Pedido_itens pedidoItens = new Pedido_itens( (int)pedidoID, produto.getPreco(), produto.getIdProduto(),1);
+                String pedidoID = String.valueOf(pedidoManager.cadastrarPedido(pedido));
+                Pedido_itens pedidoItens = new Pedido_itens( (String)pedidoID, produto.getPreco(), produto.getIdProduto(),1);
                 pedidosItensManager.cadastrarItensPedido(pedidoItens);
 
 

@@ -42,6 +42,10 @@ import com.example.tela_login_projetointegrador.database.ProductManager;
 import com.example.tela_login_projetointegrador.model.CategoriaProduto;
 import com.example.tela_login_projetointegrador.model.Produto;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,19 +67,16 @@ public class FragmentCadastrarProdutos extends Fragment {
     private ImageView imageView;
     private String imageString;
     private ProductManager productManager;
+    private DatabaseReference productsDataRef;
 
     String[] mensagens = {"Preencha todos os campos", "Produto Cadastrado com sucesso"};
-
     private static final int PICK_IMAGE_REQUEST = 1;
-
-
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cadastro_de_produtos, container, false);
         validaPermissao();
-
         edit_nome_produto = view.findViewById(R.id.edit_nome_produto);
         edit_preco_produto = view.findViewById(R.id.edit_preco_produto);
         spinner_categoria_produto = view.findViewById(R.id.spinner_categoria_produto);
@@ -85,67 +86,62 @@ public class FragmentCadastrarProdutos extends Fragment {
         imageView = view.findViewById(R.id.imageView2);
 
 
-        DatabaseConnection databaseConnection = new DatabaseConnection(getContext());
-        SQLiteDatabase db = databaseConnection.getWritableDatabase();
-        productManager = new ProductManager(db);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        productsDataRef = database.getReference("produtos");
 
         ArrayAdapter<CategoriaProduto> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item,carregaCategorias());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_categoria_produto.setAdapter(adapter);
-
-
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Perfil");
         }
         final int[] categoriaId = {0};
-
         spinner_categoria_produto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 CategoriaProduto categoriaSelecionada = (CategoriaProduto) parentView.getItemAtPosition(position);
                 categoriaId[0] = categoriaSelecionada.getId();
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 //nenhuma imagem selecionada
             }
         });
 
-
         btn_confirmar_cadastro_produto.setOnClickListener(v -> {
             String titulo = edit_nome_produto.getText().toString();
             String descricao = edit_descricao_produto.getText().toString();
             String preco = edit_preco_produto.getText().toString();
 
-
             if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty() || categoriaId[0] == 0) {
                 exibirSnackbar(mensagens[0], v);
             }else{
-                Snackbar snackbar = Snackbar.make(v, mensagens[1], Snackbar.LENGTH_SHORT);
-                snackbar.setBackgroundTint(Color.GREEN);
-                snackbar.setTextColor(Color.BLACK);
-                snackbar.show();
-
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                String userId = auth.getCurrentUser().getUid();
                 Produto produto = new Produto();
+                produto.setIdUsuario(userId);
                 produto.setTitulo(titulo);
                 produto.setDescricao(descricao);
                 produto.setPreco(Float.parseFloat(preco));
                 produto.setIdCategoria(categoriaId[0]);
                 produto.setImagem(imageString);
-                productManager.cadastrarProduto(produto);
+                salvarProdutosFirebase(produto, v);
                 limparCampos();
             }
-
         });
-
         imageView.setOnClickListener(v -> openImageChooser());
-
-
         return view;
+    }
+
+    private void salvarProdutosFirebase(Produto produto, View view){
+        String productId = productsDataRef.push().getKey();
+        produto.setIdProduto(productId);
+        if (productId != null){
+            productsDataRef.child(productId).setValue(produto.toMap())
+                    .addOnSuccessListener(aVoid -> exibirSnackbar(mensagens[1],view))
+                    .addOnFailureListener(e -> exibirSnackbar("Ocorreu um erro ao salvar o produto: " + e.getMessage(), view));
+        }
     }
 
     private void validaPermissao(){
@@ -249,19 +245,14 @@ public class FragmentCadastrarProdutos extends Fragment {
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
-
     private void saveImageToDatabase(String imageString) {
         // Aqui você deve implementar o código para salvar a string 'imageString' no banco de dados
         Toast.makeText(getActivity(), "Image saved to database!", Toast.LENGTH_SHORT).show();
     }
-
     private void exibirSnackbar(String erro, View view) {
         Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
-        snackbar.setBackgroundTint(Color.RED);
+        snackbar.setBackgroundTint(Color.GREEN);
         snackbar.setTextColor(Color.BLACK);
         snackbar.show();
     }
-
-
-
 }
