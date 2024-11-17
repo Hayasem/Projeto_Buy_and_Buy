@@ -22,6 +22,11 @@ import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.ProductManager;
 import com.example.tela_login_projetointegrador.fragment.FragmentProdutoDetalhe;
 import com.example.tela_login_projetointegrador.model.Produto;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,18 +43,29 @@ public class MenuScreen extends Fragment implements ProdutosInterface {
         View view = inflater.inflate(R.layout.activity_menu_screen, container, false);
 
         lvProdutos = view.findViewById(R.id.listView_products);
-        List<Produto> listProdutos;
-        try(DatabaseConnection db = new DatabaseConnection(getContext())){
-            ProductManager productManager = new ProductManager(db.getWritableDatabase());
-            listProdutos = productManager.getListProdutos();
-            if(!listProdutos.isEmpty())
-                getProdutos(listProdutos);
+        final List<Produto> listProdutos = new ArrayList<>();
+        ProdutosAdapter produtosAdapter = new ProdutosAdapter(getContext(), R.layout.products_itens, listProdutos,
+                this, requireActivity().getSupportFragmentManager());
+        lvProdutos.setAdapter(produtosAdapter);
 
-        }catch (Exception e){
-            e.printStackTrace();
-
-
-        }
+            DatabaseReference productsDataRef = FirebaseDatabase.getInstance().getReference("produtos");
+            productsDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    listProdutos.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Produto produto = dataSnapshot.getValue(Produto.class);
+                        if (produto != null) {
+                            listProdutos.add(produto);
+                        }
+                    }
+                    produtosAdapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    error.toException().printStackTrace();
+                }
+            });
 
         return view;
     }
