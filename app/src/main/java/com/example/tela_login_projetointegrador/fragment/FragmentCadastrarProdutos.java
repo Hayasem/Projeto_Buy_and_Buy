@@ -181,6 +181,10 @@ public class FragmentCadastrarProdutos extends Fragment {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    private Bitmap redimensionarBitmap(Bitmap bitmap, int width, int height){
+        return Bitmap.createScaledBitmap(bitmap, width, height, true);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -203,12 +207,14 @@ public class FragmentCadastrarProdutos extends Fragment {
 
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
+                Bitmap bitmapRedimensionado = redimensionarBitmap(bitmap, 950, 900);
 
                 // Exibir a imagem no ImageView
-                imageView.setImageBitmap(bitmap);
+                imageView.setImageBitmap(bitmapRedimensionado);
 
                 // Salvar a imagem no dispositivo e obter o caminho
-                 imageString = saveImageToInternalStorage(bitmap);
+                 imageString = saveImageToInternalStorage(bitmapRedimensionado
+                 );
 
             } catch (IOException e) {
                 e.printStackTrace();

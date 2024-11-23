@@ -11,14 +11,14 @@
 
         android:id="@+id/fgmt_cadastro_de_produtos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/background">
 
         <TextView
             android:id="@+id/tv_informe_produto"
             android:layout_width="370dp"
-            android:layout_height="83dp"
-            android:layout_margin="25dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:width="400dp"
             android:text="Cadastro de produtos"
             android:textAlignment="center"
@@ -27,8 +27,8 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.454"
-            app:layout_constraintStart_toStartOf="parent"
 
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_informe_produto"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,33 +114,56 @@
 
         <Button
             android:id="@+id/btn_confirmar_cadastro_produto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/yellow_button"
             android:text="Confirmar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/containerComponents" />
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="151dp"
-            android:layout_height="121dp"
-            android:layout_marginStart="220dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="32dp"
             android:layout_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_quantidade_produto"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
             app:srcCompat="@android:drawable/ic_menu_gallery" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="48dp"
+            android:layout_marginStart="54dp"
             android:text="Imagem do produto"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/edit_quantidade_produto" />
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="476dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="601dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

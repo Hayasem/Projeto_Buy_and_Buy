@@ -82,7 +82,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/input_layout_email"
             app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/cinza">
+            app:passwordToggleTint="@color/cinza"
+            tools:visibility="visible">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_edit_senha"

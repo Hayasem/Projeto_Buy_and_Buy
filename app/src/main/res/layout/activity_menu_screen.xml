@@ -9,7 +9,6 @@
     tools:context=".backendactivitys.MenuScreen">
 
 
-
     <!-- Menu Bar (Toolbar) -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -52,12 +51,16 @@
     </androidx.appcompat.widget.Toolbar>
 
     <!-- ListView to display products -->
-    <ListView
-        android:id="@+id/listView_products"
+    <GridView
+        android:id="@+id/gridView_products"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:numColumns="2"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="8dp"
+        android:stretchMode="columnWidth"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
