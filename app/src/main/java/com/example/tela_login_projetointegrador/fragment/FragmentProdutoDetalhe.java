@@ -1,5 +1,6 @@
 package com.example.tela_login_projetointegrador.fragment;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -11,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.StatusPedido;
+import com.example.tela_login_projetointegrador.backendactivitys.MenuScreen;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.PedidoManager;
 import com.example.tela_login_projetointegrador.database.PedidosItensManager;
@@ -27,9 +30,7 @@ import java.util.List;
 
 public class FragmentProdutoDetalhe extends Fragment {
 
-
-
-    private Button buttonAddToCart;
+    private ImageView iconCart, iconShare, iconComeBack;
     private Produto produto;
     private PedidoManager pedidoManager;
     private PedidosItensManager pedidosItensManager;
@@ -40,9 +41,12 @@ public class FragmentProdutoDetalhe extends Fragment {
         View view = inflater.inflate(R.layout.fragment_produto_detalhe, container, false);
 
         ImageView image = view.findViewById(R.id.product_image);
+        iconCart = view.findViewById(R.id.icon_cart);
+        iconComeBack = view.findViewById(R.id.icon_comeBack);
+        iconShare = view.findViewById(R.id.icon_share);
         TextView textPreco = view.findViewById(R.id.product_price);
         TextView descricao = view.findViewById(R.id.product_description);
-        buttonAddToCart = view.findViewById(R.id.button_add_to_cart);
+
 
         DatabaseConnection databaseConnection = new DatabaseConnection(getContext());
         SQLiteDatabase db = databaseConnection.getWritableDatabase();
@@ -64,7 +68,7 @@ public class FragmentProdutoDetalhe extends Fragment {
     }
 
     private void acoes() {
-        buttonAddToCart.setOnClickListener(v -> {
+        iconCart.setOnClickListener(v -> {
             List<Pedido> pedidosList = pedidoManager.getPedidoByStatus(StatusPedido.ABERTO); // se não tiver pedido com status aberto eu tenho que criar um novo pedido, caso ao contrato eu uso o pedido em aberto
             if(pedidosList.isEmpty()){
                 Pedido pedido = new  Pedido(Utils.obterDataHoraAtual(),1,StatusPedido.ABERTO.toString());
@@ -72,8 +76,17 @@ public class FragmentProdutoDetalhe extends Fragment {
                 Pedido_itens pedidoItens = new Pedido_itens( (String)pedidoID, produto.getPreco(), produto.getIdProduto(),1);
                 pedidosItensManager.cadastrarItensPedido(pedidoItens);
 
-
+            }else{
+                Pedido pedidoAberto = pedidosList.get(0);
+                Pedido_itens pedidoItens = new Pedido_itens(String.valueOf(pedidoAberto.getIdPedido()), produto.getPreco(), produto.getIdProduto(), 1);
+                pedidosItensManager.cadastrarItensPedido(pedidoItens);
             }
+            Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+        });
+        iconComeBack.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), MenuScreen.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
     }
 }
