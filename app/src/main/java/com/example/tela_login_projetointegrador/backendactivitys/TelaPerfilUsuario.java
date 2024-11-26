@@ -59,6 +59,9 @@ public class TelaPerfilUsuario extends Fragment {
         usuariosRef = FirebaseDatabase.getInstance().getReference("usuarios");
 
         bt_deslogar.setOnClickListener(view1 -> {
+            requireActivity().getSharedPreferences(MainActivity.PREFS_NAME, getContext().MODE_PRIVATE)
+                            .edit().remove(MainActivity.KEY_LAST_LOGIN)
+                            .apply();
             auth.signOut();
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);

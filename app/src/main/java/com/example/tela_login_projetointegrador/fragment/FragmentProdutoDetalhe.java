@@ -1,5 +1,6 @@
 package com.example.tela_login_projetointegrador.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -84,9 +85,12 @@ public class FragmentProdutoDetalhe extends Fragment {
             Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
         });
         iconComeBack.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), MenuScreen.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentProdutos, new MenuScreen())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 }

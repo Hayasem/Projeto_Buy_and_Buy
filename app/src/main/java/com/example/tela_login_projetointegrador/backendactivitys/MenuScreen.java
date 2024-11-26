@@ -1,4 +1,6 @@
 package com.example.tela_login_projetointegrador.backendactivitys;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.os.Bundle;
+import android.widget.ScrollView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,6 +34,7 @@ public class MenuScreen extends Fragment implements ProdutosInterface {
     private ImageButton bt_perfil;
     private ImageButton bt_notificacao;
     private GridView gvProdutos;
+    private Parcelable gridViewState;
 
     @Nullable
     @Override
@@ -65,6 +69,23 @@ public class MenuScreen extends Fragment implements ProdutosInterface {
         return view;
     }
 
+    //Pra quem for mexer nisso aqui, a ideia é que após clicar em produto e ver a tela de detalhes, quando vc saísse
+    //de volta para a tela de menu, o layout seguisse na mesma posição que tava quando você clicou.
+    //Tentei fazer aqui, mas não deu certo, caso queiram tentar, metade do código ta pronto ae já.
+    public void onPause() {
+        super.onPause();
+        GridView gridView = getView().findViewById(R.id.gridView_products);
+        if (gridView != null){
+            gridViewState = gridView.onSaveInstanceState();
+        }
+    }
+    public void onResume() {
+        super.onResume();
+        GridView gridView = getView().findViewById(R.id.gridView_products);
+        if (gridView != null && gridViewState != null){
+            gridView.onRestoreInstanceState(gridViewState);
+        }
+    }
     public static MenuScreen newInstance(){
         return new MenuScreen();
     }

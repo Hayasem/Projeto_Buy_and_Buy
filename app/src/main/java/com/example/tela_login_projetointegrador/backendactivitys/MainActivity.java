@@ -52,9 +52,11 @@ public class MainActivity extends AppCompatActivity {
     private UserManager userManager;
     String[] mensagens = {"Preencha todos os campos", "Login efetuado com sucesso!"};
 
-    private static final String PREFS_NAME = "LoginPrefs";
+    protected static final String PREFS_NAME = "LoginPrefs";
     private static final String KEY_ATTEMPTS = "attempts";
-    private static final int MAXIMO_TENTATIVAS = 3; // Máximo de tentativas
+    protected static final String KEY_LAST_LOGIN = "last_login";
+    protected static final long LOGIN_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+    protected static final int MAXIMO_TENTATIVAS = 3; // Máximo de tentativas
 
     private SharedPreferences sharedPreferences;
 //---------------------------------------------------------------------------------------------
@@ -70,12 +72,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
-
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         auth = FirebaseAuth.getInstance();
-
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
+        long lastLogin = sharedPreferences.getLong(KEY_LAST_LOGIN, 0);
+        long currentTime = System.currentTimeMillis();
+        if (lastLogin != 0 && (currentTime - lastLogin < LOGIN_EXPIRATION_TIME)) {
+            // Usuário logado recentemente, vá direto para a tela principal
+            navegaHome();
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_main);
         IniciarComponentes();
         acoesClick();
@@ -155,16 +162,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void navegaHome() {
+        sharedPreferences.edit().putLong(KEY_LAST_LOGIN, System.currentTimeMillis()).apply();
         Intent intent = new Intent(MainActivity.this,SecondActivity.class);
         startActivity(intent);
     }
-
-    private String gerarCodigoVerificacao(){
-        Random random = new Random();
-        int codigo = 100000 + random.nextInt(900000);
-        return String.valueOf(codigo);
-    }
-
 
     private void validaTentativas() {
 
@@ -176,8 +177,6 @@ public class MainActivity extends AppCompatActivity {
             showToast("Você excedeu o número máximo de tentativas.");
         }
     }
-
-
 
     private void enviarEmailVerificacao(FirebaseUser user) {
         user.sendEmailVerification().addOnCompleteListener(task -> {
