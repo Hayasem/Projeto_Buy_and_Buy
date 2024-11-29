@@ -90,12 +90,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="4dp"
                         android:text="R$ 99,99"
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/guideline4"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -119,21 +117,23 @@
                         android:id="@+id/primeira_parte_texto_promo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="Descontos exclusivos de até"
+                        android:layout_marginStart="4dp"
+                        android:text="||  Descontos exclusivos de até"
                         android:textColor="@color/white"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/porcentagem_promo_text"
                         app:layout_constraintStart_toEndOf="@id/porcentagem_promo_text"
-                        app:layout_constraintTop_toTopOf="@id/porcentagem_promo_text" />
+                        app:layout_constraintTop_toTopOf="@+id/porcentagem_promo_text" />
 
                     <TextView
                         android:id="@+id/valor_promo_texto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="4dp"
                         android:text="R$ 50,00"
                         android:textColor="#FFC800"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/primeira_parte_texto_promo"
                         app:layout_constraintStart_toEndOf="@id/primeira_parte_texto_promo"
                         app:layout_constraintTop_toTopOf="@id/primeira_parte_texto_promo" />
 
@@ -141,7 +141,7 @@
                         android:id="@+id/segunda_parte_texto_promo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="4dp"
                         android:text="no App"
                         android:textColor="@color/white"
                         android:textStyle="bold"
@@ -149,12 +149,6 @@
                         app:layout_constraintStart_toEndOf="@id/valor_promo_texto"
                         app:layout_constraintTop_toTopOf="@id/valor_promo_texto" />
 
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintGuide_begin="49dp" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
@@ -162,7 +156,7 @@
                 android:id="@+id/product_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 android:text="Descrição do produto vai aqui. Detalhes sobre o material, tamanho e outras especificações."
                 android:textColor="@color/black"
                 android:paddingStart="8dp"
