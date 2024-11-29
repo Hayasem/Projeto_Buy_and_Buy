@@ -102,7 +102,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:text="-5%"
                         android:textColor="#FFC800"
@@ -152,15 +151,190 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/product_description"
+            <LinearLayout
+                android:id="@+id/layout_para_descricao_produto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Descrição do produto vai aqui. Detalhes sobre o material, tamanho e outras especificações."
-                android:textColor="@color/black"
-                android:paddingStart="8dp"
-                android:textSize="16sp" />
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:id="@+id/txt_descricao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Descrição"
+                        android:textColor="@color/black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/icone_avancar1"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/seta_direita_32"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_descricao"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txt_descricao" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_para_especificacoes_produtos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/especificacoes_produtos_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/cinza_claro"
+                    android:background="@color/cinza_claro">
+
+                    <TextView
+                        android:id="@+id/txt_especificacoes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Especificações"
+                        android:textColor="@color/black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/icone_avancar2"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/seta_direita_32"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_especificacoes"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txt_especificacoes" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txt_avaliacoes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Avaliações do produto"
+                            android:textColor="@color/black"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/icone_avancar3"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/seta_direita_32"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/estrela"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/estrela_32"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/txt_avaliacoes" />
+
+                        <ImageView
+                            android:id="@+id/estrela2"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/estrela_32"
+                            app:layout_constraintBottom_toBottomOf="@+id/estrela"
+                            app:layout_constraintStart_toEndOf="@id/estrela"
+                            app:layout_constraintTop_toTopOf="@+id/estrela" />
+
+                        <ImageView
+                            android:id="@+id/estrela3"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/estrela_32"
+                            app:layout_constraintBottom_toBottomOf="@+id/estrela2"
+                            app:layout_constraintStart_toEndOf="@id/estrela2"
+                            app:layout_constraintTop_toTopOf="@+id/estrela2" />
+
+                        <ImageView
+                            android:id="@+id/estrela4"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/estrela_32"
+                            app:layout_constraintBottom_toBottomOf="@+id/estrela3"
+                            app:layout_constraintStart_toEndOf="@id/estrela3"
+                            app:layout_constraintTop_toTopOf="@+id/estrela3" />
+
+                        <ImageView
+                            android:id="@+id/estrela5"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/estrela_32"
+                            app:layout_constraintBottom_toBottomOf="@+id/estrela4"
+                            app:layout_constraintStart_toEndOf="@id/estrela4"
+                            app:layout_constraintTop_toTopOf="@+id/estrela4" />
+
+                        <TextView
+                            android:id="@+id/txt_nota_produto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="5/5"
+                            android:textColor="@color/vermelho"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@+id/estrela5"
+                            app:layout_constraintStart_toEndOf="@id/estrela5"
+                            app:layout_constraintTop_toTopOf="@+id/estrela5" />
+
+                        <TextView
+                            android:id="@+id/txt_opinioes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="(34 Opiniões)"
+                            android:textColor="@color/cinza"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@+id/txt_nota_produto"
+                            app:layout_constraintStart_toEndOf="@id/txt_nota_produto"
+                            app:layout_constraintTop_toTopOf="@+id/txt_nota_produto" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

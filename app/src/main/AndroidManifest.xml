@@ -17,6 +17,9 @@
         android:theme="@style/Theme.Tela_Login_ProjetoIntegrador"
         tools:targetApi="31">
         <activity
+            android:name=".BottomSheetProdutoActivity"
+            android:exported="false" />
+        <activity
             android:name=".backendactivitys.activity_recuperar_senha"
             android:exported="false" />
         <activity
