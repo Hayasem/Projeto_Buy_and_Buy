@@ -113,6 +113,7 @@ public class FragmentCadastrarProdutos extends Fragment {
             String titulo = edit_nome_produto.getText().toString();
             String descricao = edit_descricao_produto.getText().toString();
             String preco = edit_preco_produto.getText().toString();
+            String quantidadeProd = edit_quantidade_produto.getText().toString();
 
             if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty() || categoriaId[0] == 0) {
                 exibirSnackbar(mensagens[0], v);
@@ -126,6 +127,7 @@ public class FragmentCadastrarProdutos extends Fragment {
                 produto.setPreco(Float.parseFloat(preco));
                 produto.setIdCategoria(categoriaId[0]);
                 produto.setImagem(imageString);
+                produto.setQuantidadeDisponivel(quantidadeProd);
                 salvarProdutosFirebase(produto, v);
                 limparCampos();
             }

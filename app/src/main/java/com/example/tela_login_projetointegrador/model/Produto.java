@@ -26,9 +26,9 @@ public class Produto implements Serializable {
     float preco;
     int status;
     String imagem;
-    int quantidadeDisponivel;
+    String quantidadeDisponivel;
 
-    public Produto(String idProduto, String idUsuario, String titulo, String descricao, int idCategoria, float preco, int status, String imagem, int quantidadeDisponivel) {
+    public Produto(String idProduto, String idUsuario, String titulo, String descricao, int idCategoria, float preco, int status, String imagem, String quantidadeDisponivel) {
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
         this.titulo = titulo;
@@ -107,11 +107,11 @@ public class Produto implements Serializable {
         this.imagem = imagem;
     }
 
-    public int getQuantidadeDisponivel() {
+    public String getQuantidadeDisponivel() {
         return quantidadeDisponivel;
     }
 
-    public void setQuantidadeDisponivel(int quantidadeDisponivel) {
+    public void setQuantidadeDisponivel(String quantidadeDisponivel) {
         this.quantidadeDisponivel = quantidadeDisponivel;
     }
 }

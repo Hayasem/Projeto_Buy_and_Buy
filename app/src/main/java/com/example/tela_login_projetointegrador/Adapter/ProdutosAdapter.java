@@ -85,15 +85,4 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
 
         return itemView;
     }
-
-//    public void openFragment(Fragment fragment) {
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.fragmentProdutos, fragment);
-//        transaction.addToBackStack(null); // Adiciona à pilha de fragmentos para permitir voltar
-//        transaction.commit(); // Confirma a transação
-//    }
-
-
-
-
 }

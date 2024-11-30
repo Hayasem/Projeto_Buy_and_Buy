@@ -46,7 +46,7 @@ public class FragmentProdutoDetalhe extends Fragment {
         iconComeBack = view.findViewById(R.id.icon_comeBack);
         iconShare = view.findViewById(R.id.icon_share);
         TextView textPreco = view.findViewById(R.id.product_price);
-        TextView descricao = view.findViewById(R.id.product_description);
+        TextView descricao = view.findViewById(R.id.txt_descricao);
 
 
         DatabaseConnection databaseConnection = new DatabaseConnection(getContext());

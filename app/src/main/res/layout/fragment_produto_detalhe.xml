@@ -151,16 +151,18 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
+            <!--Layout exclusivo para a descrição-->
             <LinearLayout
-                android:id="@+id/layout_para_descricao_produto"
+                android:id="@+id/descricao_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!--Cabeçalho Clicável-->
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/header_descricao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
 
                     <TextView
                         android:id="@+id/txt_descricao"
@@ -174,7 +176,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/icone_avancar1"
+                        android:id="@+id/descricaoToggleIcon"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_alignParentEnd="true"
@@ -183,18 +185,35 @@
                         app:layout_constraintBottom_toBottomOf="@+id/txt_descricao"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/txt_descricao" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!--Conteúdo expandível-->
+                <LinearLayout
+                    android:id="@+id/content_descricao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Este é o conteúdo da descrição do produto." />
+                </LinearLayout>
             </LinearLayout>
 
+            <!--Layout exclusivo para especificacoes-->
             <LinearLayout
-                android:id="@+id/layout_para_especificacoes_produtos"
+                android:id="@+id/especificacoes_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+
+                <!--Cabeçalho clicável-->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/especificacoes_produtos_container"
+                    android:id="@+id/header_especificacoes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/cinza_claro"
@@ -212,7 +231,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/icone_avancar2"
+                        android:id="@+id/especificacoesToggleIcon"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_alignParentEnd="true"
@@ -221,15 +240,33 @@
                         app:layout_constraintBottom_toBottomOf="@+id/txt_especificacoes"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/txt_especificacoes" />
-
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!--Conteúdo expandível-->
                 <LinearLayout
+                    android:id="@+id/content_especificacoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="especificao"/>
+                </LinearLayout>
+
+                <!--layout exlcusivo para avaliacoes-->
+                <LinearLayout
+                    android:id="@+id/avaliacoes_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!--Cabeçalho clicável-->
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/header_avaliacoes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -246,7 +283,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
-                            android:id="@+id/icone_avancar3"
+                            android:id="@+id/avaliacoesToggleIcon"
                             android:layout_width="12dp"
                             android:layout_height="12dp"
                             android:layout_alignParentEnd="true"
@@ -330,9 +367,22 @@
                             app:layout_constraintBottom_toBottomOf="@+id/txt_nota_produto"
                             app:layout_constraintStart_toEndOf="@id/txt_nota_produto"
                             app:layout_constraintTop_toTopOf="@+id/txt_nota_produto" />
-
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Conteúdo expandível -->
+                    <LinearLayout
+                        android:id="@+id/content_avaliacoes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Este é o conteúdo da descrição do produto." />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
