@@ -1,14 +1,10 @@
 package com.example.tela_login_projetointegrador.fragment;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -25,7 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,12 +32,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.ProductManager;
 import com.example.tela_login_projetointegrador.model.CategoriaProduto;
 import com.example.tela_login_projetointegrador.model.Produto;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,7 +46,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class FragmentCadastrarProdutos extends Fragment {
 
@@ -61,8 +53,8 @@ public class FragmentCadastrarProdutos extends Fragment {
     private EditText edit_nome_produto;
     private EditText edit_preco_produto;
     private Spinner spinner_categoria_produto;
-    private EditText edit_descricao_produto;
-    private EditText edit_quantidade_produto;
+    private EditText editDescricaoProduto;
+    private EditText editQuantidadeProduto;
     private Button btn_confirmar_cadastro_produto;
     private ImageView imageView;
     private String imageString;
@@ -80,8 +72,8 @@ public class FragmentCadastrarProdutos extends Fragment {
         edit_nome_produto = view.findViewById(R.id.edit_nome_produto);
         edit_preco_produto = view.findViewById(R.id.edit_preco_produto);
         spinner_categoria_produto = view.findViewById(R.id.spinner_categoria_produto);
-        edit_descricao_produto = view.findViewById(R.id.edit_descricao_produto);
-        edit_quantidade_produto = view.findViewById(R.id.edit_quantidade_produto);
+        editDescricaoProduto = view.findViewById(R.id.edit_descricao_produto);
+        editQuantidadeProduto = view.findViewById(R.id.edit_quantidade_produto);
         btn_confirmar_cadastro_produto = view.findViewById(R.id.btn_confirmar_cadastro_produto);
         imageView = view.findViewById(R.id.imageView2);
 
@@ -111,9 +103,9 @@ public class FragmentCadastrarProdutos extends Fragment {
 
         btn_confirmar_cadastro_produto.setOnClickListener(v -> {
             String titulo = edit_nome_produto.getText().toString();
-            String descricao = edit_descricao_produto.getText().toString();
+            String descricao = editDescricaoProduto.getText().toString();
             String preco = edit_preco_produto.getText().toString();
-            String quantidadeProd = edit_quantidade_produto.getText().toString();
+            int quantidadeProd = Integer.parseInt(editQuantidadeProduto.getText().toString());
 
             if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty() || categoriaId[0] == 0) {
                 exibirSnackbar(mensagens[0], v);
@@ -159,9 +151,9 @@ public class FragmentCadastrarProdutos extends Fragment {
 
     private void limparCampos(){
         edit_nome_produto.setText("");
-        edit_descricao_produto.setText("");
+        editDescricaoProduto.setText("");
         edit_preco_produto.setText("");
-        edit_quantidade_produto.setText("");
+        editQuantidadeProduto.setText("");
         imageView.setImageResource(android.R.drawable.ic_menu_gallery);
         imageString= null;
     }

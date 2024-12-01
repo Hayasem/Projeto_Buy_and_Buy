@@ -161,6 +161,7 @@
                 <!--Cabeçalho Clicável-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/header_descricao"
+                    android:backgroundTint="@color/cinza_claro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -197,6 +198,8 @@
                     android:visibility="gone">
 
                     <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/txt_descricao_expandida"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Este é o conteúdo da descrição do produto." />
@@ -252,6 +255,15 @@
                     android:visibility="gone">
 
                     <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/txt_quantidade_expandida"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="especificao"/>
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/txt_categoria_expandida"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="especificao"/>

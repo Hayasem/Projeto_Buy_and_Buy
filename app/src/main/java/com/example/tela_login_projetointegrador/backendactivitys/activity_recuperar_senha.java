@@ -33,6 +33,11 @@ public class activity_recuperar_senha extends AppCompatActivity {
     private String strEmail;
 
     @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -64,7 +69,7 @@ public class activity_recuperar_senha extends AppCompatActivity {
     btn_voltar.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            getOnBackPressedDispatcher();
+            getOnBackPressedDispatcher().onBackPressed();
         }
     });
 
