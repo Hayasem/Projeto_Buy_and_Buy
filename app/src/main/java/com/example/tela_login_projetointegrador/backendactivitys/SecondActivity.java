@@ -29,7 +29,6 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
         }
 
     }
-
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);

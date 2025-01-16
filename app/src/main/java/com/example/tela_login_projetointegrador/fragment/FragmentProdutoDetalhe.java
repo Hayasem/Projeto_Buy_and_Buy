@@ -1,30 +1,22 @@
 package com.example.tela_login_projetointegrador.fragment;
-
-import android.content.Context;
-import android.content.Intent;
+import androidx.fragment.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.StatusPedido;
 import com.example.tela_login_projetointegrador.backendactivitys.MenuScreen;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.database.PedidoManager;
 import com.example.tela_login_projetointegrador.database.PedidosItensManager;
-import com.example.tela_login_projetointegrador.database.UserManager;
 import com.example.tela_login_projetointegrador.model.Pedido;
 import com.example.tela_login_projetointegrador.model.Pedido_itens;
 import com.example.tela_login_projetointegrador.model.Produto;
@@ -114,10 +106,7 @@ public class FragmentProdutoDetalhe extends Fragment {
         iconComeBack.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentProdutos, new MenuScreen())
-                    .addToBackStack(null)
-                    .commit();
+                    .popBackStack();
         });
     }
 
