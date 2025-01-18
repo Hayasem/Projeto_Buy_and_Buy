@@ -40,6 +40,14 @@
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/trash_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="220dp"
+            android:contentDescription="Lixeira"
+            android:src="@drawable/trash_icon" />
 </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.widget.ConstraintLayout
