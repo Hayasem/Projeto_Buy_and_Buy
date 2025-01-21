@@ -5,13 +5,13 @@
             android:icon="@drawable/img_home"
             android:title="Principal"/>
     <item
-            android:id="@+id/notificacaoId"
-            android:icon="@drawable/notification_icon"
-            android:title="Notificação"/>
+            android:id="@+id/searchId"
+            android:icon="@drawable/search_menu_icon"
+            android:title="Buscar"/>
 
     <item
             android:id="@+id/carrinhoId"
-            android:icon="@drawable/img_kart"
+            android:icon="@drawable/shopping_cart"
             android:title="Carrinho"/>
 
     <item

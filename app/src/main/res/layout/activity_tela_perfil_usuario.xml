@@ -52,9 +52,31 @@
                     app:layout_constraintBottom_toBottomOf="@+id/user_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/user_name" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Seção de "Meus Pedidos" -->
+                <ImageView
+            android:id="@+id/suporte_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="suporte"
+            android:src="@drawable/suporte_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/settings_icon"
+            app:layout_constraintEnd_toStartOf="@id/settings_icon"
+            app:layout_constraintTop_toTopOf="@+id/settings_icon" />
+
+                <ImageView
+                    android:id="@+id/notificationId"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="notification"
+                    android:src="@drawable/notifications_icon"
+
+                    app:layout_constraintBottom_toBottomOf="@+id/suporte_icon"
+                    app:layout_constraintEnd_toStartOf="@+id/suporte_icon"
+                    app:layout_constraintTop_toTopOf="@+id/suporte_icon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Outras seções -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -250,6 +272,16 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginVertical="16dp"
+            android:background="#E0E0E0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/other_sections"
+            app:layout_constraintTop_toBottomOf="@id/orders_section" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/other_sections"
             android:layout_width="0dp"
@@ -265,11 +297,11 @@
                     android:id="@+id/history_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    app:layout_constraintBottom_toBottomOf="@+id/cupom_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cupom_layout">
 
                         <ImageView
                             android:id="@+id/history_icon"
@@ -296,15 +328,26 @@
                             app:layout_constraintTop_toBottomOf="@id/history_icon" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#E0E0E0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/cupom_layout"
+                    app:layout_constraintStart_toEndOf="@+id/history_layout"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cupom_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="100dp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@id/history_layout"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/history_layout"
-                    app:layout_constraintTop_toTopOf="@id/history_layout">
+                    app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
                             android:id="@+id/coupons_icon"
@@ -329,5 +372,63 @@
                             app:layout_constraintStart_toStartOf="@id/coupons_icon"
                             app:layout_constraintTop_toBottomOf="@id/coupons_icon" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#E0E0E0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/favoritos_layout"
+                    app:layout_constraintStart_toEndOf="@+id/cupom_layout"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/favoritos_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="100dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@id/cupom_layout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cupom_layout"
+                    app:layout_constraintTop_toTopOf="@id/cupom_layout">
+
+                        <ImageView
+                            android:id="@+id/heart_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:contentDescription="Favoritos"
+                            android:src="@drawable/like"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/roxo" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="Favoritos"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="@id/heart_icon"
+                            app:layout_constraintStart_toStartOf="@id/heart_icon"
+                            app:layout_constraintTop_toBottomOf="@id/heart_icon" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#FFC107"
+            android:text="Sair da conta"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/other_sections" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
