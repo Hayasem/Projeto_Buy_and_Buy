@@ -31,25 +31,6 @@
             this.firebaseDatabase = firebaseDatabase;
             this.firebaseAuth = FirebaseAuth.getInstance();
         }
-
-        public void cadastrarUsuarioAuth    (Usuario usuario, OnCompleteListener<Void> listener){
-            firebaseAuth.createUserWithEmailAndPassword(usuario.getEmail(), usuario.getSenha())
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                String idUsuario = firebaseDatabase.child("usuarios").push().getKey();
-                                usuario.setIdUsuario(idUsuario);
-
-                                assert idUsuario != null;
-                                firebaseDatabase.child("usuarios").child(idUsuario).setValue(usuario).addOnCompleteListener(listener);
-                            }else{
-                                Exception exception = task.getException();
-                                mostrarErroDialog(exception != null ? exception.getMessage() : "Não foi possível efetuar o cadastro, tente novamente.");
-                            }
-                        }
-                    });
-        }
         public void consultarUsuario(String idUsuario, ValueEventListener listener) {
             firebaseDatabase.child("usuarios").child(idUsuario).addListenerForSingleValueEvent(listener);
         }
@@ -73,32 +54,7 @@
             firebaseAuth.signOut();
         }
     }
-        public String gerarSalt(){
-            SecureRandom random;
-            try {
-                random = SecureRandom.getInstance("SHA1PRNG");
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                random = new SecureRandom(); // fallback para o padrão
-            }
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
-            return Base64.getEncoder().encodeToString(salt);
-        }
-        public String gerarHashSenha(String senha, String salt){
-            try{
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] hash = digest.digest((senha + salt).getBytes(StandardCharsets.UTF_8));
-                StringBuilder hexString = new StringBuilder(2*hash.length);
-                for(byte b : hash){
-                    hexString.append(String.format("%02x", b & 0xff));
-                }
-                return hexString.toString();
-            }catch (NoSuchAlgorithmException e){
-                e.printStackTrace();
-                return null;
-            }
-        }
+
         private void mostrarErroDialog(String mensagem) {
             new AlertDialog.Builder(context)
                     .setTitle("Erro")

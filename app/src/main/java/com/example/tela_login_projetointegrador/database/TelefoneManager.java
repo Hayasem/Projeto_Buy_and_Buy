@@ -2,16 +2,12 @@ package com.example.tela_login_projetointegrador.database;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.example.tela_login_projetointegrador.model.Telefone;
-import com.example.tela_login_projetointegrador.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +42,7 @@ public class TelefoneManager {
                 if (snapshot.exists()) {
                     Telefone telefone = snapshot.getValue(Telefone.class);
                     if (telefone != null) {
-                        System.out.println("Telefone encontrado: " + telefone.getNumero());
+                        System.out.println("Telefone encontrado: " + telefone.getContato());
                     } else {
                         System.out.println("Telefone não encontrado.");
                     }

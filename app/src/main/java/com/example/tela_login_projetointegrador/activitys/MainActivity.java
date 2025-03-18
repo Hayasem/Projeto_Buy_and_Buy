@@ -1,12 +1,9 @@
-package com.example.tela_login_projetointegrador.backendactivitys;
+package com.example.tela_login_projetointegrador.activitys;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,31 +11,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tela_login_projetointegrador.Format.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Format.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.database.UserManager;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
-import java.util.Random;
 
 //Classe Principal, e objetos da classe:
 //--------------------------------------------------------------------------------------------
@@ -57,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     protected static final String KEY_LAST_LOGIN = "last_login";
     protected static final long LOGIN_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
     protected static final int MAXIMO_TENTATIVAS = 3; // Máximo de tentativas
-
     private SharedPreferences sharedPreferences;
 //---------------------------------------------------------------------------------------------
 
@@ -160,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void navegaHome() {
         sharedPreferences.edit().putLong(KEY_LAST_LOGIN, System.currentTimeMillis()).apply();
         Intent intent = new Intent(MainActivity.this,SecondActivity.class);
@@ -182,9 +168,6 @@ public class MainActivity extends AppCompatActivity {
         user.sendEmailVerification().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 Snackbar.make(bt_entrar, "E-mail de verificação enviado. Verifique sua caixa de entrada.", Snackbar.LENGTH_LONG).show();
-
-
-
             }else{
                 Exception exception = task.getException();
                 assert exception != null;
@@ -214,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
         attempts++;
         sharedPreferences.edit().putInt(KEY_ATTEMPTS, attempts).apply();
     }
-
     private void resetAttempts() {
         sharedPreferences.edit().putInt(KEY_ATTEMPTS, 0).apply();
     }

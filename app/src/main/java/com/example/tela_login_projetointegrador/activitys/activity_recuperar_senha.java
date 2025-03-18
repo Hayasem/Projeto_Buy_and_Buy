@@ -1,4 +1,4 @@
-package com.example.tela_login_projetointegrador.backendactivitys;
+package com.example.tela_login_projetointegrador.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,17 +11,11 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.utils.Utils;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class activity_recuperar_senha extends AppCompatActivity {

@@ -58,7 +58,6 @@ public class FragmentCadastrarProdutos extends Fragment {
     private Button btn_confirmar_cadastro_produto;
     private ImageView imageView;
     private String imageString;
-    private ProductManager productManager;
     private DatabaseReference productsDataRef;
 
     String[] mensagens = {"Preencha todos os campos", "Produto Cadastrado com sucesso"};

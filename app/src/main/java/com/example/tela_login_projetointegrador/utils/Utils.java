@@ -9,6 +9,11 @@ import androidx.core.content.ContextCompat;
 import com.example.tela_login_projetointegrador.R;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.regex.Pattern;
 
 import android.graphics.Bitmap;
@@ -98,5 +103,31 @@ public class Utils {
         LocalDateTime agora = LocalDateTime.now();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         return agora.format(formato);
+    }
+    public static String gerarSalt(){
+        SecureRandom random;
+        try {
+            random = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            random = new SecureRandom(); // fallback para o padrão
+        }
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return Base64.getEncoder().encodeToString(salt);
+    }
+    public static String gerarHashSenha(String senha, String salt){
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest((senha + salt).getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder(2*hash.length);
+            for(byte b : hash){
+                hexString.append(String.format("%02x", b & 0xff));
+            }
+            return hexString.toString();
+        }catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

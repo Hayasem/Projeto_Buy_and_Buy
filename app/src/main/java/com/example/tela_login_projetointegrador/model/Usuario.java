@@ -2,7 +2,7 @@ package com.example.tela_login_projetointegrador.model;
 
 public class Usuario {
     private String idUsuario;
-    private String idTelefone;
+    private String idContato;
     String nome;
     String cpf;
     String email;
@@ -12,18 +12,21 @@ public class Usuario {
     String dataReg;
     String salt;
 
-    public Usuario(String idUsuario, String nome, String cpf, String email, String senha,
-                   String cep, String dataReg, String hash_senha, String salt)
+
+    public Usuario(){}
+    public Usuario(String idUsuario, String idContato, String nome, String cpf, String email, String senha,
+                   String cep, String hash_senha, String salt,String dataReg)
     {
         this.idUsuario = idUsuario;
+        this.idContato = idContato;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
         this.cep = cep;
         this.hash_senha = hash_senha;
-        this.dataReg = dataReg;
         this.salt = salt;
+        this.dataReg = dataReg;
     }
 
     public String getIdUsuario() {
@@ -34,12 +37,12 @@ public class Usuario {
         this.idUsuario = idUsuario;
     }
 
-    public String getIdTelefone() {
-        return idTelefone;
+    public String getIdContato() {
+        return idContato;
     }
 
-    public void setIdTelefone(String idTelefone) {
-        this.idTelefone = idTelefone;
+    public void setIdContato(String idTelefone) {
+        this.idContato = idTelefone;
     }
 
     public String getNome() {

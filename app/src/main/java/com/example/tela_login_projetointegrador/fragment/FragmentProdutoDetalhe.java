@@ -1,7 +1,10 @@
 package com.example.tela_login_projetointegrador.fragment;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.database.sqlite.SQLiteDatabase;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.StatusPedido;
-import com.example.tela_login_projetointegrador.backendactivitys.MenuScreen;
-import com.example.tela_login_projetointegrador.database.DatabaseConnection;
-import com.example.tela_login_projetointegrador.database.PedidoManager;
-import com.example.tela_login_projetointegrador.database.PedidosItensManager;
-import com.example.tela_login_projetointegrador.model.Pedido;
-import com.example.tela_login_projetointegrador.model.Pedido_itens;
+import com.example.tela_login_projetointegrador.model.CartProducts;
 import com.example.tela_login_projetointegrador.model.Produto;
 import com.example.tela_login_projetointegrador.utils.Utils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FragmentProdutoDetalhe extends Fragment {
 
@@ -30,12 +34,11 @@ public class FragmentProdutoDetalhe extends Fragment {
     private boolean isDescriptionExpanded;
     private boolean isEspecificacoesExpanded;
     private TextView textPreco, descricao, descricaoExpandida, categoriaExpandida, quantidadeExpandida;
-    private ImageView iconCart, iconShare, iconComeBack, image, descricaoToggleIcon, especificacoesToggleIcon;
+    private ImageView iconCart, iconComeBack, image, descricaoToggleIcon, especificacoesToggleIcon;
     private Produto produto;
     private LinearLayout descricaoContent, especificacoesContent;
-    private PedidoManager pedidoManager;
-    private PedidosItensManager pedidosItensManager;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_produto_detalhe, container, false);
@@ -52,7 +55,6 @@ public class FragmentProdutoDetalhe extends Fragment {
         image = view.findViewById(R.id.product_image);
         iconCart = view.findViewById(R.id.icon_cart);
         iconComeBack = view.findViewById(R.id.icon_comeBack);
-        iconShare = view.findViewById(R.id.icon_share);
         textPreco = view.findViewById(R.id.product_price);
         descricao = view.findViewById(R.id.txt_descricao);
 
@@ -66,11 +68,6 @@ public class FragmentProdutoDetalhe extends Fragment {
             toggleSection(especificacoesContent, especificacoesToggleIcon, isEspecificacoesExpanded);
         });
 
-        DatabaseConnection databaseConnection = new DatabaseConnection(getContext());
-        SQLiteDatabase db = databaseConnection.getWritableDatabase();
-        pedidoManager = new PedidoManager(db);
-        pedidosItensManager = new PedidosItensManager(db);
-
         assert getArguments() != null;
         produto = (Produto) getArguments().getSerializable("produto");
         if (produto != null) {
@@ -80,36 +77,29 @@ public class FragmentProdutoDetalhe extends Fragment {
 
             descricaoExpandida.setText(produto.getDescricao());
             categoriaExpandida.setText(String.valueOf(produto.getIdCategoria()));
-            quantidadeExpandida.setText(String.valueOf(produto.getQuantidadeDisponivel()) + " peças ainda em estoque");
+            quantidadeExpandida.setText(produto.getQuantidadeDisponivel() + " peças ainda em estoque");
         }
-
         acoes();
         return view;
     }
-
     private void acoes() {
         iconCart.setOnClickListener(v -> {
-            List<Pedido> pedidosList = pedidoManager.getPedidoByStatus(StatusPedido.ABERTO); // se não tiver pedido com status aberto eu tenho que criar um novo pedido, caso ao contrato eu uso o pedido em aberto
-            if (pedidosList.isEmpty()) {
-                Pedido pedido = new Pedido(Utils.obterDataHoraAtual(), 1, StatusPedido.ABERTO.toString());
-                String pedidoID = String.valueOf(pedidoManager.cadastrarPedido(pedido));
-                Pedido_itens pedidoItens = new Pedido_itens((String) pedidoID, produto.getPreco(), produto.getIdProduto(), 1);
-                pedidosItensManager.cadastrarItensPedido(pedidoItens);
-
-            } else {
-                Pedido pedidoAberto = pedidosList.get(0);
-                Pedido_itens pedidoItens = new Pedido_itens(String.valueOf(pedidoAberto.getIdPedido()), produto.getPreco(), produto.getIdProduto(), 1);
-                pedidosItensManager.cadastrarItensPedido(pedidoItens);
-            }
-            Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+            iconCart.setEnabled(false);
+            adicionarProdutoCarrinho(new CartProducts(
+                    produto.getIdProduto(),
+                    produto.getTitulo(),
+                    produto.getPreco(),
+                    1
+            ));
+            requireActivity().getSupportFragmentManager().setFragmentResult("carrinho_atualizado", new Bundle());
         });
+
         iconComeBack.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
                     .popBackStack();
         });
     }
-
     private void toggleSection (LinearLayout content, ImageView toggleIcon,boolean isExpanded){
         // Alternar visibilidade
         content.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -123,5 +113,55 @@ public class FragmentProdutoDetalhe extends Fragment {
         rotate.setDuration(300);
         rotate.setFillAfter(true);
         toggleIcon.startAnimation(rotate);
+    }
+    public void adicionarProdutoCarrinho(CartProducts produto){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getUid() == null) {
+            Log.e("Firebase", "Usuário não autenticado");
+            return;
+        }
+
+        DatabaseReference cartRef = FirebaseDatabase.getInstance()
+                .getReference("carrinho")
+                .child(auth.getUid())
+                .child(produto.getIdProduto());
+
+        cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int novaQuantidade = 1;
+                if (snapshot.exists()) {
+                    Integer quantidadeAtual = snapshot.child("quantidade").getValue(Integer.class);
+                    if (quantidadeAtual != null) {
+                        novaQuantidade = quantidadeAtual + 1;
+                    }
+                }
+                Map<String, Object> cartItem = new HashMap<>();
+                cartItem.put("nome", produto.getNomeProduto());
+                cartItem.put("preco", produto.getPreco_uni());
+                cartItem.put("quantidade", novaQuantidade);
+
+                cartRef.setValue(cartItem)
+                        .addOnSuccessListener(aVoid -> {
+                            iconCart.setEnabled(true);
+                            Log.d("Firebase", "Produto adicionado/atualizado no carrinho com sucesso!");
+                            // Atualiza a tela ou notifica o usuário
+                            Toast.makeText(getContext(), "Produto adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                            // Notifica o Fragment que o carrinho foi atualizado
+                            requireActivity().getSupportFragmentManager().setFragmentResult("carrinho_atualizado", new Bundle());
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("Firebase", "Erro ao adicionar produto ao carrinho", e);
+                            Toast.makeText(getContext(), "Erro ao adicionar produto", Toast.LENGTH_SHORT).show();
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                iconCart.setEnabled(true);
+                Log.e("Firebase", "Erro ao acessar o carrinho", error.toException());
+                Toast.makeText(getContext(), "Erro ao acessar o carrinho", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

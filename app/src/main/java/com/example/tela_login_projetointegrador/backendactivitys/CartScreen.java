@@ -21,16 +21,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartScreen extends Fragment {
+
+    private RecyclerView recyclerView;
+    private MyCartAdapter myCartAdapter;
+    private final List<CartProducts> cartProductsList = new ArrayList<>();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_cart_screen, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_CartProducts);
+        recyclerView = view.findViewById(R.id.recyclerView_CartProducts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+
+        carregarProdutosCarrinho();
+
         return view;
     }
 
-    public static CartScreen newInstance() {
-        return new CartScreen();
+    private void carregarProdutosCarrinho() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("carrinho")
+                .child(auth.getUid());
+
+        cartRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cartProductsList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String idProduto = dataSnapshot.getKey();
+                    String titulo = dataSnapshot.child("nome").getValue(String.class);
+                    float preco = dataSnapshot.child("preco").getValue(Float.class);
+                    int quantidade = dataSnapshot.child("quantidade").getValue(Integer.class);
+
+                    cartProductsList.add(new CartProducts(idProduto, titulo, preco, quantidade));
+                }
+                myCartAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Erro ao carregar carrinho", error.toException());
+            }
+        });
     }
 }

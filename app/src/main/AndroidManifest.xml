@@ -20,19 +20,19 @@
             android:name=".BottomSheetProdutoActivity"
             android:exported="false" />
         <activity
-            android:name=".backendactivitys.activity_recuperar_senha"
+            android:name=".activitys.activity_recuperar_senha"
             android:exported="false" />
         <activity
-            android:name=".backendactivitys.CartScreen"
+            android:name=".fragment.CartScreen"
             android:exported="false" />
         <activity
-            android:name=".backendactivitys.MenuScreen"
+            android:name=".activitys.MenuScreen"
             android:exported="false" />
         <activity
-            android:name=".backendactivitys.TelaPerfilUsuario"
+            android:name=".activitys.TelaPerfilUsuario"
             android:exported="false" />
         <activity
-            android:name=".backendactivitys.MainActivity"
+            android:name=".activitys.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,11 +45,11 @@
         <!-- android:launchMode="singleTop" -->
         <!-- /> -->
         <activity
-            android:name=".backendactivitys.FormCadastro"
+            android:name=".activitys.FormCadastro"
             android:exported="true"
             android:launchMode="singleTop" />
         <activity
-            android:name=".backendactivitys.SecondActivity"
+            android:name=".activitys.SecondActivity"
             android:exported="true"
             android:launchMode="singleTop" />
     </application>

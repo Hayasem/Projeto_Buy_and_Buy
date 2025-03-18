@@ -2,13 +2,14 @@ package com.example.tela_login_projetointegrador.model;
 
 public class Telefone {
     String idTelefone;
-    String numero;
     String idUsuario;
+    String contato;
 
-    public Telefone(String idTelefone, String idUsuario, String numero ) {
-        this.numero = numero;
-        this.idUsuario = idUsuario;
+
+    public Telefone(String idTelefone, String idUsuario, String contato ) {
         this.idTelefone = idTelefone;
+        this.idUsuario = idUsuario;
+        this.contato = contato;
     }
 
 
@@ -20,12 +21,12 @@ public class Telefone {
         this.idTelefone = idTelefone;
     }
 
-    public String getNumero() {
-        return numero;
+    public String getContato() {
+        return contato;
     }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
+    public void setContato(String contato) {
+        this.contato = contato;
     }
 
     public String getIdUsuario() {
