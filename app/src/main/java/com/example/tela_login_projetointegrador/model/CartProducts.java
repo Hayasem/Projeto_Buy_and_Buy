@@ -21,7 +21,7 @@ public class CartProducts {
         this.noCarrinho = noCarrinho;
     }
 
-    public CartProducts() {
+    public CartProducts(String idProduto, String titulo, float preco, int quantidade) {
     }
 
     public int getIdCarrinho() {

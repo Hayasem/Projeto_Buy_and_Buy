@@ -148,6 +148,7 @@ public class FormCadastro extends AppCompatActivity {
                         }
                     });
         });
+
     }
 
     private void exibirSnackbar(String erro, View view) {

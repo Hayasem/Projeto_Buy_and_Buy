@@ -13,7 +13,7 @@ public class  CartProductsManager {
     public CartProducts getCartProducts(){
         Cursor cursor = db.rawQuery("SELECT * FROM CARRINHO", null);
         if (cursor.moveToFirst()){
-            CartProducts carrinho = new CartProducts();
+            CartProducts carrinho = new CartProducts(idProduto, titulo, preco, quantidade);
 
             carrinho.setIdCarrinho(cursor.getInt(0));
             carrinho.setIdProduto(cursor.getInt(1));
