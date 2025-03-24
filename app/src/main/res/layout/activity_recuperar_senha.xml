@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".activitys.MainActivity" >
+    tools:context=".activities.MainActivity" >
 
     <View
         android:id="@+id/container_circle"
@@ -14,7 +14,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/container_circle"
+        android:background="@drawable/circle_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
