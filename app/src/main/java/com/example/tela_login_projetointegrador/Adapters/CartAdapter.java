@@ -31,44 +31,47 @@ import java.util.Objects;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHolder> {
     private List<ProdutosCarrinho> listaProdutosCarrinho;
-    private double totalCarrinho = 0.0;
+    private TextView totalPriceView;
+
 
     public CartAdapter(List<ProdutosCarrinho> listaProdutosCarrinho) {
         this.listaProdutosCarrinho = listaProdutosCarrinho;
+        this.totalPriceView = totalPriceView;
 
     }
+
     public void atualizarLista(List<ProdutosCarrinho> novaLista){
         this.listaProdutosCarrinho = novaLista;
         notifyDataSetChanged();
     }
 
+
     @SuppressLint("ResourceType")
     @NonNull
     @Override
     public MyViewCartHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       return new MyViewCartHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_itens_layout, parent, false));
+        return new MyViewCartHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_itens_layout, parent, false));
     }
 
-        @SuppressLint({"DefaultLocale", "SetTextI18n"})
-        @Override
-        public void onBindViewHolder(@NonNull MyViewCartHolder holder, int position) {
-            ProdutosCarrinho produtoNoCarrinho = listaProdutosCarrinho.get(position);
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
+    @Override
+    public void onBindViewHolder(@NonNull MyViewCartHolder holder, int position) {
+        ProdutosCarrinho produtoNoCarrinho = listaProdutosCarrinho.get(position);
 
 
+        holder.plusView.setOnClickListener(v -> {
+            adicionarProduto(produtoNoCarrinho);
+        });
+        holder.minusView.setOnClickListener(v -> {
+            removerProduto(produtoNoCarrinho);
+        });
 
-            holder.plusView.setOnClickListener(v -> {
-                adicionarProduto(produtoNoCarrinho);
-            });
-            holder.minusView.setOnClickListener(v -> {
-               removerProduto(produtoNoCarrinho);
-            });
+        holder.nameView.setText(produtoNoCarrinho.getNomeProduto());
+        holder.priceView.setText(String.format("%.2f", produtoNoCarrinho.getPreco()));
+        holder.quantityView.setText(String.valueOf(produtoNoCarrinho.getQuantidade()));
+        Glide.with(holder.itemView.getContext()).load(produtoNoCarrinho.getimagemUrl()).into(holder.imageView);
 
-            holder.nameView.setText(produtoNoCarrinho.getNomeProduto());
-            holder.priceView.setText(String.format("%.2f", produtoNoCarrinho.getPreco()));
-            holder.quantityView.setText(String.valueOf(produtoNoCarrinho.getQuantidade()));
-            Glide.with(holder.itemView.getContext()).load(produtoNoCarrinho.getimagemUrl()).into(holder.imageView);
-
-        }
+    }
 
     @Override
     public int getItemCount() {
@@ -98,12 +101,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
             Log.e("Firebase", "Usuário não autenticado ao alterar quantidade");
             return;
         }
-            String userId = auth.getUid();
-            String productId = product.getIdCarrinho();
-            if (userId == null || productId == null) {
-                Log.e("Firebase", "ID do usuário ou ID do produto é nulo.");
-                return;
-            }
+        String userId = auth.getUid();
+        String productId = product.getIdCarrinho();
+        if (userId == null || productId == null) {
+            Log.e("Firebase", "ID do usuário ou ID do produto é nulo.");
+            return;
+        }
         DatabaseReference cartRef = FirebaseDatabase.getInstance()
                 .getReference("carrinho")
                 .child(userId)
@@ -114,7 +117,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
                     int position = listaProdutosCarrinho.indexOf(product);
                     if (position != -1) {
                         product.setQuantidade(novaQuantidade);
-                        notifyItemChanged(position);
+                        notifyItemChanged(position); // Notifica o RecyclerView da alteração
                     }
                     calcularTotal();
                 })
@@ -144,28 +147,37 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
                 .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover o produto", e));
     }
     private void calcularTotal() {
-        totalCarrinho = 0.0;
+        // Armazena o valor total do carrinho
+        double totalCarrinho = 0.0;
         for (ProdutosCarrinho produto : listaProdutosCarrinho) {
             totalCarrinho += produto.getPreco() * produto.getQuantidade();
         }
-        // Atualizar o total na UI, se necessário
-        Log.d("TotalCarrinho", "Valor Total: " + totalCarrinho);
-    } 
-        public static class MyViewCartHolder extends RecyclerView.ViewHolder {
-            ImageView imageView, plusView, minusView;
-            TextView nameView, quantityView, priceView, nameSeller, excludeTv, buyTv;
-
-            public MyViewCartHolder(@NotNull View itemView){
-                super(itemView);
-                excludeTv = itemView.findViewById(R.id.exclude_tv);
-                buyTv = itemView.findViewById(R.id.buy_tv);
-                nameSeller = itemView.findViewById(R.id.seller_name);
-                imageView = itemView.findViewById(R.id.img_product);
-                nameView = itemView.findViewById(R.id.product_name);
-                plusView = itemView.findViewById(R.id.plus_icon);
-                minusView = itemView.findViewById(R.id.minus_icon);
-                quantityView = itemView.findViewById(R.id.product_quantity);
-                priceView = itemView.findViewById(R.id.product_price);
+        if (totalPriceView != null) {
+            // Caso o carrinho esteja vazio, exibe "Carrinho vazio"
+            if (listaProdutosCarrinho.isEmpty()) {
+                totalPriceView.setText("Carrinho vazio");
+            } else {
+                totalPriceView.setText(String.format("Total: R$ %.2f", totalCarrinho));
             }
         }
+        // Atualizar o total na UI, se necessário
+        Log.d("TotalCarrinho", "Valor Total: " + totalCarrinho);
     }
+    public static class MyViewCartHolder extends RecyclerView.ViewHolder {
+        ImageView imageView, plusView, minusView;
+        TextView nameView, quantityView, priceView, nameSeller, excludeTv, buyTv;
+
+        public MyViewCartHolder(@NotNull View itemView){
+            super(itemView);
+            excludeTv = itemView.findViewById(R.id.exclude_tv);
+            buyTv = itemView.findViewById(R.id.buy_tv);
+            nameSeller = itemView.findViewById(R.id.seller_name);
+            imageView = itemView.findViewById(R.id.img_product);
+            nameView = itemView.findViewById(R.id.product_name);
+            plusView = itemView.findViewById(R.id.plus_icon);
+            minusView = itemView.findViewById(R.id.minus_icon);
+            quantityView = itemView.findViewById(R.id.product_quantity);
+            priceView = itemView.findViewById(R.id.product_price);
+        }
+    }
+}
