@@ -1,16 +1,20 @@
 package com.example.tela_login_projetointegrador.model;
 
 public class CartProducts {
-    int idCarrinho;
-    int idProduto;
-    int idUsuario;
-    int idPedido;
+    String nomeVendedor;
+    String nomeProduto;
+    int quantidade;
+    String idCarrinho;
+    String idProduto;
+    String idUsuario;
+    String idPedido;
     float preco_uni;
     float total;
     String data_add;
     boolean noCarrinho;
 
-    public CartProducts(int idCarrinho, int idProduto, int idUsuario, int idPedido, float preco_uni, float total, String data_add, boolean noCarrinho) {
+    public CartProducts(String idCarrinho, String idProduto, String idUsuario, String idPedido, float preco_uni, float total, String data_add, boolean noCarrinho, String nomeVendedor,
+                        String nomeProduto, int quantidade) {
         this.idCarrinho = idCarrinho;
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
@@ -19,41 +23,73 @@ public class CartProducts {
         this.total = total;
         this.data_add = data_add;
         this.noCarrinho = noCarrinho;
+        this.nomeVendedor = nomeVendedor;
+        this.nomeProduto = nomeProduto;
+        this.quantidade = quantidade;
     }
 
     public CartProducts(String idProduto, String titulo, float preco, int quantidade) {
+        this.idProduto = idProduto;
+        this.nomeProduto = titulo;
+        this.preco_uni = preco;
+        this.quantidade = quantidade;
     }
 
-    public int getIdCarrinho() {
+
+    public String getIdCarrinho() {
         return idCarrinho;
     }
 
-    public void setIdCarrinho(int idCarrinho) {
+    public void setIdCarrinho(String idCarrinho) {
         this.idCarrinho = idCarrinho;
     }
 
-    public int getIdProduto() {
+    public String getIdProduto() {
         return idProduto;
     }
 
-    public void setIdProduto(int idProduto) {
+    public void setIdProduto(String idProduto) {
         this.idProduto = idProduto;
     }
 
-    public int getIdUsuario() {
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    public int getIdPedido() {
+    public String getIdPedido() {
         return idPedido;
     }
 
-    public void setIdPedido(int idPedido) {
+    public void setIdPedido(String idPedido) {
         this.idPedido = idPedido;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public String getNomeProduto() {
+        return nomeProduto;
+    }
+
+    public void setNomeProduto(String nomeProduto) {
+        this.nomeProduto = nomeProduto;
+    }
+
+    public String getNomeVendedor() {
+        return nomeVendedor;
+    }
+
+    public void setNomeVendedor(String nomeVendedor) {
+        this.nomeVendedor = nomeVendedor;
     }
 
     public float getPreco_uni() {
