@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".activitys.TelaPerfilUsuario">
+    tools:context=".activities.UserActivity">
 
         <!-- Barra superior com nome e opções -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -433,12 +433,12 @@
             app:layout_constraintTop_toBottomOf="@+id/other_sections" />
 
         <Button
-            android:id="@+id/btn_limparProdutos"
+            android:id="@+id/btn_cadastrar_produto"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:backgroundTint="#FFC107"
-            android:text="Limpar produtos"
+            android:text="Cadastrar produtos"
             app:layout_constraintEnd_toEndOf="@+id/btn_deslogar"
             app:layout_constraintStart_toStartOf="@+id/btn_deslogar"
             app:layout_constraintTop_toBottomOf="@+id/btn_deslogar" />
