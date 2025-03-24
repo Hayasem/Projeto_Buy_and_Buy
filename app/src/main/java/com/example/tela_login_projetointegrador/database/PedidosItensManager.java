@@ -4,8 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.tela_login_projetointegrador.model.Pedido;
-import com.example.tela_login_projetointegrador.model.Pedido_itens;
+import com.example.tela_login_projetointegrador.models.PedidoItens;
 
 public class PedidosItensManager {
     SQLiteDatabase db;
@@ -13,10 +12,10 @@ public class PedidosItensManager {
     public PedidosItensManager(SQLiteDatabase db) {
         this.db = db;
     }
-    public Pedido_itens getItensPedidos(){
+    public PedidoItens getItensPedidos(){
         Cursor cursor = db.rawQuery("SELECT * FROM PEDIDO_ITENS", null);
         if (cursor.moveToFirst()){
-            Pedido_itens itens = new Pedido_itens();
+            PedidoItens itens = new PedidoItens();
 
             itens.setIdItensPedidos(cursor.getInt(0));
             itens.setIdPedido(cursor.getString(1));
@@ -31,7 +30,7 @@ public class PedidosItensManager {
     }
 
 
-    public void cadastrarItensPedido(Pedido_itens pedidoItens) {
+    public void cadastrarItensPedido(PedidoItens pedidoItens) {
         ContentValues values = new ContentValues();
         values.put("idPedido", pedidoItens.getIdPedido());
         values.put("valorUnit", pedidoItens.getValorUnit());

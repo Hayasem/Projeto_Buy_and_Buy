@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.example.tela_login_projetointegrador.model.Telefone;
+import com.example.tela_login_projetointegrador.models.Telefone;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

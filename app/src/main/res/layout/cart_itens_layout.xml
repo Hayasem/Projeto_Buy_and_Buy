@@ -55,8 +55,8 @@
         <!-- Imagem do Produto -->
         <ImageView
             android:id="@+id/img_product"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
             android:src="@drawable/img_racket"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -81,18 +81,43 @@
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/exclude_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Excluir"
+                android:textColor="@color/roxo"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/container_qnt_cart_product"
+                app:layout_constraintStart_toStartOf="@+id/product_name"
+                app:layout_constraintTop_toBottomOf="@id/product_name" />
+
+            <TextView
+                android:id="@+id/buy_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comprar"
+                android:textColor="@color/roxo"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/exclude_tv"
+                app:layout_constraintEnd_toEndOf="@+id/product_name"
+                app:layout_constraintTop_toTopOf="@+id/exclude_tv" />
 
             <!-- Quantidade -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container_qnt_cart_product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/product_name"
-                app:layout_constraintTop_toBottomOf="@id/product_name">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/exclude_tv">
 
                 <ImageView
                     android:id="@+id/minus_icon"
@@ -108,6 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="24dp"
                     android:paddingHorizontal="8dp"
                     android:text="1"
                     android:textColor="@android:color/black"

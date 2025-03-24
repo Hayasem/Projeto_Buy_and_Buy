@@ -5,9 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.tela_login_projetointegrador.StatusPedido;
-import com.example.tela_login_projetointegrador.model.Pedido;
-import com.example.tela_login_projetointegrador.model.Pedido_itens;
-import com.example.tela_login_projetointegrador.model.Produto;
+import com.example.tela_login_projetointegrador.models.Pedido;
 
 import java.util.ArrayList;
 import java.util.List;

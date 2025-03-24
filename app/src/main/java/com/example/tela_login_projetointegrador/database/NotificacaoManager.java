@@ -2,7 +2,7 @@ package com.example.tela_login_projetointegrador.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.example.tela_login_projetointegrador.model.HolderNotificacao;
+import com.example.tela_login_projetointegrador.models.HolderNotificacao;
 
 public class NotificacaoManager {
     SQLiteDatabase db;

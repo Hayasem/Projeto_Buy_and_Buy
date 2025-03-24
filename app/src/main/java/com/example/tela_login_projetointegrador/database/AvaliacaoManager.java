@@ -2,7 +2,7 @@ package com.example.tela_login_projetointegrador.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.example.tela_login_projetointegrador.model.Avaliacao;
+import com.example.tela_login_projetointegrador.models.Avaliacao;
 
 public class AvaliacaoManager {
     SQLiteDatabase db;

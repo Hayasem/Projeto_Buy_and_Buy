@@ -46,7 +46,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     @NonNull
     @Override
     public MyViewCartHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       return new MyViewCartHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.products_cart_itens, parent, false));
+       return new MyViewCartHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_itens_layout, parent, false));
     }
 
         @SuppressLint({"DefaultLocale", "SetTextI18n"})

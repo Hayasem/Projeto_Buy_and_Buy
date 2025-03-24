@@ -2,25 +2,11 @@
 
     import android.content.Context;
 
-    import androidx.annotation.NonNull;
     import androidx.appcompat.app.AlertDialog;
 
-    import com.example.tela_login_projetointegrador.model.Usuario;
-    import com.google.android.gms.tasks.OnCompleteListener;
-    import com.google.android.gms.tasks.Task;
-    import com.google.firebase.auth.AuthResult;
     import com.google.firebase.auth.FirebaseAuth;
     import com.google.firebase.database.DatabaseReference;
     import com.google.firebase.database.ValueEventListener;
-
-    import java.nio.charset.StandardCharsets;
-    import java.security.MessageDigest;
-    import java.security.NoSuchAlgorithmException;
-    import java.security.SecureRandom;
-    import java.text.SimpleDateFormat;
-    import java.util.Base64;
-    import java.util.Calendar;
-    import java.util.Locale;
 
     public class UserManager {
         private DatabaseReference firebaseDatabase;

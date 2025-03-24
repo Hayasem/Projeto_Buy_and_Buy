@@ -87,6 +87,13 @@
         <item name="android:background">@drawable/black_button</item>
     </style>
 
+    <style name="container_qntd_produtos_carrinho">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/cirlcle_container</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Container_products">
         <item name="android:background">@drawable/container_products</item>
         <item name="android:layout_width">match_parent</item>
@@ -122,13 +129,17 @@
         <item name="android:layout_margin">15dp</item>
         <item name="android:clickable">true</item>
     </style>
-    
+
     <style name="CartPlusMinusIcons">
         <item name="android:layout_width">15dp</item>
         <item name="android:layout_height">15dp</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:clickable">true</item>
 
+    </style>
+    <style name="Widget.Theme.Tela_Login_ProjetoIntegrador.MyView" parent="">
+        <item name="android:background">@color/gray_400</item>
+        <item name="exampleColor">@color/light_blue_400</item>
     </style>
 
 </resources>

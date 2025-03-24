@@ -1,14 +1,8 @@
 package com.example.tela_login_projetointegrador.database;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.example.tela_login_projetointegrador.model.Entrega;
-import com.example.tela_login_projetointegrador.model.Usuario;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
+import com.example.tela_login_projetointegrador.models.Entrega;
 
 public class EntregaManager {
     SQLiteDatabase db;
