@@ -39,7 +39,7 @@ public class NotificacaoAdapter extends ArrayAdapter<HolderNotificacao> {
         }
 
         TextView txtTitulo = (TextView) convertView.findViewById(R.id.idTitulo);
-        TextView txtSubtitulo = (TextView) convertView.findViewById(R.id.idSubtitulo);
+        TextView txtSubtitulo = (TextView) convertView.findViewById(R.id.idDescricaoNotification);
 
         // Exiba o item nas TextViews
         txtTitulo.setText(getItem(position).getTitulo());
