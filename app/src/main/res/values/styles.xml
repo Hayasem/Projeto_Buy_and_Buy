@@ -90,7 +90,7 @@
     <style name="container_qntd_produtos_carrinho">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/cirlcle_container</item>
+        <item name="android:background">@drawable/circle_container</item>
         <item name="android:textStyle">bold</item>
     </style>
 
