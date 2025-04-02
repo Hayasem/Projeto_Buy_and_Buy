@@ -58,6 +58,33 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     public void onBindViewHolder(@NonNull MyViewCartHolder holder, int position) {
         ProdutosCarrinho produtoNoCarrinho = listaProdutosCarrinho.get(position);
 
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("usuarios")
+                .child(produtoNoCarrinho.getIdUsuario());
+        userRef.child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String nomeVendedor = snapshot.getValue(String.class);
+                    holder.nameSeller.setText(nomeVendedor);
+                }else{
+                    holder.nameSeller.setText("Vendedor desconhecido");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                holder.nameSeller.setText("Erro ao carregar vendedor");
+            }
+        });
+
+        holder.nameSeller.setText(produtoNoCarrinho.getNomeVendedor());
+        holder.nameView.setText(produtoNoCarrinho.getNomeProduto());
+        holder.priceView.setText(String.format("%.2f", produtoNoCarrinho.getPreco()));
+        holder.quantityView.setText(String.valueOf(produtoNoCarrinho.getQuantidade()));
+        Glide.with(holder.itemView.getContext())
+                .load(produtoNoCarrinho.getimagemUrl())
+                .placeholder(R.drawable.img_backpack)
+                .into(holder.imageView);
 
         holder.plusView.setOnClickListener(v -> {
             adicionarProduto(produtoNoCarrinho);
@@ -65,12 +92,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         holder.minusView.setOnClickListener(v -> {
             removerProduto(produtoNoCarrinho);
         });
-
-        holder.nameView.setText(produtoNoCarrinho.getNomeProduto());
-        holder.priceView.setText(String.format("%.2f", produtoNoCarrinho.getPreco()));
-        holder.quantityView.setText(String.valueOf(produtoNoCarrinho.getQuantidade()));
-        Glide.with(holder.itemView.getContext()).load(produtoNoCarrinho.getimagemUrl()).into(holder.imageView);
-
     }
 
     @Override
