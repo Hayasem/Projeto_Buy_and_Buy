@@ -1,8 +1,11 @@
 package com.example.tela_login_projetointegrador.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,11 +14,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.tela_login_projetointegrador.Formats.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Formats.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseApp;
@@ -25,12 +34,33 @@ import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
 
 //Classe Principal, e objetos da classe:
 //--------------------------------------------------------------------------------------------
 public class MainActivity extends AppCompatActivity {
+
+    private ActivityResultLauncher<String> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted ->{
+                if (isGranted){
+                    getDeviceToken();
+                    Toast.makeText(MainActivity.this, "Permissão concedida! Agora você receberá notificações.", Toast.LENGTH_SHORT).show();
+                }else{
+                    new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Permissão negada")
+                            .setMessage("Sem essa permissão, você não receberá notificações importantes. Você pode ativá-la nas configurações do aplicativo.")
+                            .setPositiveButton("Abrir configurações", (dialog, which) -> {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.setData(android.net.Uri.parse("package:" + getPackageName()));
+                                startActivity(intent);
+                            })
+                            .setNegativeButton("Fechar", (dialog, which) -> dialog.dismiss())
+                            .show();
+                }
+            }
+    );
     private FirebaseAuth auth;
     private TextView text_button_tela_cadastro, text_esqueci_senha;
     private TextInputLayout layout_email, layout_senha;
@@ -56,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestPermission();
         FirebaseApp.initializeApp(this);
         auth = FirebaseAuth.getInstance();
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-
         long lastLogin = sharedPreferences.getLong(KEY_LAST_LOGIN, 0);
         long currentTime = System.currentTimeMillis();
         if (lastLogin != 0 && (currentTime - lastLogin < LOGIN_EXPIRATION_TIME)) {
@@ -199,5 +229,45 @@ public class MainActivity extends AppCompatActivity {
         edit_email.addTextChangedListener(new EmailTextWatcher(layout_email));
         edit_senha.addTextChangedListener(new SenhaTextWatcher(layout_senha));
         text_esqueci_senha = findViewById(R.id.text_esqueci_senha);
+    }
+    public void requestPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            == PackageManager.PERMISSION_GRANTED){
+
+            }else if(shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)){
+                showPermissionExplanationDialog();
+            }else{
+                resultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }else{
+            getDeviceToken();
+        }
+    }
+    private void showPermissionExplanationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Permissão necessária")
+                .setMessage("Precisamos da sua permissão para enviar notificações sobre atualizações importantes e promoções exclusivas.")
+                .setPositiveButton("Permitir", (dialog, which) -> {
+                    resultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
+    }
+    public void getDeviceToken(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()){
+                            Log.e("FireBaseLogs", "Fetching Token Failed" + task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+                        Log.v("FireBaseLogs", "Device Token: " + token);
+                    }
+                });
     }
 }

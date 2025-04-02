@@ -3,6 +3,8 @@ package com.example.tela_login_projetointegrador.Adapters;
 import static java.security.AccessController.getContext;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +36,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     private TextView totalPriceView;
 
 
-    public CartAdapter(List<ProdutosCarrinho> listaProdutosCarrinho) {
+    public CartAdapter(List<ProdutosCarrinho> listaProdutosCarrinho, TextView totalPriceView) {
         this.listaProdutosCarrinho = listaProdutosCarrinho;
         this.totalPriceView = totalPriceView;
 
@@ -90,7 +92,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
             adicionarProduto(produtoNoCarrinho);
         });
         holder.minusView.setOnClickListener(v -> {
-            removerProduto(produtoNoCarrinho);
+            removerProduto(produtoNoCarrinho, v.getContext());
         });
     }
 
@@ -106,14 +108,24 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     }
 
     // Método para diminuir a quantidade do produto no carrinho
-    private void removerProduto(ProdutosCarrinho produto) {
-        int novaQuantidade = produto.getQuantidade() - 1;
-        if (novaQuantidade > 0) {
-            atualizarQuantidade(produto, novaQuantidade);
+    private void removerProduto(ProdutosCarrinho produto, Context context) {
+        if (produto.getQuantidade() == 1) {
+            // Exibir alerta antes de remover o item do carrinho
+            exibirAlertaRemocaoCarrinho(produto, context);
         } else {
-            // Remove o produto caso a quantidade chegue a 0
-            removerProdutoDoCarrinho(produto);
+            // Se a quantidade for maior que 1, apenas diminui normalmente
+            int novaQuantidade = produto.getQuantidade() - 1;
+            atualizarQuantidade(produto, novaQuantidade);
         }
+    }
+
+    public void     exibirAlertaRemocaoCarrinho(ProdutosCarrinho produto, Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("Remover item")
+                .setMessage("Você deseja remover esse item do carrinho?")
+                .setPositiveButton("Sim", ((dialog, which) -> removerProdutoDoCarrinho(produto)))
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void atualizarQuantidade(ProdutosCarrinho product, int novaQuantidade) {
@@ -131,7 +143,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         DatabaseReference cartRef = FirebaseDatabase.getInstance()
                 .getReference("carrinho")
                 .child(userId)
-                .child(productId);
+                .child((product.getIdCarrinho()));
 
         cartRef.child("quantidade").setValue(novaQuantidade)
                 .addOnSuccessListener(aVoid -> {
@@ -154,7 +166,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         DatabaseReference cartRef = FirebaseDatabase.getInstance()
                 .getReference("carrinho")
                 .child(userId)
-                .child(product.getIdProduto());
+                .child(product.getIdCarrinho());
 
         cartRef.removeValue()
                 .addOnSuccessListener(aVoid -> {
@@ -168,20 +180,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
                 .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover o produto", e));
     }
     private void calcularTotal() {
-        // Armazena o valor total do carrinho
         double totalCarrinho = 0.0;
         for (ProdutosCarrinho produto : listaProdutosCarrinho) {
             totalCarrinho += produto.getPreco() * produto.getQuantidade();
         }
         if (totalPriceView != null) {
-            // Caso o carrinho esteja vazio, exibe "Carrinho vazio"
             if (listaProdutosCarrinho.isEmpty()) {
                 totalPriceView.setText("Carrinho vazio");
             } else {
-                totalPriceView.setText(String.format("Total: R$ %.2f", totalCarrinho));
+                totalPriceView.setText(String.format("R$ %.2f", totalCarrinho));
             }
         }
-        // Atualizar o total na UI, se necessário
         Log.d("TotalCarrinho", "Valor Total: " + totalCarrinho);
     }
     public static class MyViewCartHolder extends RecyclerView.ViewHolder {
