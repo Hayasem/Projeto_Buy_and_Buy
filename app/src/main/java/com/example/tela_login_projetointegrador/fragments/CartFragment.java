@@ -51,7 +51,7 @@
             rvProductsInCart.setLayoutManager(new LinearLayoutManager(getContext()));
             rvProductsInCart.setHasFixedSize(true);
 
-            cartAdapter = new CartAdapter(produtosCarrinhoList);
+            cartAdapter = new CartAdapter(produtosCarrinhoList, tvTotalCompra);
             rvProductsInCart.setAdapter(cartAdapter);
 
             String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
