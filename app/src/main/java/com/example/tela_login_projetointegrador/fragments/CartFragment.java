@@ -47,7 +47,6 @@
             btn_finalizar_compra = view.findViewById(R.id.btn_finalizar_compra);
             tv_kart_prompt = view.findViewById(R.id.tv_kart_prompt);
 
-
             rvProductsInCart.setLayoutManager(new LinearLayoutManager(getContext()));
             rvProductsInCart.setHasFixedSize(true);
 
