@@ -60,24 +60,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     public void onBindViewHolder(@NonNull MyViewCartHolder holder, int position) {
         ProdutosCarrinho produtoNoCarrinho = listaProdutosCarrinho.get(position);
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("usuarios")
-                .child(produtoNoCarrinho.getIdUsuario());
-        userRef.child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    String nomeVendedor = snapshot.getValue(String.class);
-                    holder.nameSeller.setText(nomeVendedor);
-                }else{
-                    holder.nameSeller.setText("Vendedor desconhecido");
-                }
-            }
+        if (produtoNoCarrinho.getIdUsuario() != null && !produtoNoCarrinho.getIdUsuario().isEmpty()) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("usuarios")
+                    .child(produtoNoCarrinho.getIdUsuario());
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                holder.nameSeller.setText("Erro ao carregar vendedor");
-            }
-        });
+            userRef.child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String nomeVendedor = snapshot.getValue(String.class);
+                        holder.nameSeller.setText(nomeVendedor);
+                    } else {
+                        holder.nameSeller.setText("Vendedor desconhecido");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    holder.nameSeller.setText("Erro ao carregar vendedor");
+                }
+            });
+        }else{
+            Log.e("Firebase", "ID do usuário do produto é nulo ou vazio!");
+            holder.nameSeller.setText("Vendedor desconhecido");
+        }
 
         holder.nameSeller.setText(produtoNoCarrinho.getNomeVendedor());
         holder.nameView.setText(produtoNoCarrinho.getNomeProduto());

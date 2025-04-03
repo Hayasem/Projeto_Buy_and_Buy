@@ -3,22 +3,25 @@ package com.example.tela_login_projetointegrador.models;
 public class HolderNotificacao {
      int idNotificacao;
      int idUsuario;
+     String image_notif;
      String titulo;
      String descricao;
      String data_notif;
-     boolean visualizado;
+     String hora_notif;
 
-    public HolderNotificacao(int idNotificacao, int idUsuario, String titulo, String descricao, String data_notif, boolean visualizado) {
+    public HolderNotificacao(int idNotificacao, int idUsuario, String image_notif, String titulo, String descricao, String data_notif, String hora_notif) {
         this.idNotificacao = idNotificacao;
         this.idUsuario = idUsuario;
+        this.image_notif = image_notif;
         this.titulo = titulo;
         this.descricao = descricao;
         this.data_notif = data_notif;
-        this.visualizado = visualizado;
+        this.hora_notif = hora_notif;
     }
 
     public HolderNotificacao() {
     }
+
 
     public int getIdNotificacao() {
         return idNotificacao;
@@ -34,6 +37,14 @@ public class HolderNotificacao {
 
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public String getImage_notif() {
+        return image_notif;
+    }
+
+    public void setImage_notif(String image_notif) {
+        this.image_notif = image_notif;
     }
 
     public String getTitulo() {
@@ -60,12 +71,11 @@ public class HolderNotificacao {
         this.data_notif = data_notif;
     }
 
-    public boolean isVisualizado() {
-        return visualizado;
+    public String getHora_notif() {
+        return hora_notif;
     }
 
-    public void setVisualizado(boolean visualizado) {
-        this.visualizado = visualizado;
+    public void setHora_notif(String hora_notif) {
+        this.hora_notif = hora_notif;
     }
-
 }
