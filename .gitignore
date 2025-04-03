@@ -6,6 +6,10 @@
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
+gradle/
+*.lock
+*.bin
+*.kts~
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
