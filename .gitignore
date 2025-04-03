@@ -7,6 +7,12 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+gradle/caches/
+gradle/daemon/
+gradle/wrapper/
+*.lock
+*.bin
+.idea/
 .DS_Store
 /build
 /captures
