@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.database.DatabaseConnection;
 import com.example.tela_login_projetointegrador.fragments.FragmentCadastrarProdutos;
+import com.example.tela_login_projetointegrador.fragments.FragmentNotificacao;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -79,6 +80,16 @@ public class UserActivity extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
+
+        notificationIcon.setOnClickListener(view1 -> {
+            FragmentNotificacao fragmentNotificacoes = new FragmentNotificacao();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentProdutos, fragmentNotificacoes) // Usa o ID correto do container
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         return view;
     }
 

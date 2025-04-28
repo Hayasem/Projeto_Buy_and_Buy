@@ -67,9 +67,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             if (idNotificacao != null) {
                 HolderNotificacao notificacao = new HolderNotificacao(
-                        idNotificacao.hashCode(), // Pode ser um ID numérico baseado no hash da chave gerada
-                        Integer.parseInt(idUsuario), // Converte o ID do usuário para inteiro, se necessário
-                        message.getData().get("image_notif"), // URL da imagem, se houver
+                        idNotificacao,
+                        idUsuario,
+                        message.getData().get("image_notif"),
                         titulo,
                         textoMensagem,
                         new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date()),

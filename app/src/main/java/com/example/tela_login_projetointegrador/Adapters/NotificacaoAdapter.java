@@ -1,73 +1,83 @@
 package com.example.tela_login_projetointegrador.Adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.HolderNotificacao;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
-public class NotificacaoAdapter extends ArrayAdapter<HolderNotificacao> {
+public class NotificacaoAdapter extends RecyclerView.Adapter<NotificacaoAdapter.ViewHolder> {
     private Context context;
-    private int resource;
     private ArrayList<HolderNotificacao> notificacoes;
-    private DatabaseReference databaseRef;
 
-    //Contrutor para receber a lista de notificações
-    public NotificacaoAdapter(@NonNull Context context, int resource, @NonNull ArrayList<HolderNotificacao> notificacoes) {
-        super(context, resource, notificacoes);
+    public NotificacaoAdapter(Context context, ArrayList<HolderNotificacao> notificacoes) {
         this.context = context;
-        this.resource = resource;
         this.notificacoes = notificacoes;
     }
 
-    @SuppressLint("SetTextI18n")
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView titulo, descricao, data;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            titulo = itemView.findViewById(R.id.idTitulo);
+            descricao = itemView.findViewById(R.id.idDescricaoNotification);
+            data = itemView.findViewById(R.id.notificationData);
+        }
+    }
+
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(resource, parent, false);
-        }
+    public NotificacaoAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.adapternotificacao, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onBindViewHolder(@NonNull NotificacaoAdapter.ViewHolder holder, int position) {
         HolderNotificacao notificacao = notificacoes.get(position);
 
-        TextView titulo = convertView.findViewById(R.id.idTitulo);
-        TextView descricao = convertView.findViewById(R.id.idDescricaoNotification);
-        TextView data = convertView.findViewById(R.id.notificationData);
-        ImageView imagem = convertView.findViewById(R.id.notificationLogo);
-        ImageView btnRemover = convertView.findViewById(R.id.cleanIcon);
+        holder.titulo.setText(notificacao.getTitulo());
+        holder.descricao.setText(notificacao.getDescricao());
+        holder.data.setText(notificacao.getData_notif() + " " + notificacao.getHora_notif());
+    }
 
-        titulo.setText(notificacao.getTitulo());
-        descricao.setText(notificacao.getDescricao());
-        data.setText(notificacao.getData_notif() + " " + notificacao.getHora_notif());
+    @Override
+    public int getItemCount() {
+        return notificacoes.size();
+    }
 
-        btnRemover.setOnClickListener(v -> {
-            databaseRef = FirebaseDatabase.getInstance().getReference("notificacoes")
-                    .child(String.valueOf(notificacao.getIdUsuario()))
-                    .child(String.valueOf(notificacao.getIdNotificacao()));
+    public void removerItem(int position) {
+        HolderNotificacao notificacao = notificacoes.get(position);
 
-            databaseRef.removeValue().addOnSuccessListener(aVoid -> {
-                notificacoes.remove(position);
-                notifyDataSetChanged();
-                Toast.makeText(context, "Notificação removida!", Toast.LENGTH_SHORT).show();
-            }).addOnFailureListener(e -> {
-                Toast.makeText(context, "Erro ao remover!", Toast.LENGTH_SHORT).show();
-            });
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance()
+                .getReference("notificacoes")
+                .child(notificacao.getIdUsuario())
+                .child(notificacao.getIdNotificacao());
+
+        databaseRef.removeValue().addOnSuccessListener(aVoid -> {
+            notificacoes.remove(position);
+            notifyItemRemoved(position);
+            Toast.makeText(context, "Notificação removida!", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(context, "Erro ao remover notificação!", Toast.LENGTH_SHORT).show();
         });
-        return convertView;
     }
 }

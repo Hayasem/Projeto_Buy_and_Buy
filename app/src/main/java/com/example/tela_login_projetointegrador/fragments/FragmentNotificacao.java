@@ -1,19 +1,22 @@
 package com.example.tela_login_projetointegrador.fragments;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
-import android.os.Bundle;
-import android.widget.Toast;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tela_login_projetointegrador.Adapters.NotificacaoAdapter;
 import com.example.tela_login_projetointegrador.R;
@@ -28,7 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class FragmentNotificacao extends Fragment {
-    private ListView listView;
+
+    private RecyclerView recyclerView;
     private NotificacaoAdapter adapter;
     private ArrayList<HolderNotificacao> listaNotificacoes;
     private DatabaseReference databaseRef;
@@ -37,41 +41,38 @@ public class FragmentNotificacao extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_notificacao, container, false);
+        View view = inflater.inflate(R.layout.fragment_notificacao, container, false);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             idUsuario = auth.getCurrentUser().getUid();
-            if (!idUsuario.isEmpty()) { // Garante que o ID não seja nulo ou vazio
-                databaseRef = FirebaseDatabase.getInstance().getReference("notificacoes").child(idUsuario);
-            } else {
-                Toast.makeText(getContext(), "Erro ao obter ID do usuário", Toast.LENGTH_SHORT).show();
-                return view;
-            }
+            databaseRef = FirebaseDatabase.getInstance().getReference("notificacoes").child(idUsuario);
         } else {
             Toast.makeText(getContext(), "Usuário não autenticado", Toast.LENGTH_SHORT).show();
-            return view; // Sai da função se o usuário não estiver logado
-        }
-        listView = view.findViewById(R.id.lvNotificacoes);
-        listaNotificacoes = new ArrayList<>();
-        adapter = new NotificacaoAdapter(getContext(), R.layout.adapternotificacao, listaNotificacoes);
-        listView.setAdapter(adapter);
-        carregarNotificacoes();
-        return view;
-    }
-    private void carregarNotificacoes(){
-        if (databaseRef == null) {
-            Toast.makeText(getContext(), "Erro ao acessar o Firebase", Toast.LENGTH_SHORT).show();
-            return;
+            return view;
         }
 
+        recyclerView = view.findViewById(R.id.recyclerViewNotificacoes);
+        listaNotificacoes = new ArrayList<>();
+        adapter = new NotificacaoAdapter(getContext(), listaNotificacoes);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+
+        carregarNotificacoes();
+        configurarSwipeParaExcluir();
+
+        return view;
+    }
+
+    private void carregarNotificacoes() {
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listaNotificacoes.clear();
-                for (DataSnapshot notificacaoSnapshot : snapshot.getChildren()){
+                for (DataSnapshot notificacaoSnapshot : snapshot.getChildren()) {
                     HolderNotificacao notificacao = notificacaoSnapshot.getValue(HolderNotificacao.class);
-                    if (notificacao != null){
+                    if (notificacao != null) {
                         listaNotificacoes.add(notificacao);
                     }
                 }
@@ -85,8 +86,51 @@ public class FragmentNotificacao extends Fragment {
         });
     }
 
+    private void configurarSwipeParaExcluir() {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            private final ColorDrawable background = new ColorDrawable(Color.RED);
+            private final Drawable deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete);
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false; // Não implementamos "drag and drop"
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                adapter.removerItem(position);
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                View itemView = viewHolder.itemView;
+
+                if (dX < 0) { // Swiping para esquerda
+                    background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                    background.draw(c);
+
+                    if (deleteIcon != null) {
+                        int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
+                        int iconTop = itemView.getTop() + iconMargin;
+                        int iconBottom = iconTop + deleteIcon.getIntrinsicHeight();
+                        int iconLeft = itemView.getRight() - iconMargin - deleteIcon.getIntrinsicWidth();
+                        int iconRight = itemView.getRight() - iconMargin;
+
+                        deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                        deleteIcon.draw(c);
+                    }
+                }
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+    }
+
     public static FragmentNotificacao newInstance() {
         return new FragmentNotificacao();
     }
-
 }

@@ -1,15 +1,15 @@
 package com.example.tela_login_projetointegrador.models;
 
 public class HolderNotificacao {
-     int idNotificacao;
-     int idUsuario;
-     String image_notif;
-     String titulo;
-     String descricao;
-     String data_notif;
-     String hora_notif;
+    private String idNotificacao;
+    private String idUsuario;
+    private String image_notif;
+    private String titulo;
+    private String descricao;
+    private String data_notif;
+    private String hora_notif;
 
-    public HolderNotificacao(int idNotificacao, int idUsuario, String image_notif, String titulo, String descricao, String data_notif, String hora_notif) {
+    public HolderNotificacao(String idNotificacao, String idUsuario, String image_notif, String titulo, String descricao, String data_notif, String hora_notif) {
         this.idNotificacao = idNotificacao;
         this.idUsuario = idUsuario;
         this.image_notif = image_notif;
@@ -22,20 +22,19 @@ public class HolderNotificacao {
     public HolderNotificacao() {
     }
 
-
-    public int getIdNotificacao() {
+    public String getIdNotificacao() {
         return idNotificacao;
     }
 
-    public void setIdNotificacao(int idNotificacao) {
+    public void setIdNotificacao(String idNotificacao) {
         this.idNotificacao = idNotificacao;
     }
 
-    public int getIdUsuario() {
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 
