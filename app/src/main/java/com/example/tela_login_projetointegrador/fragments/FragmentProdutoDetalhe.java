@@ -155,7 +155,8 @@ public class FragmentProdutoDetalhe extends Fragment {
                                 produto.getNomeProduto(),
                                 produto.getImagem(),
                                 produto.getPreco(),
-                                novaQuantidade
+                                novaQuantidade,
+                                usuarioID
                         );
 
                         assert idCarrinhoExistente != null;

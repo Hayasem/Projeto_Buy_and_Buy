@@ -60,34 +60,33 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     public void onBindViewHolder(@NonNull MyViewCartHolder holder, int position) {
         ProdutosCarrinho produtoNoCarrinho = listaProdutosCarrinho.get(position);
 
-        if (produtoNoCarrinho.getIdUsuario() != null && !produtoNoCarrinho.getIdUsuario().isEmpty()) {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("usuarios")
-                    .child(produtoNoCarrinho.getIdUsuario());
-
-            userRef.child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        String nomeVendedor = snapshot.getValue(String.class);
-                        holder.nameSeller.setText(nomeVendedor);
-                    } else {
-                        holder.nameSeller.setText("Vendedor desconhecido");
-                    }
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("usuarios")
+                .child(produtoNoCarrinho.getIdUsuario());
+        userRef.child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String nomeVendedor = snapshot.getValue(String.class);
+                    holder.nameSeller.setText("Vendedor: "+nomeVendedor);
+                }else{
+                    holder.nameSeller.setText("Vendedor desconhecido");
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    holder.nameSeller.setText("Erro ao carregar vendedor");
-                }
-            });
-        }else{
-            Log.e("Firebase", "ID do usuário do produto é nulo ou vazio!");
-            holder.nameSeller.setText("Vendedor desconhecido");
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                holder.nameSeller.setText("Erro ao carregar vendedor");
+            }
+        });
 
         holder.nameSeller.setText(produtoNoCarrinho.getNomeVendedor());
         holder.nameView.setText(produtoNoCarrinho.getNomeProduto());
-        holder.priceView.setText(String.format("%.2f", produtoNoCarrinho.getPreco()));
+        Float preco = produtoNoCarrinho.getPreco();
+        if (preco != null) {
+            holder.priceView.setText(String.format("%.2f", preco));
+        } else {
+            holder.priceView.setText("0.00");
+        }
         holder.quantityView.setText(String.valueOf(produtoNoCarrinho.getQuantidade()));
         Glide.with(holder.itemView.getContext())
                 .load(produtoNoCarrinho.getimagemUrl())
@@ -100,6 +99,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         holder.minusView.setOnClickListener(v -> {
             removerProduto(produtoNoCarrinho, v.getContext());
         });
+
+
+//        holder.excludeTv.setOnClickListener(v-> {
+//            listaProdutosCarrinho.remove(position);
+//        });
+
+
     }
 
     @Override
@@ -199,6 +205,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         }
         Log.d("TotalCarrinho", "Valor Total: " + totalCarrinho);
     }
+    //
     public static class MyViewCartHolder extends RecyclerView.ViewHolder {
         ImageView imageView, plusView, minusView;
         TextView nameView, quantityView, priceView, nameSeller, excludeTv, buyTv;
@@ -206,7 +213,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         public MyViewCartHolder(@NotNull View itemView){
             super(itemView);
             excludeTv = itemView.findViewById(R.id.exclude_tv);
-            buyTv = itemView.findViewById(R.id.buy_tv);
+//            buyTv = itemView.findViewById(R.id.buy_tv);
             nameSeller = itemView.findViewById(R.id.seller_name);
             imageView = itemView.findViewById(R.id.img_product);
             nameView = itemView.findViewById(R.id.product_name);

@@ -7,6 +7,7 @@ public class ProdutosCarrinho {
     int quantidade;
     float totalPrice, preco;
 
+
     public ProdutosCarrinho(){
     }
 
@@ -23,13 +24,14 @@ public class ProdutosCarrinho {
         this.totalPrice = totalPrice;
     }
 
-    public ProdutosCarrinho(String idCarrinhoExistente, String idProduto, String nomeProduto, String imagemUrl, float preco, int quantidade) {
+    public ProdutosCarrinho(String idCarrinhoExistente, String idProduto, String nomeProduto, String imagemUrl, float preco, int quantidade,String idUsuario) {
         this.idCarrinho = idCarrinhoExistente;
         this.idProduto = idProduto;
         this.nomeProduto  =nomeProduto;
         this.imagemUrl = imagemUrl;
         this.quantidade = quantidade;
         this.preco = preco;
+        this.idUsuario = idUsuario;
     }
 
     public String getIdUsuario() {
@@ -92,7 +94,7 @@ public class ProdutosCarrinho {
         return imagemUrl;
     }
 
-    public void setImagemUrl(String getImagemUrl) {
+    public void setImagemUrl(String imagemUrl) {
         this.imagemUrl = imagemUrl;
     }
 
@@ -111,4 +113,5 @@ public class ProdutosCarrinho {
     public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
     }
+
 }
