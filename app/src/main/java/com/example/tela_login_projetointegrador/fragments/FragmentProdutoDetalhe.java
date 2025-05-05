@@ -131,26 +131,27 @@ public class FragmentProdutoDetalhe extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         int novaQuantidade = 1;
-                        String idCarrinhoExistente = null;
+                        String idCarrinho = null;
 
                         if (snapshot.exists()) {
                             for (DataSnapshot data : snapshot.getChildren()) {
                                 ProdutosCarrinho itemExistente = data.getValue(ProdutosCarrinho.class);
                                 if (itemExistente != null){
                                     novaQuantidade = itemExistente.getQuantidade() + 1;
-                                    idCarrinhoExistente = data.getKey();
+                                    idCarrinho = data.getKey();
                                 }
                             }
-                        }else{
-                            idCarrinhoExistente = carrinhoRef.push().getKey();
-                            if (idCarrinhoExistente == null) {
-                                Toast.makeText(getContext(), "Erro ao adicionar ao carrinho!", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+                        } else {
+                            idCarrinho = carrinhoRef.push().getKey();
+                        }
+
+                        if (idCarrinho == null) {
+                            Toast.makeText(getContext(), "Erro ao gerar ID para o carrinho!", Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
                         ProdutosCarrinho novoItem = new ProdutosCarrinho(
-                                idCarrinhoExistente,
+                                idCarrinho,
                                 produto.getIdProduto(),
                                 produto.getNomeProduto(),
                                 produto.getImagem(),
@@ -158,17 +159,22 @@ public class FragmentProdutoDetalhe extends Fragment {
                                 novaQuantidade,
                                 usuarioID
                         );
+                        try{
+                            carrinhoRef.child(idCarrinho).setValue(novoItem.toMap())
+                                    .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Erro ao adicionar ao carrinho!", Toast.LENGTH_SHORT).show());
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
 
-                        assert idCarrinhoExistente != null;
-                        carrinhoRef.child(idCarrinhoExistente).setValue(novoItem)
-                                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Erro ao adicionar ao carrinho!", Toast.LENGTH_SHORT).show());
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Toast.makeText(getContext(), "Erro: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
 }
 

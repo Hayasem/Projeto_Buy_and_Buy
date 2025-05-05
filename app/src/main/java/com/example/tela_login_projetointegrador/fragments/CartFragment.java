@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapters.CartAdapter;
@@ -60,8 +62,25 @@ public class CartFragment extends Fragment {
         rvProductsInCart.setAdapter(cartAdapter);
 
         trashIcon.setOnClickListener(v -> removerDoCarrinho());
+
+        btn_finalizar_compra.setOnClickListener(v ->{
+            navegarFinalizarCompra();
+        });
         return view;
+
+
     }
+
+    private void navegarFinalizarCompra(){
+        Fragment fragment = new PagamentoFragment();
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.fragmentProdutos, fragment); // container = FrameLayout no layout da Activity
+        transaction.addToBackStack(null); // permite voltar com o botão "voltar"
+        transaction.commit();
+    }
+
 
     private void carregarCarrinho(String usuarioID) {
         DatabaseReference carrinhoRef = FirebaseDatabase.getInstance().getReference("carrinho").child(usuarioID);
@@ -116,4 +135,7 @@ public class CartFragment extends Fragment {
     public static CartFragment newInstance() {
         return new CartFragment();
     }
+
+
+
 }

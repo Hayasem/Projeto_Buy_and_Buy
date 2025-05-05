@@ -2,11 +2,25 @@ package com.example.tela_login_projetointegrador.models;
 
 import android.widget.ImageView;
 
+import java.util.Map;
+
 public class ProdutosCarrinho {
     String idUsuario, idCarrinho, idProduto, nomeVendedor, nomeProduto, data_add, imagemUrl;
     int quantidade;
-    float totalPrice, preco;
+    Float totalPrice, preco;
 
+    public Map<String, Object> toMap() {
+        return Map.of(
+                "idCarrinho", idCarrinho,
+                "idProduto", idProduto,
+                "imagemUrl", imagemUrl,
+                "nomeProduto", nomeProduto,
+                "preco", preco,
+                "quantidade", quantidade,
+                "totalPrice", 0,
+                "idUsuario", idUsuario
+        );
+    }
 
     public ProdutosCarrinho(){
     }
@@ -98,7 +112,7 @@ public class ProdutosCarrinho {
         this.imagemUrl = imagemUrl;
     }
 
-    public float getPreco() {
+    public Float getPreco() {
         return preco;
     }
 
