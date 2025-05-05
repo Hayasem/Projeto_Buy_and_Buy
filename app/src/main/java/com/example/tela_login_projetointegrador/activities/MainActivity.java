@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
 
 import com.example.tela_login_projetointegrador.Formats.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Formats.SenhaTextWatcher;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         requestPermission();
         FirebaseApp.initializeApp(this);
         auth = FirebaseAuth.getInstance();

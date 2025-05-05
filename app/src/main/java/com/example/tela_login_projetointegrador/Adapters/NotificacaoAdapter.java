@@ -1,47 +1,75 @@
 package com.example.tela_login_projetointegrador.Adapters;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.models.HolderNotificacao;
-import org.jetbrains.annotations.NotNull;
+import com.example.tela_login_projetointegrador.models.ModelNotification;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class NotificacaoAdapter extends ArrayAdapter<HolderNotificacao> {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
-    private Context context;
-    private int resource;
-
-    //Contrutor para receber a lista de notificações
-    public NotificacaoAdapter(@NonNull @NotNull Context context, int resource) {
-        super(context, resource);
-        this.context = context;
-        this.resource = resource;
-
+public class NotificacaoAdapter extends RecyclerView.Adapter<NotificationViewHolder> {
+    private List<ModelNotification> listaNotificacao;
+    private Set<String> selectedIds = new HashSet<>();
+    public NotificacaoAdapter(List<ModelNotification> list) {
+        this.listaNotificacao = list;
+    }
+    public Set<String> getSelectedIds() {
+        return selectedIds;
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    public void clearSelections() {
+        selectedIds.clear();
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new NotificationViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.adapternotificacao, parent, false));
+    }
+    @Override
+    public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
+        ModelNotification item = listaNotificacao.get(position);
+        holder.title.setText(item.getTitulo());
+        holder.message.setText(item.getMensagem());
+        holder.timestamp.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                .format(new Date(item.getTimestamp())));
 
-        if(convertView==null){
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            convertView = inflater.inflate(resource, parent, false);
-        }
+        holder.checkBox.setOnCheckedChangeListener(null);
+        holder.checkBox.setChecked(selectedIds.contains(item.getIdNotificacao()));
+        holder.checkBox.setOnCheckedChangeListener((btn, isChecked) -> {
+            if (isChecked) selectedIds.add(item.getIdNotificacao());
+            else selectedIds.remove(item.getIdNotificacao());
+        });
+    }
 
-        TextView txtTitulo = convertView.findViewById(R.id.idTitulo);
-        TextView txtSubtitulo = convertView.findViewById(R.id.idDescricaoNotification);
+    @Override
+    public int getItemCount() {
+        return listaNotificacao.size();
+    }
 
-        // Exiba o item nas TextViews
-        txtTitulo.setText(getItem(position).getTitulo());
-        txtSubtitulo.setText(getItem(position).getDescricao());
-
-        return convertView;
+    @SuppressLint("NotifyDataSetChanged")
+    public void removeByIds(Set<String> idsToRemove) {
+        listaNotificacao.removeIf(n -> idsToRemove.contains(n.getIdNotificacao()));
+        notifyDataSetChanged();
     }
 }
