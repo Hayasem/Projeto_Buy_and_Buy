@@ -28,32 +28,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
-
-        if (message.getNotification() != null) {
-            String titulo = message.getNotification().getTitle();
-            String mensagem = message.getNotification().getBody();
-            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            String notiId = UUID.randomUUID().toString();
-
-            ModelNotification model = new ModelNotification(notiId, titulo, mensagem, System.currentTimeMillis());
-
-            FirebaseDatabase.getInstance()
-                    .getReference("usuarios")
-                    .child(userId)
-                    .child("notificacoes")
-                    .child(notiId)
-                    .setValue(model);
-        }
+        
     }
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
 
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDatabase.getInstance()
-                .getReference("usuarios")
-                .child(userID)
-                .child("fmctoken")
-                .setValue(token);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseDatabase.getInstance()
+                    .getReference("usuarios")
+                    .child(userID)
+                    .child("fmctoken")
+                    .setValue(token);
+        }else{
+            Log.w("FCM_TOKEN", "Usuário não logado no momento da geração do token.");
+        }
     }
 }

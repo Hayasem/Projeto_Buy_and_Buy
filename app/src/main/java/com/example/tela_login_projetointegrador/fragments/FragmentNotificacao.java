@@ -67,6 +67,7 @@ public class FragmentNotificacao extends Fragment {
         recyclerView.setAdapter(adapter);
 
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
         notiRef = FirebaseDatabase.getInstance().getReference("usuarios").child(uid).child("notificacoes");
 
         notiRef.addValueEventListener(new ValueEventListener() {

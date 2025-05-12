@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
+import com.example.tela_login_projetointegrador.FirebaseMessageAPI.MyFirebaseMessagingService;
 
 import com.example.tela_login_projetointegrador.Formats.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Formats.SenhaTextWatcher;
@@ -35,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
@@ -140,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                             if (user != null) {
                                 if (user.isEmailVerified()){
                                     resetAttempts();
+                                    salvarTokenNoFirebase(user.getUid());
                                     navegaHome();
                                 }else{
                                     enviarEmailVerificacao(user);
@@ -269,6 +272,23 @@ public class MainActivity extends AppCompatActivity {
                         }
                         String token = task.getResult();
                         Log.v("FireBaseLogs", "Device Token: " + token);
+                    }
+                });
+    }
+    private void salvarTokenNoFirebase(String uid) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String token = task.getResult();
+                        // Alteração do caminho para coincidir com o do servidor
+                        FirebaseDatabase.getInstance().getReference("usuarios")
+                                .child(uid)
+                                .child("fmctoken")  // Salvando o token no caminho correto
+                                .setValue(token)
+                                .addOnSuccessListener(aVoid -> Log.d("TokenSalvo", "Token salvo com sucesso"))
+                                .addOnFailureListener(e -> Log.e("ErroToken", "Erro ao salvar token", e));
+                    } else {
+                        Log.e("TokenErro", "Erro ao obter token", task.getException());
                     }
                 });
     }
