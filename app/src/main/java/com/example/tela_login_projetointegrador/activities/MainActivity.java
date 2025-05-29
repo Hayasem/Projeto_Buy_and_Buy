@@ -71,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
     private Button bt_entrar;
     String[] mensagens = {"Preencha todos os campos", "Login efetuado com sucesso!"};
 
-    protected static final String PREFS_NAME = "LoginPrefs";
-    private static final String KEY_ATTEMPTS = "attempts";
-    protected static final String KEY_LAST_LOGIN = "last_login";
+    public static final String PREFS_NAME = "LoginPrefs";
+    public static final String KEY_ATTEMPTS = "attempts";
+    public static final String KEY_LAST_LOGIN = "last_login";
     protected static final long LOGIN_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
     protected static final int MAXIMO_TENTATIVAS = 3; // Máximo de tentativas
     private SharedPreferences sharedPreferences;

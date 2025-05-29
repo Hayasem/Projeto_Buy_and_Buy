@@ -3,6 +3,7 @@ import android.os.Bundle;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.fragments.CartFragment;
 import com.example.tela_login_projetointegrador.fragments.FragmentNotificacao;
+import com.example.tela_login_projetointegrador.fragments.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
@@ -66,7 +67,7 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
             openFragment(cartScreen);
             return true;
         }else if (menuItem.getItemId() ==R.id.profileId) {
-            Fragment telaPerfilUsuario = UserActivity.newInstance();
+            Fragment telaPerfilUsuario = UserFragment.newInstance();
             openFragment(telaPerfilUsuario);
             return true;
         }

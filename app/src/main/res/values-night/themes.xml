@@ -2,6 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Tela_Login_ProjetoIntegrador" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
+        <item name="colorPrimary">#3B0561</item>
+        <item name="colorPrimaryVariant">#320C32</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">#583A00</item>
+        <item name="android:statusBarColor">#320C32</item>
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 </resources>

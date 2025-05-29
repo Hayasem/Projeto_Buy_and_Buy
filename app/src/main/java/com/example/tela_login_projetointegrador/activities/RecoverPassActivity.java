@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -20,7 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class RecoverPassActivity extends AppCompatActivity {
 
-    private Button btn_enviar_senha, btn_voltar;
+    private Button btn_enviar_senha;
+    private ImageView btn_voltar;
     private EditText edit_email;
     private ProgressBar progressBar2;
     private FirebaseAuth mAuth;
@@ -39,7 +41,7 @@ public class RecoverPassActivity extends AppCompatActivity {
 
 
     btn_enviar_senha = findViewById(R.id.enviar_senha_nova);
-    btn_voltar = findViewById(R.id.botao_voltar);
+    btn_voltar = findViewById(R.id.btn_back);
     edit_email = findViewById(R.id.input_edit_email);
     progressBar2 = findViewById(R.id.progressBar2);
 

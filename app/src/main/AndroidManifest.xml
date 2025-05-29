@@ -36,7 +36,7 @@
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".activities.UserActivity"
+            android:name=".fragments.UserFragment"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity

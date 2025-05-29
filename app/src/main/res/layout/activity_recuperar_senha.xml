@@ -1,138 +1,129 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    tools:context=".activities.MainActivity" >
+    android:background="@color/white"
+    tools:context=".activities.MainActivity">
 
+    <!-- Seta de Voltar no topo -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/arrow_back"
+        android:contentDescription="Voltar"
+        app:tint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Circulo com imagem -->
     <View
         android:id="@+id/container_circle"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/circle_container"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circle_container_yellow"
+        app:layout_constraintTop_toBottomOf="@id/btn_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:src="@drawable/protect"
-        app:layout_constraintBottom_toBottomOf="@+id/container_circle"
-        app:layout_constraintEnd_toEndOf="@+id/container_circle"
-        app:layout_constraintStart_toStartOf="@+id/container_circle"
-        app:layout_constraintTop_toTopOf="@+id/container_circle" />
+        app:layout_constraintTop_toTopOf="@id/container_circle"
+        app:layout_constraintBottom_toBottomOf="@id/container_circle"
+        app:layout_constraintStart_toStartOf="@id/container_circle"
+        app:layout_constraintEnd_toEndOf="@id/container_circle" />
 
+    <!-- Título -->
     <TextView
         android:id="@+id/text_resetar_senha"
-        style="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:fontFamily="sans-serif-condensed-medium"
         android:text="RECUPERAR SENHA"
+        android:textSize="28sp"
+        android:textStyle="bold"
         android:textColor="@color/black"
-        android:textSize="45sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintTop_toBottomOf="@id/container_circle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_circle" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
 
+    <!-- Descrição -->
     <TextView
         android:id="@+id/text_email_resetar_senha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:textColor="@color/black"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:text="Insira abaixo o email no qual deseja reeinventar sua senha "
+        android:text="Insira abaixo o e-mail que deseja redefinir a senha."
+        android:textSize="16sp"
+        android:textColor="@color/cinza"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_resetar_senha"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_resetar_senha" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"/>
 
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/enviar_senha_nova"
-        style="@style/yellow_button"
-        android:layout_marginStart="24dp"
+    <!-- Campo de E-mail -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_email"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxBackgroundMode="filled"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/criar_senha"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="E-mail"
+        app:boxBackgroundColor="@color/cinza_claro"
+        app:layout_constraintTop_toBottomOf="@id/text_email_resetar_senha"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/botao_voltar"
-        style="@style/black_button"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_edit_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/black"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Botão Criar Senha -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/enviar_senha_nova"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
-        android:text="Voltar"
+        android:backgroundTint="#DBB400"
+        android:text="Enviar"
+        android:textColor="@color/black"
+        app:cornerRadius="16dp"
+        app:iconPadding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enviar_senha_nova" />
+        app:layout_constraintTop_toBottomOf="@id/input_layout_email" />
 
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressBar2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/enviar_senha_nova"
-        app:layout_constraintEnd_toEndOf="@+id/enviar_senha_nova"
-        app:layout_constraintStart_toStartOf="@+id/enviar_senha_nova"
-        app:layout_constraintTop_toTopOf="@+id/enviar_senha_nova" />
+        app:layout_constraintTop_toTopOf="@id/enviar_senha_nova"
+        app:layout_constraintBottom_toBottomOf="@id/enviar_senha_nova"
+        app:layout_constraintStart_toStartOf="@id/enviar_senha_nova"
+        app:layout_constraintEnd_toEndOf="@id/enviar_senha_nova" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/container_components"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_email_resetar_senha">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_email"
-        style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:helperText="Preencha esse campo"
-        app:helperTextTextColor="@color/vermelho"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_edit_email"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:drawableEnd="@drawable/ic_email"
-            android:hint="Email:"
-            android:inputType="textEmailAddress"
-            android:lines="1"
-            android:textColor="@color/black">
-
-
-        </com.google.android.material.textfield.TextInputEditText>
-    </com.google.android.material.textfield.TextInputLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

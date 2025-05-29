@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".activities.UserActivity">
+    tools:context=".fragments.UserFragment">
 
         <!-- Barra superior com nome e opções -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,30 +45,18 @@
                     app:layout_constraintStart_toEndOf="@id/user_icon"/>
 
                 <ImageView
-                    android:id="@+id/settings_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="Configurações"
-                    android:src="@drawable/settings_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/user_name"
+                    android:id="@+id/suporte_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:contentDescription="suporte"
+                    android:src="@drawable/suporte_icon"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/user_name" />
-
-                <ImageView
-            android:id="@+id/suporte_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="suporte"
-            android:src="@drawable/suporte_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/settings_icon"
-            app:layout_constraintEnd_toStartOf="@id/settings_icon"
-            app:layout_constraintTop_toTopOf="@+id/settings_icon" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/notification_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="notification"
                     android:src="@drawable/notifications_icon"
@@ -129,10 +117,10 @@
                     android:id="@+id/waiting_order_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="@+id/wait_payment_layout"
+                    app:layout_constraintEnd_toStartOf="@+id/deliverying_order_layout"
                     app:layout_constraintStart_toEndOf="@+id/wait_payment_layout"
                     app:layout_constraintTop_toTopOf="@+id/wait_payment_layout">
 
@@ -165,11 +153,11 @@
                     android:id="@+id/deliverying_order_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="24dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="@+id/waiting_order_layout"
-                    app:layout_constraintStart_toEndOf="@+id/waiting_order_layout"
+                    app:layout_constraintEnd_toStartOf="@+id/return_order_layout"
                     app:layout_constraintTop_toTopOf="@+id/waiting_order_layout">
 
                         <ImageView
@@ -199,52 +187,14 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/add_comment_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/deliverying_order_layout"
-                    app:layout_constraintStart_toEndOf="@+id/deliverying_order_layout"
-                    app:layout_constraintTop_toTopOf="@+id/deliverying_order_layout">
-
-                        <ImageView
-                            android:id="@+id/comment_icon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:contentDescription="Enviado"
-                            android:src="@drawable/add_comment_icon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/txt_add_comentario"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Adicionar\ncomentário"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/comment_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/return_order_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_comment_layout"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_comment_layout"
-                    app:layout_constraintTop_toTopOf="@+id/add_comment_layout">
+                    app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
                             android:id="@+id/return_icon"
@@ -261,8 +211,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Devoluções"
                             android:padding="8dp"
+                            android:text="Devoluções"
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -342,11 +292,11 @@
                     android:id="@+id/cupom_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="100dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/history_layout"
+                    app:layout_constraintEnd_toStartOf="@+id/favoritos_layout"
+                    app:layout_constraintStart_toEndOf="@+id/history_layout"
                     app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
@@ -388,12 +338,10 @@
                     android:id="@+id/favoritos_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="100dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="@id/cupom_layout"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/cupom_layout"
                     app:layout_constraintTop_toTopOf="@id/cupom_layout">
 
                         <ImageView
