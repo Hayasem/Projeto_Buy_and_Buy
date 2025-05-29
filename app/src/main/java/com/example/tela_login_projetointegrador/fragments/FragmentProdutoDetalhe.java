@@ -124,34 +124,26 @@ public class FragmentProdutoDetalhe extends Fragment {
 
     public void adicionarAoCarrinho(Produto produto) {
         String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference carrinhoRef = FirebaseDatabase.getInstance().getReference("carrinho").child(usuarioID);
+        DatabaseReference carrinhoRef = FirebaseDatabase.getInstance()
+                .getReference("usuarios")
+                .child(usuarioID)
+                .child("carrinho")
+                .child(produto.getIdProduto());
 
-        carrinhoRef.orderByChild("idProduto").equalTo(produto.getIdProduto())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        carrinhoRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         int novaQuantidade = 1;
-                        String idCarrinho = null;
 
                         if (snapshot.exists()) {
-                            for (DataSnapshot data : snapshot.getChildren()) {
-                                ProdutosCarrinho itemExistente = data.getValue(ProdutosCarrinho.class);
+                            ProdutosCarrinho itemExistente = snapshot.getValue(ProdutosCarrinho.class);
                                 if (itemExistente != null){
                                     novaQuantidade = itemExistente.getQuantidade() + 1;
-                                    idCarrinho = data.getKey();
                                 }
                             }
-                        } else {
-                            idCarrinho = carrinhoRef.push().getKey();
-                        }
-
-                        if (idCarrinho == null) {
-                            Toast.makeText(getContext(), "Erro ao gerar ID para o carrinho!", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
 
                         ProdutosCarrinho novoItem = new ProdutosCarrinho(
-                                idCarrinho,
+                                produto.getIdProduto(),
                                 produto.getIdProduto(),
                                 produto.getNomeProduto(),
                                 produto.getImagem(),
@@ -159,14 +151,9 @@ public class FragmentProdutoDetalhe extends Fragment {
                                 novaQuantidade,
                                 usuarioID
                         );
-                        try{
-                            carrinhoRef.child(idCarrinho).setValue(novoItem.toMap())
-                                    .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Erro ao adicionar ao carrinho!", Toast.LENGTH_SHORT).show());
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
-                        }
-
+                        carrinhoRef.setValue(novoItem.toMap())
+                                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Erro ao adicionar ao carrinho!", Toast.LENGTH_SHORT).show());
                     }
 
                     @Override
@@ -175,6 +162,5 @@ public class FragmentProdutoDetalhe extends Fragment {
                     }
                 });
     }
-
 }
 
