@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartFragment extends Fragment {
+    ConstraintLayout prompt_container,container_valor_total;
     private ImageView trashIcon, iv_bag, iv_left_arrow, iv_empty_state;
     private Button btn_comprar_mais, btn_finalizar_compra;
     private TextView tv_kart_prompt, tvTotalCompra, tv_empty_state_msg;
@@ -53,6 +55,8 @@ public class CartFragment extends Fragment {
         tv_kart_prompt = view.findViewById(R.id.tv_kart_prompt);
         iv_empty_state = view.findViewById(R.id.iv_empty_state);
         tv_empty_state_msg = view.findViewById(R.id.tv_empty_state_msg);
+        prompt_container = view.findViewById(R.id.prompt_container);
+        container_valor_total = view.findViewById(R.id.container_valor_total);
 
 
 
@@ -62,9 +66,8 @@ public class CartFragment extends Fragment {
         rvProductsInCart.setAdapter(cartAdapter);
 
         trashIcon.setOnClickListener(v ->{
-            removerDoCarrinho();
+            removerTodosDoCarrinho();
         });
-
         btn_finalizar_compra.setOnClickListener(v ->{
             navegarFinalizarCompra();
         });
@@ -76,11 +79,11 @@ public class CartFragment extends Fragment {
         carregarCarrinho(userID);
         return view;
     }
-    private void carregarCarrinho(String usuarioID) {
-        usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private void carregarCarrinho(String userID) {
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference carrinhoRef = FirebaseDatabase.getInstance()
                 .getReference("usuarios")
-                .child(usuarioID)
+                .child(userID)
                 .child("carrinho");
 
         carrinhoRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -88,6 +91,7 @@ public class CartFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double totalCompra = 0.0;
+                produtosCarrinhoList.clear();
                 List<ProdutosCarrinho> listaCarrinho = new ArrayList<>();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -105,6 +109,12 @@ public class CartFragment extends Fragment {
                 }
 
                 tvTotalCompra.setText(String.format("R$ %.2f", totalCompra));
+
+                if (listaCarrinho.isEmpty()){
+                    mostrarEmptyState();
+                }else{
+                    mostrarCarrinhoCheio();
+                }
             }
 
             @Override
@@ -120,10 +130,25 @@ public class CartFragment extends Fragment {
         trashIcon.setVisibility(View.GONE);
         btn_finalizar_compra.setVisibility(View.GONE);
         iv_bag.setVisibility(View.GONE);
+        prompt_container.setVisibility(View.GONE);
+        btn_comprar_mais.setVisibility(View.GONE);
+        container_valor_total.setVisibility(View.GONE);
 
         iv_empty_state.setVisibility(View.VISIBLE);
         tv_empty_state_msg.setVisibility(View.VISIBLE);
     }
+    private void mostrarCarrinhoCheio() {
+        rvProductsInCart.setVisibility(View.VISIBLE);
+        tv_kart_prompt.setVisibility(View.VISIBLE);
+        tvTotalCompra.setVisibility(View.VISIBLE);
+        trashIcon.setVisibility(View.VISIBLE);
+        btn_finalizar_compra.setVisibility(View.VISIBLE);
+        iv_bag.setVisibility(View.VISIBLE);
+
+        iv_empty_state.setVisibility(View.GONE);
+        tv_empty_state_msg.setVisibility(View.GONE);
+    }
+
     private void navegarFinalizarCompra(){
         Fragment fragment = new PagamentoFragment();
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -137,7 +162,7 @@ public class CartFragment extends Fragment {
         transaction.addToBackStack(null); // permite voltar com o botão "voltar"
         transaction.commit();
     }
-    private void removerDoCarrinho(){
+    private void removerTodosDoCarrinho(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userId = auth.getUid();
 
@@ -156,16 +181,21 @@ public class CartFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     produtosCarrinhoList.clear();
                     cartAdapter.atualizarLista(produtosCarrinhoList);
-                    rvProductsInCart.postDelayed(() -> mostrarEmptyState(), 300);
+                    mostrarEmptyState();
                     Toast.makeText(getContext(), "Carrinho esvaziado", Toast.LENGTH_SHORT).show();
                     Log.d("Firebase", "Todos os produtos foram removidos com sucesso.");
                 })
                 .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover todos os produtos", e));
     }
     private void navegarParaProdutos() {
-        Intent intent = new Intent(getActivity(), HomeActivity.class);
-        startActivity(intent);
-        requireActivity().finish();
+        FragmentTransaction transaction = requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction();
+
+        transaction.replace(R.id.fragmentProdutos, new HomeActivity());
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
     public static CartFragment newInstance() {

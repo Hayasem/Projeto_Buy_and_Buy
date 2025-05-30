@@ -43,10 +43,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     }
 
     public void atualizarLista(List<ProdutosCarrinho> novaLista){
-        this.listaProdutosCarrinho = novaLista;
+        this.listaProdutosCarrinho.clear();
+        this.listaProdutosCarrinho.addAll(novaLista);
         notifyDataSetChanged();
     }
-
 
     @SuppressLint("ResourceType")
     @NonNull
@@ -65,10 +65,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         userRef.child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     String nomeVendedor = snapshot.getValue(String.class);
-                    holder.nameSeller.setText("Vendedor: "+nomeVendedor);
-                }else{
+                    holder.nameSeller.setText("Vendedor: " + nomeVendedor);
+                } else {
                     holder.nameSeller.setText("Vendedor desconhecido");
                 }
             }
@@ -100,19 +100,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
             removerProduto(produtoNoCarrinho, v.getContext());
         });
 
-
-//        holder.excludeTv.setOnClickListener(v-> {
-//            listaProdutosCarrinho.remove(position);
-//        });
-
-
     }
 
     @Override
     public int getItemCount() {
         return listaProdutosCarrinho.size();
     }
-
 
     private void adicionarProduto(ProdutosCarrinho produto) {
         int novaQuantidade = produto.getQuantidade() + 1;
@@ -131,7 +124,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         }
     }
 
-    public void     exibirAlertaRemocaoCarrinho(ProdutosCarrinho produto, Context context){
+    public void exibirAlertaRemocaoCarrinho(ProdutosCarrinho produto, Context context){
         new AlertDialog.Builder(context)
                 .setTitle("Remover item")
                 .setMessage("Você deseja remover esse item do carrinho?")
@@ -153,7 +146,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
             return;
         }
         DatabaseReference cartRef = FirebaseDatabase.getInstance()
-                .getReference("carrinho")
+                .getReference("usuarios")
                 .child(userId)
                 .child((product.getIdCarrinho()));
 
@@ -171,12 +164,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     private void removerProdutoDoCarrinho(ProdutosCarrinho product) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userId = auth.getUid();
+
         if (userId == null) {
             Log.e("Firebase", "Usuário não autenticado ao remover produto");
             return;
         }
         DatabaseReference cartRef = FirebaseDatabase.getInstance()
-                .getReference("carrinho")
+                .getReference("usuarios")
                 .child(userId)
                 .child(product.getIdCarrinho());
 
@@ -185,11 +179,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
                     int position = listaProdutosCarrinho.indexOf(product);
                     if (position != -1) {
                         listaProdutosCarrinho.remove(position);
-                        notifyItemRemoved(position); // Atualiza a lista e notifica a remoção
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, listaProdutosCarrinho.size());
                     }
+
                     calcularTotal();
-                })
-                .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover o produto", e));
+
+                    if (totalPriceView != null && listaProdutosCarrinho.isEmpty()) {
+                        totalPriceView.setText("Carrinho vazio");
+                        atualizarLista(listaProdutosCarrinho);
+                    }
+                });
+
     }
     private void calcularTotal() {
         double totalCarrinho = 0.0;
@@ -213,7 +214,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         public MyViewCartHolder(@NotNull View itemView){
             super(itemView);
             excludeTv = itemView.findViewById(R.id.exclude_tv);
-//            buyTv = itemView.findViewById(R.id.buy_tv);
             nameSeller = itemView.findViewById(R.id.seller_name);
             imageView = itemView.findViewById(R.id.img_product);
             nameView = itemView.findViewById(R.id.product_name);
