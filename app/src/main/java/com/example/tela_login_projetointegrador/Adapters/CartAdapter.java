@@ -44,8 +44,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
 
     public void atualizarLista(List<ProdutosCarrinho> novaLista){
         this.listaProdutosCarrinho.clear();
-        this.listaProdutosCarrinho.addAll(novaLista);
         notifyDataSetChanged();
+        this.listaProdutosCarrinho.addAll(novaLista);
     }
 
     @SuppressLint("ResourceType")

@@ -1,6 +1,7 @@
 package com.example.tela_login_projetointegrador.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -21,8 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -35,6 +39,7 @@ import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.CategoriaProduto;
 import com.example.tela_login_projetointegrador.models.Produto;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,83 +54,123 @@ import java.util.List;
 public class FragmentCadastrarProdutos extends Fragment {
 
 
-    private EditText edit_nome_produto;
-    private EditText edit_preco_produto;
+    private TextInputEditText edit_nome_produto, edit_preco_produto;
+    private TextView hint_image;
+    private EditText editDescricaoProduto, editQuantidadeProduto;
     private Spinner spinner_categoria_produto;
-    private EditText editDescricaoProduto;
-    private EditText editQuantidadeProduto;
     private Button btn_confirmar_cadastro_produto;
     private ImageView imageView;
     private String imageString;
     private DatabaseReference productsDataRef;
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    String[] mensagens = {"Preencha todos os campos",
+            "Produto Cadastrado com sucesso"};
 
-    String[] mensagens = {"Preencha todos os campos", "Produto Cadastrado com sucesso"};
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private final ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 950, 900, true);
+                        imageView.setImageBitmap(resizedBitmap);
+                        imageString = encodeImage(resizedBitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cadastro_de_produtos, container, false);
-        validaPermissao();
+        inicializaComponentes(view);
+        solicitaPermissao();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(getContext(), "Usuário não autenticado", Toast.LENGTH_SHORT).show();
+            return view;
+        }
+
+        String userId = auth.getCurrentUser().getUid();
+        productsDataRef = FirebaseDatabase.getInstance().getReference("usuarios").child(userId).child("produtos");
+
+        configurarSpinnerCategorias();
+        configurarBotaoCadastrarProduto(userId);
+        configurarImageView();
+
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) actionBar.setTitle("Cadastro de Produto");
+
+        return view;
+    }
+    private void inicializaComponentes(View view){
         edit_nome_produto = view.findViewById(R.id.edit_nome_produto);
         edit_preco_produto = view.findViewById(R.id.edit_preco_produto);
         spinner_categoria_produto = view.findViewById(R.id.spinner_categoria_produto);
         editDescricaoProduto = view.findViewById(R.id.edit_descricao_produto);
         editQuantidadeProduto = view.findViewById(R.id.edit_quantidade_produto);
         btn_confirmar_cadastro_produto = view.findViewById(R.id.btn_confirmar_cadastro_produto);
-        imageView = view.findViewById(R.id.imageView2);
+        imageView = view.findViewById(R.id.img_produto); // adicione isso
+        hint_image = view.findViewById(R.id.tv_hint_imagem);
+    }
+    private void configurarSpinnerCategorias() {
+            List<CategoriaProduto> categorias = new ArrayList<>();
+            categorias.add(new CategoriaProduto(0, "Selecione a categoria"));
+            categorias.add(new CategoriaProduto(1, "Eletronicos"));
+            categorias.add(new CategoriaProduto(2, "Brinquedos"));
+            categorias.add(new CategoriaProduto(3, "Vestuários"));
+            categorias.add(new CategoriaProduto(4, "Cama/Mesa/Banho"));
 
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userId = auth.getCurrentUser().getUid();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        productsDataRef = database.getReference("usuarios").child(userId).child("produtos");
-
-        ArrayAdapter<CategoriaProduto> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item,carregaCategorias());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_categoria_produto.setAdapter(adapter);
-        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("Perfil");
-        }
-        final int[] categoriaId = {0};
-        spinner_categoria_produto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                CategoriaProduto categoriaSelecionada = (CategoriaProduto) parentView.getItemAtPosition(position);
-                categoriaId[0] = categoriaSelecionada.getId();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                //nenhuma imagem selecionada
-            }
-        });
-
+            ArrayAdapter<CategoriaProduto> adapter = new ArrayAdapter<>(requireContext(),
+                    android.R.layout.simple_spinner_item, categorias);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_categoria_produto.setAdapter(adapter);
+    }
+    private void configurarBotaoCadastrarProduto(String userID) {
         btn_confirmar_cadastro_produto.setOnClickListener(v -> {
-            String titulo = edit_nome_produto.getText().toString();
-            String descricao = editDescricaoProduto.getText().toString();
-            String preco = edit_preco_produto.getText().toString();
-            int quantidadeProd = Integer.parseInt(editQuantidadeProduto.getText().toString());
+            String titulo = edit_nome_produto.getText().toString().trim();
+            String descricao = editDescricaoProduto.getText().toString().trim();
+            String preco = edit_preco_produto.getText().toString().trim();
+            String quantidadeTexto = editQuantidadeProduto.getText().toString().trim();
+            CategoriaProduto categoriaProduto = (CategoriaProduto) spinner_categoria_produto.getSelectedItem();
 
-            if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty() || categoriaId[0] == 0) {
+            if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty()
+                    || quantidadeTexto.isEmpty() || categoriaProduto == null
+                    || imageString == null || categoriaProduto.getId() == 0) {
                 exibirSnackbar(mensagens[0], v);
-            }else{
+                return;
+            }
+
+            try {
+                float precoFloat = Float.parseFloat(preco);
+                int quantidadeProd = Integer.parseInt(quantidadeTexto);
+
                 Produto produto = new Produto();
-                produto.setIdUsuario(userId);
+                produto.setIdUsuario(userID);
                 produto.setNomeProduto(titulo);
                 produto.setDescricao(descricao);
-                produto.setPreco(Float.parseFloat(preco));
-                produto.setIdCategoria(categoriaId[0]);
+                produto.setPreco(precoFloat);
+                produto.setIdCategoria(categoriaProduto.getId());
                 produto.setImagem(imageString);
                 produto.setQuantidade(quantidadeProd);
+
                 salvarProdutosFirebase(produto, v);
                 limparCampos();
+            } catch (NumberFormatException e) {
+                exibirSnackbar("Preço ou quantidade inválidos", v);
             }
         });
-        imageView.setOnClickListener(v -> openImageChooser());
-        return view;
     }
-
+    private void configurarImageView() {
+        imageView.setOnClickListener(v -> {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    imagePickerLauncher.launch(intent);
+        });
+    }
     private void salvarProdutosFirebase(Produto produto, View view){
         String productId = productsDataRef.push().getKey();
         produto.setIdProduto(productId);
@@ -135,42 +180,38 @@ public class FragmentCadastrarProdutos extends Fragment {
                     .addOnFailureListener(e -> exibirSnackbar("Ocorreu um erro ao salvar o produto: " + e.getMessage(), view));
         }
     }
-
-    private void validaPermissao(){
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Solicitar permissão do usuario para acessar as pastas do android
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.READ_MEDIA_IMAGES},
-                    1);
-        }
-    }
-
     private void limparCampos(){
         edit_nome_produto.setText("");
         editDescricaoProduto.setText("");
         edit_preco_produto.setText("");
         editQuantidadeProduto.setText("");
+        spinner_categoria_produto.setSelection(0);
         imageView.setImageResource(android.R.drawable.ic_menu_gallery);
         imageString= null;
     }
-
-
-    private List<CategoriaProduto> carregaCategorias(){
-        List<CategoriaProduto> categorias = new ArrayList<>();
-        categorias.add(new CategoriaProduto(1, "Eletronicos"));
-        categorias.add(new CategoriaProduto(2, "Brinquedos"));
-        categorias.add(new CategoriaProduto(3, "Vestuários"));
-        categorias.add(new CategoriaProduto(4, "Cama/Mesa/Banho"));
-        return categorias;
+    private void solicitaPermissao(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            }
+        }
     }
-
-    private void openImageChooser() {
-        imageString = null;
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    private void exibirSnackbar(String erro, View view) {
+        Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
+        snackbar.setBackgroundTint(Color.GREEN);
+        snackbar.setTextColor(Color.BLACK);
+        snackbar.show();
+    }
+    private String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
     }
 
     private Bitmap redimensionarBitmap(Bitmap bitmap, int width, int height){
@@ -190,31 +231,6 @@ public class FragmentCadastrarProdutos extends Fragment {
             }
         }
     }
-
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == requireActivity().RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
-                Bitmap bitmapRedimensionado = redimensionarBitmap(bitmap, 950, 900);
-
-                // Exibir a imagem no ImageView
-                imageView.setImageBitmap(bitmapRedimensionado);
-
-                // Salvar a imagem no dispositivo e obter o caminho
-                 imageString = saveImageToInternalStorage(bitmapRedimensionado
-                 );
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
 
     private String saveImageToInternalStorage(Bitmap bitmap) {
         ContextWrapper cw = new ContextWrapper(requireContext());
@@ -237,20 +253,9 @@ public class FragmentCadastrarProdutos extends Fragment {
         return imageFile.getAbsolutePath();
     }
 
-    private String encodeImage(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
     private void saveImageToDatabase(String imageString) {
         // Aqui você deve implementar o código para salvar a string 'imageString' no banco de dados
         Toast.makeText(getActivity(), "Image saved to database!", Toast.LENGTH_SHORT).show();
-    }
-    private void exibirSnackbar(String erro, View view) {
-        Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
-        snackbar.setBackgroundTint(Color.GREEN);
-        snackbar.setTextColor(Color.BLACK);
-        snackbar.show();
+
     }
 }

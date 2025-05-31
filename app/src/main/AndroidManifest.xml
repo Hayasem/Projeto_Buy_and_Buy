@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Tela_Login_ProjetoIntegrador"
+        android:theme="@style/Base.Theme.Tela_Login_ProjetoIntegrador"
         tools:targetApi="31">
         <service android:name=".FirebaseMessageAPI.MyFirebaseMessagingService"
             android:exported="false">

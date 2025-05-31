@@ -192,7 +192,7 @@ public class CartFragment extends Fragment {
                 .getSupportFragmentManager()
                 .beginTransaction();
 
-        transaction.replace(R.id.fragmentProdutos, new HomeActivity());
+        transaction.replace(R.id.fragmentProdutos, new HomeActivity()       );
         transaction.addToBackStack(null);
         transaction.commit();
 

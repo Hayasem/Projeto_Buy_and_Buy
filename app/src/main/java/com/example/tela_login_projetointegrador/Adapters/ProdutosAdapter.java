@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.example.tela_login_projetointegrador.listeners.ProductsListener;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.Produto;
@@ -57,12 +58,10 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
         // Verifique se o produto não é nulo antes de acessar suas propriedades
         if (produto != null) {
             // Aqui você pode carregar a imagem a partir do caminho salvo
-            Bitmap bitmap = Utils.loadImageFromInternalStorage(produto.getImagem());
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                imageView.setImageResource(android.R.drawable.ic_menu_gallery); // Imagem padrão
-            }
+            Glide.with(myContext)
+                    .load(produto.getImagem())
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .into(imageView);
 
             nameView.setText(produto.getNomeProduto());
             descriptionView.setText(produto.getDescricao());
