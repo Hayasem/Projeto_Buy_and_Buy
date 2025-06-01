@@ -17,6 +17,7 @@ public class Produto implements Serializable {
         mapaProduto.put("imagem", imagem);
         mapaProduto.put("emEstoque", emEstoque);
         mapaProduto.put("quantidade", quantidade);
+        mapaProduto.put("idVendedor", idVendedor);
         return mapaProduto;
     }
     String idProduto;
@@ -28,8 +29,9 @@ public class Produto implements Serializable {
     String imagem;
     boolean emEstoque;
     int quantidade;
+    String idVendedor;
 
-    public Produto(String idProduto, String idUsuario, int idCategoria, String nomeProduto, String descricao, float preco, String imagem, boolean emEstoque, int quantidade) {
+    public Produto(String idProduto, String idUsuario, int idCategoria, String nomeProduto, String descricao, float preco, String imagem, boolean emEstoque, int quantidade, String idVendedor) {
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
         this.idCategoria = idCategoria;
@@ -39,6 +41,7 @@ public class Produto implements Serializable {
         this.imagem = imagem;
         this.emEstoque = emEstoque;
         this.quantidade = quantidade;
+        this.idVendedor = idVendedor;
     }
 
     public Produto() {
@@ -114,5 +117,13 @@ public class Produto implements Serializable {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public String getIdVendedor() {
+        return idVendedor;
+    }
+
+    public void setIdVendedor(String idVendedor) {
+        this.idVendedor = idVendedor;
     }
 }

@@ -132,7 +132,7 @@ public class FragmentCadastrarProdutos extends Fragment {
         }
 
         String userId = auth.getCurrentUser().getUid();
-        productsDataRef = FirebaseDatabase.getInstance().getReference("usuarios").child(userId).child("produtos");
+        productsDataRef = FirebaseDatabase.getInstance().getReference("produtos_globais");
 
         configurarSpinnerCategorias();
         configurarBotaoCadastrarProduto(userId);
@@ -199,6 +199,7 @@ public class FragmentCadastrarProdutos extends Fragment {
                 produto.setIdCategoria(categoriaProduto.getId());
                 produto.setQuantidade(quantidadeProd);
                 produto.setEmEstoque(true);
+                produto.setIdVendedor(userID);
 
                 uploadImageAndSaveProduct(produto, v);
             } catch (NumberFormatException e) {
@@ -327,6 +328,7 @@ public class FragmentCadastrarProdutos extends Fragment {
     private void salvarProdutosFirebase(Produto produto, View view){
         if (produto.getIdProduto() != null){
             productsDataRef.child(produto.getIdProduto()).setValue(produto.toMap())
+
                     .addOnSuccessListener(aVoid -> {
                         exibirSnackbar(mensagens[1],view); // "Produto Cadastrado com sucesso"
                         limparCampos(); // Limpa os campos APENAS após o sucesso total

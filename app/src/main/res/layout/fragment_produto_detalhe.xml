@@ -15,20 +15,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/product_image"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_racket" />
+                <ImageView
+                    android:id="@+id/product_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_racket" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -75,45 +75,50 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_for_product_price"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/roxo"
-                    android:backgroundTint="@color/roxo">
+                    android:layout_height="wrap_content" android:background="@color/roxo"
+                    android:backgroundTint="@color/roxo"
+                    android:paddingBottom="8dp"> <TextView
+                    android:id="@+id/product_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="R$ 99,99"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/product_price"
+                        android:id="@+id/txt_nome_vendedor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:text="R$ 99,99"
+                        android:layout_marginTop="4dp" android:text="Vendedor: Carregando..."
                         android:textColor="@color/white"
-                        android:textSize="24sp"
                         android:textStyle="bold"
+                        android:textSize="14sp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/product_price" />
 
                     <TextView
                         android:id="@+id/porcentagem_promo_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="-5%"
+                        android:layout_marginTop="8dp" android:text="-5%"
                         android:textColor="#FFC800"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/product_price" />
-
-
-                    <TextView
+                        app:layout_constraintTop_toBottomOf="@id/txt_nome_vendedor" /> <TextView
                         android:id="@+id/primeira_parte_texto_promo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -152,14 +157,12 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
-            <!--Layout exclusivo para a descrição-->
             <LinearLayout
                 android:id="@+id/descricao_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!--Cabeçalho Clicável-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/header_descricao"
                     android:backgroundTint="@color/cinza_claro"
@@ -189,7 +192,6 @@
                         app:layout_constraintTop_toTopOf="@+id/txt_descricao" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!--Conteúdo expandível-->
                 <LinearLayout
                     android:id="@+id/content_descricao"
                     android:layout_width="match_parent"
@@ -207,7 +209,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!--Layout exclusivo para especificacoes-->
             <LinearLayout
                 android:id="@+id/especificacoes_container"
                 android:layout_width="match_parent"
@@ -215,7 +216,6 @@
                 android:orientation="vertical">
 
 
-                <!--Cabeçalho clicável-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/header_especificacoes"
                     android:layout_width="match_parent"
@@ -246,7 +246,6 @@
                         app:layout_constraintTop_toTopOf="@+id/txt_especificacoes" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!--Conteúdo expandível-->
                 <LinearLayout
                     android:id="@+id/content_especificacoes"
                     android:layout_width="match_parent"
@@ -270,14 +269,12 @@
                         android:text="especificao"/>
                 </LinearLayout>
 
-                <!--layout exlcusivo para avaliacoes-->
                 <LinearLayout
                     android:id="@+id/avaliacoes_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!--Cabeçalho clicável-->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/header_avaliacoes"
                         android:layout_width="match_parent"
@@ -382,7 +379,6 @@
                             app:layout_constraintTop_toTopOf="@+id/txt_nota_produto" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Conteúdo expandível -->
                     <LinearLayout
                         android:id="@+id/content_avaliacoes"
                         android:layout_width="match_parent"
@@ -400,5 +396,6 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

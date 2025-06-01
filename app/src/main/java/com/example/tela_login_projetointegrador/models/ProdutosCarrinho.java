@@ -1,11 +1,15 @@
 package com.example.tela_login_projetointegrador.models;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable; // Boa prática para passar entre Fragments
 
 public class ProdutosCarrinho implements Serializable {
     String idUsuario, idCarrinho, idProduto, nomeVendedor, nomeProduto, data_add, imageUrl;
     int quantidade;
     Float preco; // O tipo do atributo é Float
+    @Exclude // ALTERAÇÃO: Adicionar essa anotação para não salvar no Firebase
+    private int estoqueDisponivel; // ALTERAÇÃO: Campo para armazenar o estoque real do produto
 
     public ProdutosCarrinho(){
         // Construtor vazio essencial para Firebase
@@ -33,8 +37,31 @@ public class ProdutosCarrinho implements Serializable {
         this.quantidade = quantidade;
         this.preco = preco;
         this.idUsuario = idUsuario;
+        this.nomeVendedor = null;
     }
 
+    public ProdutosCarrinho(String idUsuario, String idCarrinho, String idProduto, String nomeVendedor, String nomeProduto, String data_add, String imageUrl, int quantidade, Float preco) {
+        this.idUsuario = idUsuario;
+        this.idCarrinho = idCarrinho;
+        this.idProduto = idProduto;
+        this.nomeVendedor = nomeVendedor;
+        this.nomeProduto = nomeProduto;
+        this.data_add = data_add;
+        this.imageUrl = imageUrl;
+        this.quantidade = quantidade;
+        this.preco = preco;
+    }
+
+    public ProdutosCarrinho(String idCarrinho, String idProduto, String nomeProduto, String imageUrl, Float preco, int quantidade, String idUsuario, String nomeVendedor) {
+        this.idCarrinho = idCarrinho;
+        this.idProduto = idProduto;
+        this.nomeProduto = nomeProduto;
+        this.imageUrl = imageUrl;
+        this.preco = preco;
+        this.quantidade = quantidade;
+        this.idUsuario = idUsuario;
+        this.nomeVendedor = nomeVendedor;
+    }
     // --- GETTERS E SETTERS ---
 
     public String getIdUsuario() { return idUsuario; }
@@ -65,5 +92,15 @@ public class ProdutosCarrinho implements Serializable {
     // Setter de preco: Ajustado para usar Float como parâmetro
     public void setPreco(Float preco) { // <--- CORREÇÃO AQUI
         this.preco = preco;
+    }
+    // ALTERAÇÃO: Getter e Setter para estoqueDisponivel
+    @Exclude // Para que o Firebase não tente serializar este campo
+    public int getEstoqueDisponivel() {
+        return estoqueDisponivel;
+    }
+
+    @Exclude // Para que o Firebase não tente serializar este campo
+    public void setEstoqueDisponivel(int estoqueDisponivel) {
+        this.estoqueDisponivel = estoqueDisponivel;
     }
 }

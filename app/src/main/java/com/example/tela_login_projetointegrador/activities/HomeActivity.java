@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
-
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
+import android.widget.Toast;
 import com.example.tela_login_projetointegrador.Adapters.ProdutosAdapter;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.fragments.CartFragment;
@@ -39,6 +39,7 @@ public class HomeActivity extends Fragment implements ProductsListener {
     private final List<Produto> listProdutos = new ArrayList<>();
     private final List<Produto> listProdutosFiltrados = new ArrayList<>();
     private ProdutosAdapter produtosAdapter;
+    private DatabaseReference produtosGlobaisRef;
 
     @Nullable
     @Override
@@ -47,6 +48,8 @@ public class HomeActivity extends Fragment implements ProductsListener {
 
         gvProdutos = view.findViewById(R.id.gridView_products);
         searchBar = view.findViewById(R.id.search_bar);
+
+        produtosGlobaisRef = FirebaseDatabase.getInstance().getReference("produtos_globais");
 
         produtosAdapter = new ProdutosAdapter(getContext(), R.layout.products_itens, listProdutosFiltrados,
                 this, requireActivity().getSupportFragmentManager());
@@ -70,10 +73,7 @@ public class HomeActivity extends Fragment implements ProductsListener {
     }
 
     private void carregarProdutos() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userId = auth.getCurrentUser().getUid();
-        DatabaseReference productsDataRef = FirebaseDatabase.getInstance().getReference("usuarios").child(userId).child("produtos");
-        productsDataRef.addValueEventListener(new ValueEventListener() {
+        produtosGlobaisRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listProdutos.clear();
@@ -84,15 +84,17 @@ public class HomeActivity extends Fragment implements ProductsListener {
                     }
                 }
                 filtrarProdutos(searchBar.getText().toString());
+                Log.d("HomeActivity", "Produtos globais carregados: " + listProdutos.size());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("HomeActivity", "Erro ao carregar produtos globais: " + error.getMessage());
+                Toast.makeText(getContext(), "Erro ao carregar produtos.", Toast.LENGTH_SHORT).show();
                 error.toException().printStackTrace();
             }
         });
     }
-
     private void filtrarProdutos(String texto) {
         listProdutosFiltrados.clear();
         for (Produto produto : listProdutos) {
@@ -130,6 +132,7 @@ public class HomeActivity extends Fragment implements ProductsListener {
         getParentFragmentManager().setFragmentResultListener("carrinho_atualizado", this, (requestKey, result) -> {
             FragmentTransaction transaction = requireFragmentManager().beginTransaction();
             transaction.replace(R.id.fragmentProdutos, new CartFragment());
+            transaction.addToBackStack(null);
             transaction.commit();
         });
     }
@@ -146,11 +149,15 @@ public class HomeActivity extends Fragment implements ProductsListener {
         return new HomeActivity();
     }
 
-    @Override
+    /*@Override
     public void getProdutos(List<Produto> produtos) {
         listProdutos.clear();
         listProdutos.addAll(produtos);
         filtrarProdutos(searchBar.getText().toString());
+    }*/
+
+    @Override
+    public void getProdutos(List<Produto> produtos) {
     }
 
     @Override

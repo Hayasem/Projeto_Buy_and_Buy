@@ -1,7 +1,7 @@
 package com.example.tela_login_projetointegrador.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.util.HashMap;
+import java.util.Map;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapters.CartAdapter;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.activities.HomeActivity;
+import com.example.tela_login_projetointegrador.models.Produto;
 import com.example.tela_login_projetointegrador.models.ProdutosCarrinho;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,10 +42,10 @@ public class CartFragment extends Fragment {
     private TextView tv_kart_prompt, tvTotalCompra, tv_empty_state_msg;
     private CartAdapter cartAdapter;
     private RecyclerView rvProductsInCart;
-    private double totalCompra = 0.0;
     private final List<ProdutosCarrinho> produtosCarrinhoList = new ArrayList<>();
     private DatabaseReference carrinhoRef;
     private ValueEventListener carrinhoEventListener; // Listener para ser removido
+    private Map<String, Integer> estoqueProdutosGlobais = new HashMap<>();
 
 
     @Override
@@ -59,10 +61,23 @@ public class CartFragment extends Fragment {
         rvProductsInCart.setLayoutManager(new LinearLayoutManager(getContext()));
         rvProductsInCart.setHasFixedSize(true);
 
-        Log.d("CartFragment", "New CartAdapter instance created: " + cartAdapter); // Log a instância do adapter
-        Log.d("CartFragment", "CartAdapter set to RecyclerView: " + rvProductsInCart.getAdapter()); // Log a instância que o RV tem
+        cartAdapter = new CartAdapter(tvTotalCompra, new CartAdapter.OnCartItemChangeListener() {
+            @Override
+            public void onQuantityChanged(ProdutosCarrinho item, int newQuantity) {
+                // Callback do adaptador quando a quantidade muda
+                Log.d("CartFragment", "onQuantityChanged: " + item.getNomeProduto() + " para " + newQuantity);
+                Log.d("CartFragment_DEBUG", "onQuantityChanged: " + item.getNomeProduto() + " para " + newQuantity);
+                atualizarQuantidadeNoFirebase(item, newQuantity);
+            }
 
-        configurarListeners(view);
+            @Override
+            public void onShowAlertDialog(ProdutosCarrinho item, Context context) {
+                Log.d("CartFragment_DEBUG", "onShowAlertDialog: Exibindo alerta para " + item.getNomeProduto());
+                exibirAlertaRemocaoCarrinho(item, context);
+            }
+        });
+        rvProductsInCart.setAdapter(cartAdapter);
+        Log.d("CartFragment_LIFECYCLE", "onCreateView: Fragment View Criada e Adapter Setado.");
         return view;
     }
     private void inicializarComponentes(View view) {
@@ -80,6 +95,7 @@ public class CartFragment extends Fragment {
         container_valor_total = view.findViewById(R.id.container_valor_total);
     }
     private void configurarListeners(View view) {
+        Log.d("CartFragment_LIFECYCLE", "configurarListeners: Listeners configurados.");
         trashIcon.setOnClickListener(v -> removerTodosDoCarrinho());
         btn_finalizar_compra.setOnClickListener(v -> navegarFinalizarCompra());
         btn_comprar_mais.setOnClickListener(v -> navegarParaProdutos());
@@ -87,7 +103,7 @@ public class CartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Anexa o listener de dados quando o fragmento se torna visível
+        Log.d("CartFragment_LIFECYCLE", "onResume: Fragment Resumido.");
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
             // Garante que carrinhoRef está inicializado antes de anexar o listener
@@ -96,21 +112,59 @@ public class CartFragment extends Fragment {
                         .getReference("usuarios")
                         .child(userID)
                         .child("carrinho");
+                Log.d("CartFragment_LIFECYCLE", "onResume: carrinhoRef inicializado (era nulo).");
             }
-            anexarCarrinhoListener();
+            Log.d("CartFragment_LIFECYCLE", "onResume: Chamando carregarEstoqueProdutosGlobais().");
+            carregarEstoqueProdutosGlobais();
         } else {
             Toast.makeText(getContext(), "Usuário não autenticado", Toast.LENGTH_SHORT).show();
-            // Opcional: Redirecionar para tela de login
+            Log.w("CartFragment_LIFECYCLE", "onResume: Usuário não autenticado.");
         }
     }
     @Override
     public void onPause() {
         super.onPause();
-        // Remove o listener de dados quando o fragmento não está mais visível para evitar vazamentos de memória
+        Log.d("CartFragment_LIFECYCLE", "onPause: Fragment Pausado. Chamando desanexarCarrinhoListener().");
         desanexarCarrinhoListener();
     }
+    private void carregarEstoqueProdutosGlobais() {
+        Log.d("CartFragment_FIREBASE", "carregarEstoqueProdutosGlobais: Iniciando...");
+        DatabaseReference produtosGlobaisRef = FirebaseDatabase.getInstance().getReference("produtos_globais");
+        produtosGlobaisRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                estoqueProdutosGlobais.clear();
+                Log.d("CartFragment_FIREBASE", "carregarEstoqueProdutosGlobais.onDataChange: Snapshot de produtos globais recebido. Count: " + snapshot.getChildrenCount());
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Produto produto = dataSnapshot.getValue(Produto.class);
+                    if (produto != null && produto.getIdProduto() != null) {
+                        estoqueProdutosGlobais.put(produto.getIdProduto(), produto.getQuantidade());
+                    }else{
+                        Log.w("CartFragment_FIREBASE", "Produto global nulo ou sem ID na leitura: " + (produto != null ? produto.getNomeProduto() : "Nulo"));
+                    }
+                }
+                Log.d("CartFragment", "Estoque de produtos globais carregado: " + estoqueProdutosGlobais.size() + " itens.");
+                Log.d("CartFragment_FIREBASE", "Estoque de produtos globais carregado: " + estoqueProdutosGlobais.size() + " itens.");
+                Log.d("CartFragment_FIREBASE", "Chamando anexarCarrinhoListener() e configurarListeners().");
+                anexarCarrinhoListener();
+                configurarListeners(getView());
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("CartFragment", "Erro ao carregar estoque de produtos globais: " + error.getMessage());
+                Log.e("CartFragment_FIREBASE", "Erro ao carregar estoque de produtos globais: " + error.getMessage(), error.toException());
+                Toast.makeText(getContext(), "Erro ao carregar estoque: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                // Em caso de erro, ainda tente carregar o carrinho, mas os itens terão estoque 0.
+                Log.d("CartFragment_FIREBASE", "Chamando anexarCarrinhoListener() e configurarListeners() APÓS ERRO NO ESTOQUE.");
+                anexarCarrinhoListener();
+                configurarListeners(getView());
+            }
+        });
+    }
     private void anexarCarrinhoListener() {
-        if (carrinhoRef != null && carrinhoEventListener == null) { // Evita anexar múltiplas vezes
+        if (carrinhoRef != null && carrinhoEventListener == null) {
+            Log.d("CartFragment_FIREBASE", "anexarCarrinhoListener: Anexando ValueEventListener do carrinho...");
             carrinhoEventListener = new ValueEventListener() {
                 @SuppressLint("DefaultLocale")
                 @Override
@@ -118,80 +172,135 @@ public class CartFragment extends Fragment {
                     produtosCarrinhoList.clear();
                     double currentTotal = 0.0;
 
-                    Log.d("CartFragment", "onDataChange - Snapshot exists: " + snapshot.exists());
-                    Log.d("CartFragment", "onDataChange - Snapshot children count: " + snapshot.getChildrenCount());
+                    Log.d("CartFragment_FIREBASE", "carrinhoEventListener.onDataChange: Snapshot do carrinho recebido. Children: " + snapshot.getChildrenCount());
+                    if (!snapshot.exists()) {
+                        Log.d("CartFragment_FIREBASE", "carrinhoEventListener.onDataChange: Caminho do carrinho não existe ou está vazio no Firebase.");
+                    }
 
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Log.d("CartFragment", "Processing child: " + dataSnapshot.getKey());
+                        Log.d("CartFragment_FIREBASE", "Processing carrinho item: " + dataSnapshot.getKey());
                         ProdutosCarrinho item = dataSnapshot.getValue(ProdutosCarrinho.class);
-                        if (item != null) {
-                            produtosCarrinhoList.add(item);
-                            currentTotal += item.getPreco() * item.getQuantidade();
-                            Log.d("CartFragment", "Added item: " + item.getNomeProduto() + ", Qtd: " + item.getQuantidade() + ", Preco: " + item.getPreco());
-                        }else{
-                            Log.e("CartFragment", "Failed to parse item for key: " + dataSnapshot.getKey());
+                        if (item == null) {
+                            Log.e("CartFragment_FIREBASE", "Falha ao converter DataSnapshot para ProdutosCarrinho para chave: " + dataSnapshot.getKey() + ". Dados brutos: " + dataSnapshot.getValue());
+                            continue; // Pula este item se a conversão falhar
                         }
-                    }
-                    Log.d("CartFragment", "Final productsCarrinhoList size: " + produtosCarrinhoList.size());
-                    Log.d("CartFragment", "Final currentTotal: " + currentTotal);
+                        if (item.getIdCarrinho() == null) {
+                            item.setIdCarrinho(dataSnapshot.getKey());
+                            Log.d("CartFragment_FIREBASE", "ID do carrinho definido para item: " + item.getIdCarrinho());
+                        }
 
-                    if (cartAdapter == null) {
-                        // Primeira vez que os dados chegam, inicializa o adapter
-                        cartAdapter = new CartAdapter(produtosCarrinhoList, tvTotalCompra);
-                        rvProductsInCart.setAdapter(cartAdapter);
-                        Log.d("CartFragment", "CartAdapter initialized and set for the first time.");
-                    } else {
-                        // Dados subsequentes (alterações), apenas atualiza o adapter existente
-                        cartAdapter.atualizarLista(produtosCarrinhoList);
-                        Log.d("CartFragment", "CartAdapter updated with new data.");
+                        // Logs detalhados do item
+                        Log.d("CartFragment_ITEM_DATA", "Nome: " + item.getNomeProduto());
+                        Log.d("CartFragment_ITEM_DATA", "Preço: " + item.getPreco());
+                        Log.d("CartFragment_ITEM_DATA", "Quantidade: " + item.getQuantidade());
+                        Log.d("CartFragment_ITEM_DATA", "URL Imagem: " + item.getImageUrl());
+                        Log.d("CartFragment_ITEM_DATA", "ID Produto (para estoque): " + item.getIdProduto());
+
+
+                        int estoqueDisponivel = estoqueProdutosGlobais.getOrDefault(item.getIdProduto(), 0);
+                        item.setEstoqueDisponivel(estoqueDisponivel);
+                        Log.d("CartFragment_ITEM_DATA", "Estoque Disponível para " + item.getNomeProduto() + ": " + estoqueDisponivel);
+
+
+                        produtosCarrinhoList.add(item);
+                        currentTotal += (item.getPreco() != null ? item.getPreco() : 0.0f) * item.getQuantidade();
                     }
+
+                    Log.d("CartFragment_FIREBASE", "Lista produtosCarrinhoList após loop: " + produtosCarrinhoList.size() + " itens.");
+                    cartAdapter.atualizarLista(produtosCarrinhoList);
+                    cartAdapter.notifyDataSetChanged();
+                    Log.d("CartFragment_FIREBASE", "CartAdapter atualizado e notificado. Total de itens na lista do adapter: " + produtosCarrinhoList.size());
+
                     tvTotalCompra.setText(String.format(Locale.getDefault(), "R$ %.2f", currentTotal));
+                    Log.d("CartFragment_FIREBASE", "Total da compra atualizado para: " + String.format(Locale.getDefault(), "R$ %.2f", currentTotal));
 
-                    rvProductsInCart.post(() -> { // Executa no próximo ciclo de UI
-                        verificarEstadoCarrinho();
-                        Log.d("CartFragment", "Dados do carrinho atualizados em tempo real (após post).");
-                        // Adicione logs para as dimensões do RecyclerView e contagem do Adapter AQUI, dentro do post()
-                        Log.d("CartFragment", "RecyclerView width: " + rvProductsInCart.getWidth() + ", height: " + rvProductsInCart.getHeight());
-                        if (rvProductsInCart.getAdapter() != null) {
-                            Log.d("CartFragment", "Adapter item count (inside post): " + rvProductsInCart.getAdapter().getItemCount());
-                        }
-                    });
-
-                    Log.d("CartFragment", "Dados do carrinho atualizados em tempo real.");
+                    verificarEstadoCarrinho();
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(getContext(), "Erro ao carregar carrinho: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("CartFragment", "Erro ao carregar carrinho do Firebase", error.toException());
+                    Log.e("CartFragment_FIREBASE", "Erro ao carregar carrinho do Firebase: " + error.getMessage(), error.toException());
+                    verificarEstadoCarrinho();
                 }
             };
             carrinhoRef.addValueEventListener(carrinhoEventListener);
+        } else if (carrinhoRef == null) {
+            Log.e("CartFragment_FIREBASE", "anexarCarrinhoListener: carrinhoRef é nulo, não é possível anexar listener.");
+        } else {
+            Log.d("CartFragment_FIREBASE", "anexarCarrinhoListener: Listener do carrinho já anexado.");
         }
     }
+
     private void desanexarCarrinhoListener() {
         if (carrinhoRef != null && carrinhoEventListener != null) {
             carrinhoRef.removeEventListener(carrinhoEventListener);
-            carrinhoEventListener = null; // Limpa a referência
-            Log.d("CartFragment", "Listener do carrinho desanexado.");
+            carrinhoEventListener = null;
+            Log.d("CartFragment_LIFECYCLE", "desanexarCarrinhoListener: Listener do carrinho desanexado.");
+        } else {
+            Log.d("CartFragment_LIFECYCLE", "desanexarCarrinhoListener: Listener do carrinho já nulo ou carrinhoRef nulo.");
         }
     }
 
     private void verificarEstadoCarrinho() { // Manter o nome para compatibilidade
-        if (cartAdapter != null) {
-            int itemCount = cartAdapter.getItemCount(); // Obtém a contagem de itens do adapter
-            Log.d("CartFragment", "verificarEstadoCarrinho - Adapter item count: " + itemCount);
-            if (itemCount == 0) {
-                Log.d("CartFragment", "Calling mostrarEmptyState() - Adapter reports EMPTY.");
-                mostrarEmptyState();
-            } else {
-                Log.d("CartFragment", "Calling mostrarCarrinhoCheio() - Adapter reports NOT EMPTY.");
-                mostrarCarrinhoCheio();
-            }
-        } else {
-            Log.e("CartFragment", "verificarEstadoCarrinho: cartAdapter is null!");
-            // Se o adapter for nulo (acontece em onCreate), assuma carrinho vazio temporariamente
+        if (produtosCarrinhoList.isEmpty()) {
+            Log.d("CartFragment_UI_STATE", "verificarEstadoCarrinho: produtosCarrinhoList está VAZIA. Mostrando empty state.");
             mostrarEmptyState();
+        } else {
+            Log.d("CartFragment_UI_STATE", "verificarEstadoCarrinho: produtosCarrinhoList NÃO está vazia (" + produtosCarrinhoList.size() + " itens). Mostrando carrinho cheio.");
+            mostrarCarrinhoCheio();
         }
+    }
+    private void removerItemDoCarrinho(ProdutosCarrinho item) {
+        if (carrinhoRef != null && item != null && item.getIdCarrinho() != null) {
+            carrinhoRef.child(item.getIdCarrinho()).removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "Produto removido do carrinho.", Toast.LENGTH_SHORT).show();
+                        // A atualização da UI será tratada pelo ValueEventListener
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Erro ao remover item: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("CartFragment", "Erro ao remover item do Firebase: " + e.getMessage());
+                    });
+        }
+    }
+
+    private void atualizarQuantidadeNoFirebase(ProdutosCarrinho item, int newQuantity) {
+        if (carrinhoRef != null && item != null && item.getIdCarrinho() != null) {
+            // Verifica o estoque disponível ANTES de atualizar no Firebase
+            int estoqueDisponivel = estoqueProdutosGlobais.getOrDefault(item.getIdProduto(), 0);
+
+            if (newQuantity <= 0) { // Se a nova quantidade for zero ou negativa, remove o item
+                removerItemDoCarrinho(item);
+                return;
+            }
+
+            if (newQuantity > estoqueDisponivel) {
+                Toast.makeText(getContext(), "A quantidade máxima em estoque é " + estoqueDisponivel + ".", Toast.LENGTH_SHORT).show();
+                // O adapter precisará reverter a quantidade para o valor anterior ou máximo disponível
+                // A melhor forma de lidar com isso é re-renderizar com os dados do Firebase,
+                // que não serão alterados se a condição de estoque não for atendida.
+                return;
+            }
+
+            carrinhoRef.child(item.getIdCarrinho()).child("quantidade").setValue(newQuantity)
+                    .addOnSuccessListener(aVoid -> {
+                        // Toast.makeText(getContext(), "Quantidade atualizada.", Toast.LENGTH_SHORT).show(); // Comentar para evitar spam de toast
+                        // A UI será automaticamente atualizada pelo ValueEventListener
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Erro ao atualizar quantidade: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("CartFragment", "Erro ao atualizar quantidade no Firebase: " + e.getMessage());
+                    });
+        }
+    }
+    public void exibirAlertaRemocaoCarrinho(ProdutosCarrinho produto, Context context){
+        new android.app.AlertDialog.Builder(context) // Use android.app.AlertDialog
+                .setTitle("Remover item")
+                .setMessage("Você deseja remover esse item do carrinho?")
+                .setPositiveButton("Sim", (dialog, which) -> removerItemDoCarrinho(produto))
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void mostrarEmptyState() {
@@ -237,12 +346,18 @@ public class CartFragment extends Fragment {
         transaction.commit();
     }
     private void removerTodosDoCarrinho(){
+        if (produtosCarrinhoList.isEmpty()) {
+            Toast.makeText(getContext(), "Seu carrinho já está vazio.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (carrinhoRef != null) {
             carrinhoRef.removeValue()
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(getContext(), "Carrinho esvaziado", Toast.LENGTH_SHORT).show();
                         Log.d("Firebase", "Todos os produtos foram removidos com sucesso.");
+                        // O ValueEventListener já vai cuidar da atualização da UI.
                     })
                     .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover todos os produtos", e));
         } else {
@@ -262,5 +377,4 @@ public class CartFragment extends Fragment {
     public static CartFragment newInstance() {
         return new CartFragment();
     }
-
 }

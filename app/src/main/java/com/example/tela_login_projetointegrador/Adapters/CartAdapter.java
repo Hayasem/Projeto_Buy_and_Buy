@@ -9,44 +9,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.CheckBox; // Adicione este import para o CheckBox
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy; // Adicione este import
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.ProdutosCarrinho;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.jetbrains.annotations.NotNull;
-
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHolder> {
-    private List<ProdutosCarrinho> listaProdutosCarrinho;
-    private TextView totalPriceView;
+    private List<ProdutosCarrinho> listaProdutosCarrinho = new ArrayList<>();
+    private TextView totalPriceView; // Este TextView será atualizado pelo Fragment agora, não pelo Adapter
+    private OnCartItemChangeListener listener; // Nova interface de callback
 
+    // Nova interface de callback para o Fragment
+    public interface OnCartItemChangeListener {
+        void onQuantityChanged(ProdutosCarrinho item, int newQuantity);
+        void onShowAlertDialog(ProdutosCarrinho item, Context context);
+    }
 
-    public CartAdapter(List<ProdutosCarrinho> listaProdutosCarrinho, TextView totalPriceView) {
-        Log.d("CartAdapter", "CartAdapter constructor called. List size: " + listaProdutosCarrinho.size());
-        this.listaProdutosCarrinho = listaProdutosCarrinho;
+    // ALTERAÇÃO: Construtor que recebe a interface de callback
+    public CartAdapter(TextView totalPriceView, OnCartItemChangeListener listener) {
         this.totalPriceView = totalPriceView;
-
+        this.listener = listener;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void atualizarLista(List<ProdutosCarrinho> novaLista){
-        this.listaProdutosCarrinho.clear();
-        this.listaProdutosCarrinho.addAll(novaLista);
-        notifyDataSetChanged();
-
-    }
-
-    @SuppressLint("ResourceType")
     @NonNull
     @Override
     public MyViewCartHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,48 +50,84 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
     public void onBindViewHolder(@NonNull MyViewCartHolder holder, int position) {
-        ProdutosCarrinho produtoNoCarrinho = listaProdutosCarrinho.get(position);
+        ProdutosCarrinho item = listaProdutosCarrinho.get(position);
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("usuarios")
-                .child(produtoNoCarrinho.getIdUsuario());
-        userRef.child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String nomeVendedor = snapshot.getValue(String.class);
-                    holder.nameSeller.setText("Vendedor: " + nomeVendedor);
+        // Preenche o nome do vendedor (já vem do objeto ProdutosCarrinho)
+        holder.nameSeller.setText("Vendedor: " + (item.getNomeVendedor() != null ? item.getNomeVendedor() : "Desconhecido"));
+
+        holder.nameView.setText(item.getNomeProduto());
+        // Formate o preço usando NumberFormat para o padrão monetário correto
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        holder.priceView.setText(format.format(item.getPreco()));
+
+        holder.quantityView.setText(String.valueOf(item.getQuantidade()));
+
+        // Carrega a imagem
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(item.getImageUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Adicione caching
+                    .placeholder(R.drawable.img_backpack) // Placeholder padrão
+                    .into(holder.imageView);
+        } else {
+            holder.imageView.setImageResource(R.drawable.img_backpack);
+        }
+
+        // Lógica para aumentar a quantidade
+        holder.plusView.setOnClickListener(v -> {
+            int currentQuantity = item.getQuantidade();
+            int newQuantity = currentQuantity + 1;
+            int estoqueDisponivel = item.getEstoqueDisponivel(); // Obtém o estoque do objeto ProdutosCarrinho
+
+            if (listener != null) {
+                if (newQuantity <= estoqueDisponivel) {
+                    listener.onQuantityChanged(item, newQuantity);
                 } else {
-                    holder.nameSeller.setText("Vendedor desconhecido");
+                    Toast.makeText(holder.itemView.getContext(), "Quantidade máxima em estoque atingida: " + estoqueDisponivel, Toast.LENGTH_SHORT).show();
                 }
             }
+        });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                holder.nameSeller.setText("Erro ao carregar vendedor");
+        // Lógica para diminuir a quantidade
+        holder.minusView.setOnClickListener(v -> {
+            int currentQuantity = item.getQuantidade();
+            if (listener != null) {
+                if (currentQuantity > 1) {
+                    int newQuantity = currentQuantity - 1;
+                    listener.onQuantityChanged(item, newQuantity);
+                } else {
+                    // Se a quantidade é 1, chama o Fragment para exibir o alerta de remoção
+                    listener.onShowAlertDialog(item, v.getContext());
+                }
             }
         });
 
-        holder.nameSeller.setText(produtoNoCarrinho.getNomeVendedor());
-        holder.nameView.setText(produtoNoCarrinho.getNomeProduto());
-        Float preco = produtoNoCarrinho.getPreco();
-        if (preco != null) {
-            holder.priceView.setText(String.format("%.2f", preco));
-        } else {
-            holder.priceView.setText("0.00");
+        // Lógica para o botão "Excluir" (exclude_tv)
+        if (holder.excludeTv != null) {
+            holder.excludeTv.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onShowAlertDialog(item, v.getContext());
+                }
+            });
         }
-        holder.quantityView.setText(String.valueOf(produtoNoCarrinho.getQuantidade()));
-        Glide.with(holder.itemView.getContext())
-                .load(produtoNoCarrinho.getImageUrl())
-                .placeholder(R.drawable.img_backpack)
-                .into(holder.imageView);
 
-        holder.plusView.setOnClickListener(v -> {
-            adicionarProduto(produtoNoCarrinho);
-        });
-        holder.minusView.setOnClickListener(v -> {
-            removerProduto(produtoNoCarrinho, v.getContext());
-        });
+        // Lógica para o CheckBox (se você for implementar seleção de itens)
+        /*
+        if (holder.checkboxProduct != null) {
+            holder.checkboxProduct.setOnCheckedChangeListener(null); // Limpa listener para evitar loops
+            // Defina o estado do checkbox (você precisaria de um campo "isSelected" no ProdutosCarrinho)
+            // holder.checkboxProduct.setChecked(item.isSelected());
+            holder.checkboxProduct.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (listener != null) {
+                    // Notifique o fragmento sobre a mudança de seleção
+                    // listener.onItemSelected(item, isChecked);
+                }
+            });
+        }
+        */
 
+        // O 'buy_tv' (Comprar) parece ser mais uma label, ou uma ação que levaria para compra direta?
+        // Por enquanto, não adicionaremos um listener específico a ele, a menos que haja uma necessidade.
     }
 
     @Override
@@ -105,119 +135,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         return listaProdutosCarrinho.size();
     }
 
-    private void adicionarProduto(ProdutosCarrinho produto) {
-        int novaQuantidade = produto.getQuantidade() + 1;
-        atualizarQuantidade(produto, novaQuantidade);
+    // Método para atualizar a lista de produtos no adaptador
+    public void atualizarLista(List<ProdutosCarrinho> novaLista){
+        this.listaProdutosCarrinho.clear();
+        this.listaProdutosCarrinho.addAll(novaLista);
     }
 
-    // Método para diminuir a quantidade do produto no carrinho
-    private void removerProduto(ProdutosCarrinho produto, Context context) {
-        if (produto.getQuantidade() == 1) {
-            // Exibir alerta antes de remover o item do carrinho
-            exibirAlertaRemocaoCarrinho(produto, context);
-        } else {
-            // Se a quantidade for maior que 1, apenas diminui normalmente
-            int novaQuantidade = produto.getQuantidade() - 1;
-            atualizarQuantidade(produto, novaQuantidade);
-        }
-    }
-
-    public void exibirAlertaRemocaoCarrinho(ProdutosCarrinho produto, Context context){
-        new AlertDialog.Builder(context)
-                .setTitle("Remover item")
-                .setMessage("Você deseja remover esse item do carrinho?")
-                .setPositiveButton("Sim", ((dialog, which) -> removerProdutoDoCarrinho(produto)))
-                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
-                .show();
-    }
-
-    private void atualizarQuantidade(ProdutosCarrinho product, int novaQuantidade) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() == null) {
-            Log.e("Firebase", "Usuário não autenticado ao alterar quantidade");
-            return;
-        }
-        String userId = auth.getUid();
-        String productId = product.getIdCarrinho();
-        if (userId == null || productId == null) {
-            Log.e("Firebase", "ID do usuário ou ID do produto é nulo.");
-            return;
-        }
-        DatabaseReference cartRef = FirebaseDatabase.getInstance()
-                .getReference("usuarios")
-                .child(userId)
-                .child((product.getIdCarrinho()));
-
-        cartRef.child("quantidade").setValue(novaQuantidade)
-                .addOnSuccessListener(aVoid -> {
-                    int position = listaProdutosCarrinho.indexOf(product);
-                    if (position != -1) {
-                        product.setQuantidade(novaQuantidade);
-                        notifyItemChanged(position); // Notifica o RecyclerView da alteração
-                    }
-                    calcularTotal();
-                })
-                .addOnFailureListener(e -> Log.e("Firebase", "Erro ao alterar a quantidade", e));
-    }
-    private void removerProdutoDoCarrinho(ProdutosCarrinho product) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userId = auth.getUid();
-
-        if (userId == null) {
-            Log.e("Firebase", "Usuário não autenticado ao remover produto");
-            return;
-        }
-        DatabaseReference cartRef = FirebaseDatabase.getInstance()
-                .getReference("usuarios")
-                .child(userId)
-                .child(product.getIdCarrinho());
-
-        cartRef.removeValue()
-                .addOnSuccessListener(aVoid -> {
-                    int position = listaProdutosCarrinho.indexOf(product);
-                    if (position != -1) {
-                        listaProdutosCarrinho.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, listaProdutosCarrinho.size());
-                    }
-
-                    calcularTotal();
-
-                    if (totalPriceView != null && listaProdutosCarrinho.isEmpty()) {
-                        totalPriceView.setText("Carrinho vazio");
-                        atualizarLista(listaProdutosCarrinho);
-                    }
-                });
-
-    }
-    private void calcularTotal() {
-        double totalCarrinho = 0.0;
-        for (ProdutosCarrinho produto : listaProdutosCarrinho) {
-            totalCarrinho += produto.getPreco() * produto.getQuantidade();
-        }
-        if (totalPriceView != null) {
-            if (listaProdutosCarrinho.isEmpty()) {
-                totalPriceView.setText("Carrinho vazio");
-            } else {
-                totalPriceView.setText(String.format("R$ %.2f", totalCarrinho));
-            }
-        }
-        Log.d("TotalCarrinho", "Valor Total: " + totalCarrinho);
-    }
-    //
+    // ViewHolder
     public static class MyViewCartHolder extends RecyclerView.ViewHolder {
         ImageView imageView, plusView, minusView;
         TextView nameView, quantityView, priceView, nameSeller, excludeTv, buyTv;
+        CheckBox checkboxProduct; // Adicione o CheckBox aqui
 
-        public MyViewCartHolder(@NotNull View itemView){
+        public MyViewCartHolder(@NonNull View itemView){
             super(itemView);
-            excludeTv = itemView.findViewById(R.id.exclude_tv);
+            // Mapeando os componentes do seu cart_itens_layout.xml
+            checkboxProduct = itemView.findViewById(R.id.checkbox_product); // ID do CheckBox
             nameSeller = itemView.findViewById(R.id.seller_name);
             imageView = itemView.findViewById(R.id.img_product);
             nameView = itemView.findViewById(R.id.product_name);
-            plusView = itemView.findViewById(R.id.plus_icon);
+            excludeTv = itemView.findViewById(R.id.exclude_tv); // Botão/TextView "Excluir"
+            buyTv = itemView.findViewById(R.id.buy_tv); // Botão/TextView "Comprar"
             minusView = itemView.findViewById(R.id.minus_icon);
             quantityView = itemView.findViewById(R.id.product_quantity);
+            plusView = itemView.findViewById(R.id.plus_icon);
             priceView = itemView.findViewById(R.id.product_price);
         }
     }
