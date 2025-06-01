@@ -5,7 +5,6 @@ import com.google.firebase.storage.UploadTask;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -46,8 +45,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,10 +58,13 @@ public class FragmentCadastrarProdutos extends Fragment {
     private Button btn_confirmar_cadastro_produto;
     private ImageView imageView;
     private Uri selectedImageUri;
+    private com.google.android.material.floatingactionbutton.FloatingActionButton btnAdicionarImagem;
 
     private static final String TAG = "CadastroProdutosLog";
     private DatabaseReference productsDataRef;
-    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int PERMISSION_REQUEST_CODE_READ_STORAGE = 100;
+    private static final int PERMISSION_REQUEST_CODE_CAMERA = 101; // Novo código de requisição para câmera
+    private static final int REQUEST_IMAGE_CAPTURE = 1; // Código para capturar imagem da câmera
     String[] mensagens = {"Preencha todos os campos",
             "Produto Cadastrado com sucesso"};
 
@@ -82,7 +82,6 @@ public class FragmentCadastrarProdutos extends Fragment {
                         e.printStackTrace();
                         Log.e(TAG, "IOException ao obter bitmap da URI: " + e.getMessage(), e); // Log 4: Erro de IO
                         Toast.makeText(requireContext(), "Erro ao carregar a imagem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        // Opcional: Limpar a ImageView e resetar imageString
                         imageView.setImageResource(android.R.drawable.ic_menu_gallery);
                         hint_image.setVisibility(View.VISIBLE);
                         selectedImageUri = null; // Garante que imageString seja nulo em caso de erro
@@ -93,6 +92,30 @@ public class FragmentCadastrarProdutos extends Fragment {
                 }
             });
 
+    // ActivityResultLauncher para a captura da câmera
+    private final ActivityResultLauncher<Intent> cameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                    Bundle extras = result.getData().getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+                    // Salva o bitmap em um arquivo temporário para obter uma URI
+                    Uri tempUri = getImageUri(requireContext(), imageBitmap);
+                    selectedImageUri = tempUri;
+
+                    if (selectedImageUri != null) {
+                        imageView.setImageURI(selectedImageUri);
+                        hint_image.setVisibility(View.GONE);
+                    } else {
+                        Toast.makeText(requireContext(), "Erro ao obter a imagem da câmera.", Toast.LENGTH_LONG).show();
+                        imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+                        hint_image.setVisibility(View.VISIBLE);
+                    }
+
+                } else {
+                    Log.d(TAG, "Captura da câmera cancelada ou dados inválidos.");
+                }
+            });
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Nullable
@@ -100,7 +123,7 @@ public class FragmentCadastrarProdutos extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cadastro_de_produtos, container, false);
         inicializaComponentes(view);
-        solicitaPermissao();
+        solicitarPermissaoArmazenamento();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
@@ -114,6 +137,7 @@ public class FragmentCadastrarProdutos extends Fragment {
         configurarSpinnerCategorias();
         configurarBotaoCadastrarProduto(userId);
         configurarImageView();
+        configurarBotaoAdicionarImagem();
 
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) actionBar.setTitle("Cadastro de Produto");
@@ -130,6 +154,7 @@ public class FragmentCadastrarProdutos extends Fragment {
         btn_confirmar_cadastro_produto = view.findViewById(R.id.btn_confirmar_cadastro_produto);
         imageView = view.findViewById(R.id.img_produto); // adicione isso
         hint_image = view.findViewById(R.id.tv_hint_imagem);
+        btnAdicionarImagem = view.findViewById(R.id.btn_adicionar_imagem);
     }
 
     private void configurarSpinnerCategorias() {
@@ -248,6 +273,56 @@ public class FragmentCadastrarProdutos extends Fragment {
             exibirSnackbar("Nenhuma imagem selecionada para upload.", view);
         }
     }
+    private void configurarBotaoAdicionarImagem() {
+        btnAdicionarImagem.setOnClickListener(v -> {
+            final CharSequence[] options = {"Tirar Foto", "Escolher da Galeria", "Cancelar"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Adicionar Imagem do Produto");
+            builder.setItems(options, (dialog, item) -> {
+                if (options[item].equals("Tirar Foto")) {
+                    abrirCameraParaFoto();
+                } else if (options[item].equals("Escolher da Galeria")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    pickPhoto.setType("image/*"); // Garante que apenas tipos de imagem sejam mostrados
+                    imagePickerLauncher.launch(pickPhoto);
+                } else if (options[item].equals("Cancelar")) {
+                    dialog.dismiss(); // Fecha o diálogo
+                }
+            });
+            builder.show();
+        });
+        imageView.setOnClickListener(v -> {
+            final CharSequence[] options = {"Tirar Foto", "Escolher da Galeria", "Cancelar"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Adicionar Imagem do Produto");
+            builder.setItems(options, (dialog, item) -> {
+                if (options[item].equals("Tirar Foto")) {
+                    abrirCameraParaFoto();
+                } else if (options[item].equals("Escolher da Galeria")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    pickPhoto.setType("image/*");
+                    imagePickerLauncher.launch(pickPhoto);
+                } else if (options[item].equals("Cancelar")) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        });
+    }
+    private void abrirCameraParaFoto() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                cameraLauncher.launch(takePictureIntent);
+            } else {
+                Toast.makeText(requireContext(), "Nenhum aplicativo de câmera encontrado.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            solicitaPermissaoCamera(); // Solicita a permissão se ainda não foi concedida
+        }
+    }
 
     private void salvarProdutosFirebase(Produto produto, View view){
         if (produto.getIdProduto() != null){
@@ -277,36 +352,56 @@ public class FragmentCadastrarProdutos extends Fragment {
         hint_image.setVisibility(View.VISIBLE);
         selectedImageUri= null;
     }
-    private void solicitaPermissao(){
+    private void solicitarPermissaoArmazenamento(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES)
                     != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PERMISSION_REQUEST_CODE);
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PERMISSION_REQUEST_CODE_READ_STORAGE);
             }
         } else {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_READ_STORAGE);
             }
+        }
+    }
+    private void solicitaPermissaoCamera() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE_CAMERA);
         }
     }
     private void exibirSnackbar(String erro, View view) {
         Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
-        snackbar.setBackgroundTint(Color.RED);
+        snackbar.setBackgroundTint(Color.GREEN);
         snackbar.setTextColor(Color.BLACK);
         snackbar.show();
     }
+    private Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
+        if (requestCode == PERMISSION_REQUEST_CODE_READ_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permissão concedida
+                // Permissão de armazenamento concedida
             } else {
-                // Permissão negada
-                Toast.makeText(getActivity(), "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                // Permissão de armazenamento negada
+                Toast.makeText(getActivity(), "Permissão negada para ler o armazenamento externo.", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PERMISSION_REQUEST_CODE_CAMERA) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permissão da câmera concedida
+            } else {
+                // Permissão da câmera negada
+                Toast.makeText(getActivity(), "Permissão negada para acessar a câmera.", Toast.LENGTH_SHORT).show();
             }
         }
     }
