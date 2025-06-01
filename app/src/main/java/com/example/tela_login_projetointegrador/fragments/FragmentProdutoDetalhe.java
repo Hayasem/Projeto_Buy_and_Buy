@@ -124,43 +124,62 @@ public class FragmentProdutoDetalhe extends Fragment {
 
     public void adicionarAoCarrinho(Produto produto) {
         String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference carrinhoRef = FirebaseDatabase.getInstance()
+        DatabaseReference carrinhoUsuarioRef = FirebaseDatabase.getInstance()
                 .getReference("usuarios")
                 .child(usuarioID)
-                .child("carrinho")
-                .child(produto.getIdProduto());
-
-        carrinhoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("carrinho");
+        carrinhoUsuarioRef.orderByChild("idProduto").equalTo(produto.getIdProduto())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        int novaQuantidade = 1;
+                        ProdutosCarrinho itemExistente = null;
+                        String idCarrinhoExistente = null;
 
                         if (snapshot.exists()) {
-                            ProdutosCarrinho itemExistente = snapshot.getValue(ProdutosCarrinho.class);
-                                if (itemExistente != null){
-                                    novaQuantidade = itemExistente.getQuantidade() + 1;
-                                }
+                            // Se o produto já está no carrinho, obtemos o primeiro (e único) item
+                            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                itemExistente = childSnapshot.getValue(ProdutosCarrinho.class);
+                                idCarrinhoExistente = childSnapshot.getKey(); // Obtém a chave real do item no carrinho
+                                break; // Deve haver apenas um item por idProduto se você estiver usando idProduto como ID
                             }
+                        }
 
-                        ProdutosCarrinho novoItem = new ProdutosCarrinho(
-                                produto.getIdProduto(),
+                        int novaQuantidade;
+                        if (itemExistente != null) {
+                            // Produto já existe, incrementa a quantidade
+                            novaQuantidade = itemExistente.getQuantidade() + 1;
+                        } else {
+                            // Produto não existe, adiciona com quantidade 1
+                            novaQuantidade = 1;
+                            idCarrinhoExistente = carrinhoUsuarioRef.push().getKey(); // Gera um NOVO ID ÚNICO para o item do carrinho
+                        }
+
+                        // Cria ou atualiza o objeto ProdutosCarrinho
+                        ProdutosCarrinho itemParaSalvar = new ProdutosCarrinho(
+                                idCarrinhoExistente, // Use o ID do carrinho existente ou o novo gerado
                                 produto.getIdProduto(),
                                 produto.getNomeProduto(),
                                 produto.getImagem(),
                                 produto.getPreco(),
                                 novaQuantidade,
                                 usuarioID
+                                // Você pode adicionar nomeVendedor aqui se tiver acesso a ele
                         );
-                        carrinhoRef.setValue(novoItem.toMap())
+
+                        // Salva/Atualiza o item no Firebase usando o idCarrinhoExistente como chave
+                        carrinhoUsuarioRef.child(idCarrinhoExistente).setValue(itemParaSalvar)
                                 .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Produto adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Erro ao adicionar ao carrinho!", Toast.LENGTH_SHORT).show());
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getContext(), "Erro ao adicionar ao carrinho: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.e("AdicionarCarrinho", "Erro ao adicionar/atualizar no Firebase: " + e.getMessage(), e);
+                                });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), "Erro: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Erro ao verificar carrinho: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("AdicionarCarrinho", "Erro de banco de dados: " + error.getMessage(), error.toException());
                     }
                 });
     }
 }
-

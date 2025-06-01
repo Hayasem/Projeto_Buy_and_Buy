@@ -1,131 +1,69 @@
 package com.example.tela_login_projetointegrador.models;
 
-import android.widget.ImageView;
+import java.io.Serializable; // Boa prática para passar entre Fragments
 
-import java.util.Map;
-
-public class ProdutosCarrinho {
-    String idUsuario, idCarrinho, idProduto, nomeVendedor, nomeProduto, data_add, imagemUrl;
+public class ProdutosCarrinho implements Serializable {
+    String idUsuario, idCarrinho, idProduto, nomeVendedor, nomeProduto, data_add, imageUrl;
     int quantidade;
-    Float totalPrice, preco;
-
-    public Map<String, Object> toMap() {
-        return Map.of(
-                "idCarrinho", idCarrinho,
-                "idProduto", idProduto,
-                "imagemUrl", imagemUrl,
-                "nomeProduto", nomeProduto,
-                "preco", preco,
-                "quantidade", quantidade,
-                "totalPrice", 0,
-                "idUsuario", idUsuario
-        );
-    }
+    Float preco; // O tipo do atributo é Float
 
     public ProdutosCarrinho(){
+        // Construtor vazio essencial para Firebase
     }
 
-    public ProdutosCarrinho(String idUsuario, String idCarrinho, String idProduto, String nomeVendedor, String nomeProduto, String data_add, String imagemUrl, float preco, int quantidade, float totalPrice) {
+    // Construtor completo: Ajustado para usar Float para preco
+    public ProdutosCarrinho(String idUsuario, String idCarrinho, String idProduto, String nomeVendedor, String nomeProduto, String data_add, String imageUrl, Float preco, int quantidade) {
         this.idUsuario = idUsuario;
         this.idCarrinho = idCarrinho;
         this.idProduto = idProduto;
         this.nomeVendedor = nomeVendedor;
         this.nomeProduto = nomeProduto;
         this.data_add = data_add;
-        this.imagemUrl = imagemUrl;
+        this.imageUrl = imageUrl;
         this.preco = preco;
         this.quantidade = quantidade;
-        this.totalPrice = totalPrice;
     }
 
-    public ProdutosCarrinho(String idCarrinhoExistente, String idProduto, String nomeProduto, String imagemUrl, float preco, int quantidade,String idUsuario) {
+    // Construtor usado em FragmentProdutoDetalhe: Ajustado para usar Float para preco
+    public ProdutosCarrinho(String idCarrinhoExistente, String idProduto, String nomeProduto, String imageUrl, Float preco, int quantidade, String idUsuario) {
         this.idCarrinho = idCarrinhoExistente;
         this.idProduto = idProduto;
-        this.nomeProduto  =nomeProduto;
-        this.imagemUrl = imagemUrl;
+        this.nomeProduto  = nomeProduto;
+        this.imageUrl = imageUrl;
         this.quantidade = quantidade;
         this.preco = preco;
         this.idUsuario = idUsuario;
     }
 
-    public String getIdUsuario() {
-        return idUsuario;
-    }
+    // --- GETTERS E SETTERS ---
 
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
-    }
+    public String getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(String idUsuario) { this.idUsuario = idUsuario; }
 
-    public String getIdCarrinho() {
-        return idCarrinho;
-    }
+    public String getIdCarrinho() { return idCarrinho; }
+    public void setIdCarrinho(String idCarrinho) { this.idCarrinho = idCarrinho; }
 
-    public void setIdCarrinho(String idCarrinho) {
-        this.idCarrinho = idCarrinho;
-    }
+    public String getIdProduto() { return idProduto; }
+    public void setIdProduto(String idProduto) { this.idProduto = idProduto; }
 
-    public String getIdProduto() {
-        return idProduto;
-    }
+    public int getQuantidade() { return quantidade; }
+    public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
 
-    public void setIdProduto(String idProduto) {
-        this.idProduto = idProduto;
-    }
+    public String getNomeProduto() { return nomeProduto; }
+    public void setNomeProduto(String nomeProduto) { this.nomeProduto = nomeProduto; }
 
-    public int getQuantidade() {
-        return quantidade;
-    }
+    public String getNomeVendedor() { return nomeVendedor; }
+    public void setNomeVendedor(String nomeVendedor) { this.nomeVendedor = nomeVendedor; }
 
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
+    public String getData_add() { return data_add; }
+    public void setData_add(String data_add) { this.data_add = data_add; }
 
-    public String getNomeProduto() {
-        return nomeProduto;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
-    }
-
-    public String getNomeVendedor() {
-        return nomeVendedor;
-    }
-
-    public void setNomeVendedor(String nomeVendedor) {
-        this.nomeVendedor = nomeVendedor;
-    }
-
-    public String getData_add() {
-        return data_add;
-    }
-
-    public void setData_add(String data_add) {
-        this.data_add = data_add;
-    }
-
-    public String getimagemUrl() {
-        return imagemUrl;
-    }
-
-    public void setImagemUrl(String imagemUrl) {
-        this.imagemUrl = imagemUrl;
-    }
-
-    public Float getPreco() {
-        return preco;
-    }
-
-    public void setPreco(float preco) {
+    public Float getPreco() { return preco; }
+    // Setter de preco: Ajustado para usar Float como parâmetro
+    public void setPreco(Float preco) { // <--- CORREÇÃO AQUI
         this.preco = preco;
     }
-
-    public float getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(float totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
 }

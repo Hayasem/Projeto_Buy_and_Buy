@@ -1,7 +1,5 @@
 package com.example.tela_login_projetointegrador.Adapters;
 
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,13 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.fragments.FragmentProdutoDetalhe;
 import com.example.tela_login_projetointegrador.models.ProdutosCarrinho;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHolder> {
     private List<ProdutosCarrinho> listaProdutosCarrinho;
@@ -37,15 +32,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
 
 
     public CartAdapter(List<ProdutosCarrinho> listaProdutosCarrinho, TextView totalPriceView) {
+        Log.d("CartAdapter", "CartAdapter constructor called. List size: " + listaProdutosCarrinho.size());
         this.listaProdutosCarrinho = listaProdutosCarrinho;
         this.totalPriceView = totalPriceView;
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void atualizarLista(List<ProdutosCarrinho> novaLista){
         this.listaProdutosCarrinho.clear();
-        notifyDataSetChanged();
         this.listaProdutosCarrinho.addAll(novaLista);
+        notifyDataSetChanged();
+
     }
 
     @SuppressLint("ResourceType")
@@ -89,7 +87,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
         }
         holder.quantityView.setText(String.valueOf(produtoNoCarrinho.getQuantidade()));
         Glide.with(holder.itemView.getContext())
-                .load(produtoNoCarrinho.getimagemUrl())
+                .load(produtoNoCarrinho.getImageUrl())
                 .placeholder(R.drawable.img_backpack)
                 .into(holder.imageView);
 

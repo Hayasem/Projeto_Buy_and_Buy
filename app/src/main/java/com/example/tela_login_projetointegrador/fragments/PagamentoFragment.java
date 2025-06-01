@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.models.Produto;
 import com.example.tela_login_projetointegrador.models.ProdutosCarrinho;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -107,7 +106,7 @@ public class PagamentoFragment extends Fragment {
                     txtPreco.setText("R$ "+ produto.getPreco().toString().replaceAll("\\.", ",") +" ");
                     ImageView imgProduto = itemView.findViewById(R.id.imgProduto);
                     Glide.with(requireContext())
-                            .load(produto.getimagemUrl())
+                            .load(produto.getImageUrl())
                             .placeholder(R.drawable.box_icon)
                             .error(R.drawable.user)
                             .into(imgProduto);

@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:fitsSystemWindows="true"> <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="16dp"
     android:paddingBottom="32dp">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fgmt_cadastro_de_produtos"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
-        <!-- TÍTULO -->
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/tv_informe_produto"
             android:layout_width="0dp"
@@ -29,7 +28,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"/>
 
-        <!-- CARD CONTAINER -->
         <androidx.cardview.widget.CardView
             android:id="@+id/card_container"
             android:layout_width="0dp"
@@ -48,7 +46,6 @@
                 android:layout_height="wrap_content"
                 android:padding="20dp">
 
-                <!-- NOME PRODUTO -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_nome_produto"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -66,7 +63,6 @@
                         android:hint="Nome do produto:" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- IMAGEM -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_imagem_produto"
                     android:layout_width="0dp"
@@ -118,7 +114,6 @@
                     app:layout_constraintEnd_toEndOf="@id/card_imagem_produto" />
 
 
-                <!-- PREÇO -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_preco"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -138,7 +133,6 @@
                         android:hint="Preço" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- CATEGORIA -->
                 <Spinner
                     android:id="@+id/spinner_categoria_produto"
                     android:layout_width="0dp"
@@ -149,7 +143,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="12dp"/>
 
-                <!-- DESCRIÇÃO -->
                 <EditText
                     android:id="@+id/edit_descricao_produto"
                     android:layout_width="0dp"
@@ -163,7 +156,6 @@
                     android:scrollbars="vertical"
                     android:layout_marginTop="12dp"/>
 
-                <!-- QUANTIDADE -->
                 <EditText
                     android:id="@+id/edit_quantidade_produto"
                     android:layout_width="0dp"
@@ -178,7 +170,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- BOTÃO CONFIRMAR -->
         <Button
             android:id="@+id/btn_confirmar_cadastro_produto"
             android:layout_width="0dp"
@@ -194,3 +185,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
