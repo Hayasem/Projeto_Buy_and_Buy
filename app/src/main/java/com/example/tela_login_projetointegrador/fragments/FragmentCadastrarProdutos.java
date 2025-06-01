@@ -1,7 +1,9 @@
 package com.example.tela_login_projetointegrador.fragments;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -13,10 +15,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,7 +34,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.example.tela_login_projetointegrador.R;
@@ -47,7 +48,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +60,9 @@ public class FragmentCadastrarProdutos extends Fragment {
     private Spinner spinner_categoria_produto;
     private Button btn_confirmar_cadastro_produto;
     private ImageView imageView;
-    private String imageString;
+    private Uri selectedImageUri;
+
+    private static final String TAG = "CadastroProdutosLog";
     private DatabaseReference productsDataRef;
     private static final int PERMISSION_REQUEST_CODE = 100;
     String[] mensagens = {"Preencha todos os campos",
@@ -70,16 +72,28 @@ public class FragmentCadastrarProdutos extends Fragment {
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
                     Uri imageUri = result.getData().getData();
+                    selectedImageUri = imageUri;
+                    Log.d(TAG, "Image URI obtida: " + imageUri); // Log 1: A URI da imagem
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
-                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 950, 900, true);
-                        imageView.setImageBitmap(resizedBitmap);
-                        imageString = encodeImage(resizedBitmap);
-                    } catch (IOException e) {
+                        imageView.setImageURI(selectedImageUri);
+                        hint_image.setVisibility(View.GONE);
+
+                    } catch (Exception e) {
                         e.printStackTrace();
+                        Log.e(TAG, "IOException ao obter bitmap da URI: " + e.getMessage(), e); // Log 4: Erro de IO
+                        Toast.makeText(requireContext(), "Erro ao carregar a imagem: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        // Opcional: Limpar a ImageView e resetar imageString
+                        imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+                        hint_image.setVisibility(View.VISIBLE);
+                        selectedImageUri = null; // Garante que imageString seja nulo em caso de erro
                     }
+                } else {
+                    Log.d(TAG, "Seleção de imagem cancelada ou dados inválidos."); // Log 5: Seleção cancelada
+                    selectedImageUri = null;
                 }
             });
+
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Nullable
     @Override
@@ -106,7 +120,8 @@ public class FragmentCadastrarProdutos extends Fragment {
 
         return view;
     }
-    private void inicializaComponentes(View view){
+
+    private void inicializaComponentes(View view) {
         edit_nome_produto = view.findViewById(R.id.edit_nome_produto);
         edit_preco_produto = view.findViewById(R.id.edit_preco_produto);
         spinner_categoria_produto = view.findViewById(R.id.spinner_categoria_produto);
@@ -116,19 +131,21 @@ public class FragmentCadastrarProdutos extends Fragment {
         imageView = view.findViewById(R.id.img_produto); // adicione isso
         hint_image = view.findViewById(R.id.tv_hint_imagem);
     }
-    private void configurarSpinnerCategorias() {
-            List<CategoriaProduto> categorias = new ArrayList<>();
-            categorias.add(new CategoriaProduto(0, "Selecione a categoria"));
-            categorias.add(new CategoriaProduto(1, "Eletronicos"));
-            categorias.add(new CategoriaProduto(2, "Brinquedos"));
-            categorias.add(new CategoriaProduto(3, "Vestuários"));
-            categorias.add(new CategoriaProduto(4, "Cama/Mesa/Banho"));
 
-            ArrayAdapter<CategoriaProduto> adapter = new ArrayAdapter<>(requireContext(),
-                    android.R.layout.simple_spinner_item, categorias);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner_categoria_produto.setAdapter(adapter);
+    private void configurarSpinnerCategorias() {
+        List<CategoriaProduto> categorias = new ArrayList<>();
+        categorias.add(new CategoriaProduto(0, "Selecione a categoria"));
+        categorias.add(new CategoriaProduto(1, "Eletronicos"));
+        categorias.add(new CategoriaProduto(2, "Brinquedos"));
+        categorias.add(new CategoriaProduto(3, "Vestuários"));
+        categorias.add(new CategoriaProduto(4, "Cama/Mesa/Banho"));
+
+        ArrayAdapter<CategoriaProduto> adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_spinner_item, categorias);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_categoria_produto.setAdapter(adapter);
     }
+
     private void configurarBotaoCadastrarProduto(String userID) {
         btn_confirmar_cadastro_produto.setOnClickListener(v -> {
             String titulo = edit_nome_produto.getText().toString().trim();
@@ -139,8 +156,9 @@ public class FragmentCadastrarProdutos extends Fragment {
 
             if (titulo.isEmpty() || descricao.isEmpty() || preco.isEmpty()
                     || quantidadeTexto.isEmpty() || categoriaProduto == null
-                    || imageString == null || categoriaProduto.getId() == 0) {
+                    || selectedImageUri == null || categoriaProduto.getId() == 0) {
                 exibirSnackbar(mensagens[0], v);
+                Log.d(TAG, "Validação falhou: algum campo está vazio ou imagem não selecionada.");
                 return;
             }
 
@@ -154,30 +172,99 @@ public class FragmentCadastrarProdutos extends Fragment {
                 produto.setDescricao(descricao);
                 produto.setPreco(precoFloat);
                 produto.setIdCategoria(categoriaProduto.getId());
-                produto.setImagem(imageString);
                 produto.setQuantidade(quantidadeProd);
+                produto.setEmEstoque(true);
 
-                salvarProdutosFirebase(produto, v);
-                limparCampos();
+                uploadImageAndSaveProduct(produto, v);
             } catch (NumberFormatException e) {
                 exibirSnackbar("Preço ou quantidade inválidos", v);
             }
         });
     }
+
     private void configurarImageView() {
         imageView.setOnClickListener(v -> {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    imagePickerLauncher.launch(intent);
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);
         });
     }
+
+    private void uploadImageAndSaveProduct(Produto produto, View view) {
+        if (selectedImageUri != null) {
+            // Mostra um indicador para o usuário que o upload está acontecendo
+            Toast.makeText(getContext(), "Fazendo upload da imagem...", Toast.LENGTH_LONG).show();
+            btn_confirmar_cadastro_produto.setEnabled(false); // Desabilita o botão para evitar cliques múltiplos
+
+            // Gera um ID único para o produto ANTES do upload da imagem
+            String userId;
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                Log.d(TAG, "UID do usuário para upload: " + userId); // <-- ESTE É O LOG CRÍTICO!
+            } else {
+                Log.e(TAG, "ERRO CRÍTICO: Usuário não autenticado no momento do upload. userID é nulo.");
+                exibirSnackbar("Erro: Usuário não autenticado. Faça login novamente.", view);
+                btn_confirmar_cadastro_produto.setEnabled(true);
+                return; // Interrompe o processo se não houver usuário autenticado
+            }
+            // Assim, o caminho da imagem no Storage pode incluir o ID do produto
+            String productId = productsDataRef.push().getKey();
+            if (productId == null) {
+                exibirSnackbar("Erro ao gerar ID do produto.", view);
+                btn_confirmar_cadastro_produto.setEnabled(true); // Reabilita o botão
+                return;
+            }
+            produto.setIdProduto(productId);
+
+            // Define o caminho no Firebase Storage: product_images/userId/productId_image.jpg
+            StorageReference storageRef = FirebaseStorage.getInstance("gs://buy-and-buy-atualizado.firebasestorage.app").getReference();
+            StorageReference imageRef = storageRef.child("product_images")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child(productId + "_product_image.jpg");
+            UploadTask uploadTask = imageRef.putFile(selectedImageUri);
+
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                // Imagem carregada com sucesso, agora obtém a URL de download
+                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String downloadUrl = uri.toString();
+                    Log.d(TAG, "Imagem carregada com sucesso. URL de Download: " + downloadUrl);
+
+                    // Atribui a URL de download ao campo 'imagem' do objeto Produto
+                    produto.setImagem(downloadUrl);
+
+                    // Agora que a imagem está carregada e temos a URL, salvamos os dados do produto no Realtime Database
+                    salvarProdutosFirebase(produto, view); // Chama o método para salvar no DB
+                }).addOnFailureListener(e -> {
+                    exibirSnackbar("Falha ao obter URL da imagem: " + e.getMessage(), view);
+                    Log.e(TAG, "Erro ao obter URL da imagem.", e);
+                    btn_confirmar_cadastro_produto.setEnabled(true); // Reabilita o botão
+                });
+            }).addOnFailureListener(e -> {
+                exibirSnackbar("Falha no upload da imagem: " + e.getMessage(), view);
+                Log.e(TAG, "Erro no upload da imagem para o Storage: " + e.getMessage(), e);
+                btn_confirmar_cadastro_produto.setEnabled(true); // Reabilita o botão
+            });
+        } else {
+            exibirSnackbar("Nenhuma imagem selecionada para upload.", view);
+        }
+    }
+
     private void salvarProdutosFirebase(Produto produto, View view){
-        String productId = productsDataRef.push().getKey();
-        produto.setIdProduto(productId);
-        if (productId != null){
-            productsDataRef.child(productId).setValue(produto.toMap())
-                    .addOnSuccessListener(aVoid -> exibirSnackbar(mensagens[1],view))
-                    .addOnFailureListener(e -> exibirSnackbar("Ocorreu um erro ao salvar o produto: " + e.getMessage(), view));
+        if (produto.getIdProduto() != null){
+            productsDataRef.child(produto.getIdProduto()).setValue(produto.toMap())
+                    .addOnSuccessListener(aVoid -> {
+                        exibirSnackbar(mensagens[1],view); // "Produto Cadastrado com sucesso"
+                        limparCampos(); // Limpa os campos APENAS após o sucesso total
+                        btn_confirmar_cadastro_produto.setEnabled(true); // Reabilita o botão
+                    })
+                    .addOnFailureListener(e -> {
+                        exibirSnackbar("Ocorreu um erro ao salvar o produto no banco de dados: " + e.getMessage(), view);
+                        Log.e(TAG, "Erro ao salvar o produto no Realtime Database: " + e.getMessage(), e);
+                        btn_confirmar_cadastro_produto.setEnabled(true); // Reabilita o botão
+                    });
+        } else {
+            exibirSnackbar("Erro interno: ID do produto não gerado para salvar.", view);
+            btn_confirmar_cadastro_produto.setEnabled(true); // Reabilita o botão
         }
     }
     private void limparCampos(){
@@ -187,7 +274,8 @@ public class FragmentCadastrarProdutos extends Fragment {
         editQuantidadeProduto.setText("");
         spinner_categoria_produto.setSelection(0);
         imageView.setImageResource(android.R.drawable.ic_menu_gallery);
-        imageString= null;
+        hint_image.setVisibility(View.VISIBLE);
+        selectedImageUri= null;
     }
     private void solicitaPermissao(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -204,18 +292,9 @@ public class FragmentCadastrarProdutos extends Fragment {
     }
     private void exibirSnackbar(String erro, View view) {
         Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
-        snackbar.setBackgroundTint(Color.GREEN);
+        snackbar.setBackgroundTint(Color.RED);
         snackbar.setTextColor(Color.BLACK);
         snackbar.show();
-    }
-    private String encodeImage(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-    }
-
-    private Bitmap redimensionarBitmap(Bitmap bitmap, int width, int height){
-        return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
 
     @Override
@@ -230,32 +309,5 @@ public class FragmentCadastrarProdutos extends Fragment {
                 Toast.makeText(getActivity(), "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private String saveImageToInternalStorage(Bitmap bitmap) {
-        ContextWrapper cw = new ContextWrapper(requireContext());
-        // Diretório para salvar a imagem
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Cria um arquivo com nome único
-        File imageFile = new File(directory, "image_" + System.currentTimeMillis() + ".jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(imageFile);
-            // Usa o método compress para salvar a imagem no formato JPEG com qualidade 100%
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Retorna o caminho absoluto do arquivo salvo
-        return imageFile.getAbsolutePath();
-    }
-
-    private void saveImageToDatabase(String imageString) {
-        // Aqui você deve implementar o código para salvar a string 'imageString' no banco de dados
-        Toast.makeText(getActivity(), "Image saved to database!", Toast.LENGTH_SHORT).show();
-
     }
 }

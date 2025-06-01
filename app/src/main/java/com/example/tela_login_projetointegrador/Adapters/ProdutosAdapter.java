@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.tela_login_projetointegrador.listeners.ProductsListener;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.Produto;
@@ -37,21 +38,31 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
         this.productsListener = productsListener;
         this.fragmentManager = supportFragmentManager;
     }
+    static class ViewHolder {
+        ImageView imageView;
+        TextView nameView;
+        TextView descriptionView;
+        TextView priceView;
+    }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View itemView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        ViewHolder holder;
 
-
-        if(itemView==null){
+        if(convertView==null) {
             LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
-            itemView = inflater.inflate(myResource, parent, false);
-        }
+            convertView = inflater.inflate(myResource, parent, false);
 
-        ImageView imageView = itemView.findViewById(R.id.img_product);
-        TextView nameView = itemView.findViewById(R.id.product_name);
-        TextView descriptionView = itemView.findViewById(R.id.product_description);
-        TextView priceView = itemView.findViewById(R.id.product_price);
+            holder = new ViewHolder();
+            holder.imageView = convertView.findViewById(R.id.img_product);
+            holder.nameView = convertView.findViewById(R.id.product_name);
+            holder.descriptionView = convertView.findViewById(R.id.product_description);
+            holder.priceView = convertView.findViewById(R.id.product_price);
+            convertView.setTag(holder);
+        }else{
+            holder = (ViewHolder) convertView.getTag();
+        }
 
         Produto produto = getItem(position);
 
@@ -61,15 +72,22 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
             Glide.with(myContext)
                     .load(produto.getImagem())
                     .placeholder(android.R.drawable.ic_menu_gallery)
-                    .into(imageView);
+                    .error(android.R.drawable.ic_dialog_alert)     // Imagem mostrada se houver erro no carregamento
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.imageView);
 
-            nameView.setText(produto.getNomeProduto());
-            descriptionView.setText(produto.getDescricao());
+            holder.nameView.setText(produto.getNomeProduto());
+            holder.descriptionView.setText(produto.getDescricao());
             NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-            priceView.setText(format.format(produto.getPreco()));
+            holder.priceView.setText(format.format(produto.getPreco()));
+        }else{
+            holder.imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+            holder.nameView.setText("");
+            holder.descriptionView.setText("");
+            holder.priceView.setText("");
         }
 
-        itemView.setOnClickListener(v -> {
+        convertView.setOnClickListener(v -> {
             Produto produtos = getItem(position);
             if (produtos != null) {
                 // Notifique a fragment
@@ -77,6 +95,6 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
             }
         });
 
-        return itemView;
+        return convertView;
     }
 }
