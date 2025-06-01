@@ -443,4 +443,35 @@
             app:layout_constraintStart_toStartOf="@+id/btn_deslogar"
             app:layout_constraintTop_toBottomOf="@+id/btn_deslogar" />
 
+        <Button
+            android:id="@+id/btn_aumentar_fonte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="A+"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_cadastrar_produto"
+            app:layout_constraintVertical_bias="0.518" />
+
+        <Button
+            android:id="@+id/btn_diminuir_fonte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="A-"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.978"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_aumentar_fonte"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
