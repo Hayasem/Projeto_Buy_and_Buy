@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.packaging.defaultExcludes
-
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -49,7 +47,7 @@ android {
 dependencies {
 
     implementation("com.google.firebase:firebase-analytics")
-    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation ("com.google.firebase:firebase-database:21.0.0")
@@ -74,6 +72,5 @@ dependencies {
 
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation("com.jakewharton:butterknife:10.2.3")
-    implementation("com.nex3z:notification-badge:1.0.4")
 
 }

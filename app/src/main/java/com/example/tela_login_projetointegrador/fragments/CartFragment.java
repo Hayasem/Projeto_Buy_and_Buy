@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.example.tela_login_projetointegrador.listeners.OnCartCountChangeListener;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,7 +47,28 @@ public class CartFragment extends Fragment {
     private DatabaseReference carrinhoRef;
     private ValueEventListener carrinhoEventListener; // Listener para ser removido
     private Map<String, Integer> estoqueProdutosGlobais = new HashMap<>();
+    private OnCartCountChangeListener cartCountChangeListener; // <--- ADICIONE ESTA LINHA
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCartCountChangeListener) {
+            cartCountChangeListener = (OnCartCountChangeListener) context;
+            Log.d("CartFragment_LIFECYCLE", "onAttach: Listener de contagem do carrinho anexado.");
+        } else {
+            // Se a Activity não implementar a interface, isso pode ser um erro ou uma situação esperada
+            Log.e("CartFragment_LIFECYCLE", "onAttach: Activity não implementa OnCartCountChangeListener.");
+            // Opcional: throw new RuntimeException(context.toString() + " must implement OnCartCountChangeListener");
+        }
+    }
+
+    // 2. Implementar onDetach para liberar a referência
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        cartCountChangeListener = null; // Limpa a referência para evitar vazamentos de memória
+        Log.d("CartFragment_LIFECYCLE", "onDetach: Listener de contagem do carrinho desanexado.");
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -171,6 +193,7 @@ public class CartFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     produtosCarrinhoList.clear();
                     double currentTotal = 0.0;
+                    int itemCount = 0;
 
                     Log.d("CartFragment_FIREBASE", "carrinhoEventListener.onDataChange: Snapshot do carrinho recebido. Children: " + snapshot.getChildrenCount());
                     if (!snapshot.exists()) {
@@ -204,6 +227,7 @@ public class CartFragment extends Fragment {
 
                         produtosCarrinhoList.add(item);
                         currentTotal += (item.getPreco() != null ? item.getPreco() : 0.0f) * item.getQuantidade();
+                        itemCount += item.getQuantidade();
                     }
 
                     Log.d("CartFragment_FIREBASE", "Lista produtosCarrinhoList após loop: " + produtosCarrinhoList.size() + " itens.");
@@ -215,6 +239,10 @@ public class CartFragment extends Fragment {
                     Log.d("CartFragment_FIREBASE", "Total da compra atualizado para: " + String.format(Locale.getDefault(), "R$ %.2f", currentTotal));
 
                     verificarEstadoCarrinho();
+                    if (cartCountChangeListener != null) {
+                        cartCountChangeListener.onCartCountChanged(itemCount); // <--- ADICIONE ESTA LINHA
+                        Log.d("CartFragment_BADGE", "onDataChange: Notificando Activity com " + itemCount + " itens.");
+                    }
                 }
 
                 @Override
@@ -222,6 +250,10 @@ public class CartFragment extends Fragment {
                     Toast.makeText(getContext(), "Erro ao carregar carrinho: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("CartFragment_FIREBASE", "Erro ao carregar carrinho do Firebase: " + error.getMessage(), error.toException());
                     verificarEstadoCarrinho();
+                    if (cartCountChangeListener != null) {
+                        cartCountChangeListener.onCartCountChanged(0); // Em caso de erro, assume 0 itens no carrinho
+                        Log.d("CartFragment_BADGE", "onCancelled: Notificando Activity com 0 itens devido a erro.");
+                    }
                 }
             };
             carrinhoRef.addValueEventListener(carrinhoEventListener);
@@ -231,7 +263,6 @@ public class CartFragment extends Fragment {
             Log.d("CartFragment_FIREBASE", "anexarCarrinhoListener: Listener do carrinho já anexado.");
         }
     }
-
     private void desanexarCarrinhoListener() {
         if (carrinhoRef != null && carrinhoEventListener != null) {
             carrinhoRef.removeEventListener(carrinhoEventListener);
