@@ -3,13 +3,13 @@ import android.os.Bundle;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.fragments.CartFragment;
 import com.example.tela_login_projetointegrador.fragments.FragmentNotificacao;
+import com.example.tela_login_projetointegrador.fragments.HomeFragment;
 import com.example.tela_login_projetointegrador.fragments.UserFragment;
 import com.example.tela_login_projetointegrador.listeners.OnCartCountChangeListener;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +38,7 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
 
         if (savedInstanceState == null) { // Carregar a primeira tela (Fragment)
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentProdutos, new HomeActivity())
+                    .replace(R.id.fragmentProdutos, new HomeFragment())
                     .commit();
         }
     }
@@ -66,26 +66,20 @@ public class SecondActivity extends AppCompatActivity implements BottomNavigatio
         super.onPointerCaptureChanged(hasCapture);
     }
 
+    // metodo responsavel por fazer a navegacao entre as telas
     @Override
     public boolean onNavigationItemSelected( @NotNull MenuItem menuItem) {
         Fragment selectedFragment = null;
         int itemId = menuItem.getItemId();
-        // metodo responsavel por fazer a navegacao entre as telas
 
-        if(menuItem.getItemId()==R.id.homeId){
-            Fragment menuScreen = HomeActivity.newInstance();
-            openFragment(menuScreen);
-            return true;
-        }else if(menuItem.getItemId() == R.id.notification_icon){
-            Fragment fragmentNotificacao = FragmentNotificacao.newInstance();
-            openFragment(fragmentNotificacao);
-            return true;
-        }else if (menuItem.getItemId() ==R.id.carrinhoId) {
-            Fragment cartScreen = CartFragment.newInstance();
-            openFragment(cartScreen);
-            return true;
-        }else if (menuItem.getItemId() ==R.id.profileId) {
-            Fragment telaPerfilUsuario = UserFragment.newInstance();
+        if(itemId == R.id.homeId){
+            selectedFragment = HomeFragment.newInstance(false);
+        }else if(itemId == R.id.searchId){
+            selectedFragment = HomeFragment.newInstance(true);
+        }else if (itemId == R.id.carrinhoId) {
+            selectedFragment = CartFragment.newInstance();
+        }else if (itemId == R.id.profileId) {
+            selectedFragment = UserFragment.newInstance();
         }
         if (selectedFragment != null){
             openFragment(selectedFragment);

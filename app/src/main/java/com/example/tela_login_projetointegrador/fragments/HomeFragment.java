@@ -1,11 +1,12 @@
-// HomeActivity.java atualizado com filtro de pesquisa em tempo real
-package com.example.tela_login_projetointegrador.activities;
+package com.example.tela_login_projetointegrador.fragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.inputmethod.InputMethodManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -18,11 +19,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.widget.Toast;
 import com.example.tela_login_projetointegrador.Adapters.ProdutosAdapter;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.fragments.CartFragment;
-import com.example.tela_login_projetointegrador.fragments.FragmentProdutoDetalhe;
 import com.example.tela_login_projetointegrador.listeners.ProductsListener;
 import com.example.tela_login_projetointegrador.models.Produto;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends Fragment implements ProductsListener {
+public class HomeFragment extends Fragment implements ProductsListener {
     private GridView gvProdutos;
     private EditText searchBar;
     private Parcelable gridViewState;
@@ -40,6 +38,21 @@ public class HomeActivity extends Fragment implements ProductsListener {
     private final List<Produto> listProdutosFiltrados = new ArrayList<>();
     private ProdutosAdapter produtosAdapter;
     private DatabaseReference produtosGlobaisRef;
+    public static final String ARG_FOCUS_SEARCH = "focus_search_bar";
+
+    public HomeFragment() {
+        // Construtor vazio público é necessário
+    }
+    public static HomeFragment newInstance(boolean focusSearchBar) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_FOCUS_SEARCH, focusSearchBar);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
 
     @Nullable
     @Override
@@ -72,6 +85,39 @@ public class HomeActivity extends Fragment implements ProductsListener {
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (savedInstanceState != null) {
+            gridViewState = savedInstanceState.getParcelable("gridState");
+            if (gridViewState != null){
+                gvProdutos.onRestoreInstanceState(gridViewState);
+            }
+        }
+        if (getArguments() != null) {
+            boolean focusSearchBar = getArguments().getBoolean(ARG_FOCUS_SEARCH, false);
+            if (focusSearchBar) {
+                // É importante dar um pequeno delay para garantir que o layout esteja pronto
+                // e o teclado virtual tenha tempo de aparecer sem "flicker".
+                searchBar.postDelayed(() -> {
+                    searchBar.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                }, 100); // Pequeno delay de 100ms
+            }
+        }
+
+        getParentFragmentManager().setFragmentResultListener("carrinho_atualizado", this, (requestKey, result) -> {
+            FragmentTransaction transaction = requireFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragmentProdutos, new CartFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+    }
+
     private void carregarProdutos() {
         produtosGlobaisRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -84,12 +130,12 @@ public class HomeActivity extends Fragment implements ProductsListener {
                     }
                 }
                 filtrarProdutos(searchBar.getText().toString());
-                Log.d("HomeActivity", "Produtos globais carregados: " + listProdutos.size());
+                Log.d("HomeFragment", "Produtos globais carregados: " + listProdutos.size());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("HomeActivity", "Erro ao carregar produtos globais: " + error.getMessage());
+                Log.e("HomeFragment", "Erro ao carregar produtos globais: " + error.getMessage());
                 Toast.makeText(getContext(), "Erro ao carregar produtos.", Toast.LENGTH_SHORT).show();
                 error.toException().printStackTrace();
             }
@@ -121,21 +167,6 @@ public class HomeActivity extends Fragment implements ProductsListener {
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        if (savedInstanceState != null) {
-            gridViewState = savedInstanceState.getParcelable("gridState");
-        }
-
-        getParentFragmentManager().setFragmentResultListener("carrinho_atualizado", this, (requestKey, result) -> {
-            FragmentTransaction transaction = requireFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragmentProdutos, new CartFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
-    }
 
     @Override
     public void onResume() {
@@ -144,17 +175,6 @@ public class HomeActivity extends Fragment implements ProductsListener {
             gvProdutos.onRestoreInstanceState(gridViewState);
         }
     }
-
-    public static HomeActivity newInstance() {
-        return new HomeActivity();
-    }
-
-    /*@Override
-    public void getProdutos(List<Produto> produtos) {
-        listProdutos.clear();
-        listProdutos.addAll(produtos);
-        filtrarProdutos(searchBar.getText().toString());
-    }*/
 
     @Override
     public void getProdutos(List<Produto> produtos) {

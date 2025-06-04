@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapters.CartAdapter;
 import com.example.tela_login_projetointegrador.R;
-import com.example.tela_login_projetointegrador.activities.HomeActivity;
 import com.example.tela_login_projetointegrador.models.Produto;
 import com.example.tela_login_projetointegrador.models.ProdutosCarrinho;
 import com.google.firebase.auth.FirebaseAuth;
@@ -400,7 +399,7 @@ public class CartFragment extends Fragment {
                 .getSupportFragmentManager()
                 .beginTransaction();
 
-        transaction.replace(R.id.fragmentProdutos, new HomeActivity());
+        transaction.replace(R.id.fragmentProdutos, new HomeFragment());
         transaction.addToBackStack(null);
         transaction.commit();
 
