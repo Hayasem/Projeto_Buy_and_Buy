@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?android:attr/colorBackground"
     tools:context=".fragments.UserFragment">
 
         <!-- Barra superior com nome e opções -->
@@ -106,7 +106,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Aguardando\nPagamento"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -141,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Aguardando\nenvio"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -178,7 +178,7 @@
                             android:gravity="center"
                             android:padding="8dp"
                             android:text="Enviado"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -213,7 +213,7 @@
                             android:gravity="center"
                             android:padding="8dp"
                             android:text="Devoluções"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -270,7 +270,7 @@
                             android:gravity="center"
                             android:padding="8dp"
                             android:text="Histórico"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@id/history_icon"
@@ -317,7 +317,7 @@
                             android:gravity="center"
                             android:padding="8dp"
                             android:text="Cupons"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="@id/coupons_icon"
                             app:layout_constraintStart_toStartOf="@id/coupons_icon"
@@ -362,7 +362,7 @@
                             android:gravity="center"
                             android:padding="8dp"
                             android:text="Favoritos"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="@id/heart_icon"
                             app:layout_constraintStart_toStartOf="@id/heart_icon"
@@ -391,5 +391,51 @@
             app:layout_constraintEnd_toEndOf="@+id/btn_deslogar"
             app:layout_constraintStart_toStartOf="@+id/btn_deslogar"
             app:layout_constraintTop_toBottomOf="@+id/btn_deslogar" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_accessibility_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_acessibilidade"
+            app:fabSize="normal"
+            app:tint="@android:color/white"
+            app:backgroundTint="?attr/colorPrimary"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toTopOf="@id/fab_accessibility_main"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_font_size" app:fabSize="mini"
+            android:visibility="gone"
+            app:tint="@android:color/white"
+            app:backgroundTint="?attr/colorAccent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_dark_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toTopOf="@id/fab_font_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_dark_mode" app:fabSize="mini"
+            android:visibility="gone"
+            app:tint="@android:color/white"
+            app:backgroundTint="?attr/colorAccent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

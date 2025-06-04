@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="@color/white">
+    android:background="?android:attr/colorBackground">
 
     <ScrollView
         android:id="@+id/scrollView"

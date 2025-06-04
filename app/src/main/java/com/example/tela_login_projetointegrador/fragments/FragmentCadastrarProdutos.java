@@ -117,6 +117,10 @@ public class FragmentCadastrarProdutos extends Fragment {
                 }
             });
 
+    public static Fragment newInstance() {
+        return new FragmentCadastrarProdutos();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Nullable
     @Override

@@ -16,4 +16,14 @@
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
 
+    <color name="dark_primary_purple">#3B0561</color>
+    <color name="dark_primary_variant_magenta">#320C32</color>
+    <color name="dark_secondary_orange">#583A00</color>
+    <color name="dark_background">#121212</color>
+    <color name="dark_surface">#1F1F1F</color>
+    <color name="dark_on_background">#E0E0E0</color>
+    <color name="dark_on_surface">#FFFFFF</color>
+    <color name="dark_on_primary">#FFFFFF</color>
+    <color name="dark_on_secondary">#FFFFFF</color>
+    <color name="dark_error">#CF6679</color>
 </resources>
