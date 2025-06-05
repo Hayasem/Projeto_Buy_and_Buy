@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.ProdutosCarrinho;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PagamentoFragment extends Fragment {
+public class PagamentoFragment extends BaseFragment {
     private LinearLayout containerProdutos;
 
     @Nullable

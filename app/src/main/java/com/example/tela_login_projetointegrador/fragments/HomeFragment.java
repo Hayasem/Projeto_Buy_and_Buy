@@ -21,6 +21,7 @@ import com.example.tela_login_projetointegrador.Adapters.ProdutosAdapter;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.listeners.ProductsListener;
 import com.example.tela_login_projetointegrador.models.Produto;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements ProductsListener {
+public class HomeFragment extends BaseFragment implements ProductsListener {
     private GridView gvProdutos;
     private EditText searchBar;
     private Parcelable gridViewState;

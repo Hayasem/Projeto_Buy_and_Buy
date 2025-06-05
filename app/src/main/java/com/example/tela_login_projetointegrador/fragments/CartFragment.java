@@ -25,6 +25,7 @@ import com.example.tela_login_projetointegrador.Adapters.CartAdapter;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.Produto;
 import com.example.tela_login_projetointegrador.models.ProdutosCarrinho;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class CartFragment extends Fragment{
+public class CartFragment extends BaseFragment {
     ConstraintLayout prompt_container,container_valor_total;
     private ImageView trashIcon, iv_bag, iv_left_arrow, iv_empty_state;
     private Button btn_comprar_mais, btn_finalizar_compra;

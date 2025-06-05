@@ -1,4 +1,5 @@
 package com.example.tela_login_projetointegrador.fragments;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,7 +49,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentCadastrarProdutos extends Fragment {
+public class FragmentCadastrarProdutos extends BaseFragment {
 
 
     private TextInputEditText edit_nome_produto, edit_preco_produto;

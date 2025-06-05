@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.tela_login_projetointegrador.utils.AccessibilityUtils;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.activities.MainActivity;
@@ -25,9 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import android.util.TypedValue;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class UserFragment extends Fragment {
-   private TextView nomeUsuario, aguardePag, aguardEnv, enviado, addComentario, devolucoes, historico, cupons, favoritos;
-   private ImageView aguardePagIcon, aguardeEnvIcon, enviadoIcon, addComentarioIcon, devolucoesIcon, historicoIcon, cupomIcon, favIcon, userIcon, notificationIcon, suporteIcon, configIcon;
+public class UserFragment extends BaseFragment {
+   private TextView nomeUsuario;
+   private ImageView  notificationIcon, suporteIcon;
    private Button bt_deslogar, btn_cadastrar_produtos;
    private FirebaseAuth auth;
    private DatabaseReference usuariosRef;
@@ -53,21 +54,6 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_tela_perfil_usuario, container, false);
 
         nomeUsuario = view.findViewById(R.id.user_name);
-        aguardePag = view.findViewById(R.id.txt_aguarde_pag);
-        aguardEnv = view.findViewById(R.id.txt_aguarde_env);
-        enviado = view.findViewById(R.id.txt_enviado);
-        devolucoes = view.findViewById(R.id.txt_devolucoes);
-        historico = view.findViewById(R.id.txt_historico);
-        cupons = view.findViewById(R.id.txt_cupons);
-        favoritos = view.findViewById(R.id.txt_favoritos);
-        aguardePagIcon = view.findViewById(R.id.pending_payment_icon);
-        aguardeEnvIcon = view.findViewById(R.id.box_icon);
-        enviadoIcon = view.findViewById(R.id.post_truck_icon);
-        devolucoesIcon = view.findViewById(R.id.return_icon);
-        historicoIcon = view.findViewById(R.id.history_icon);
-        cupomIcon = view.findViewById(R.id.coupons_icon);
-        favIcon = view.findViewById(R.id.heart_icon);
-        userIcon = view.findViewById(R.id.user_icon);
         notificationIcon = view.findViewById(R.id.notification_icon);
         suporteIcon = view.findViewById(R.id.suporte_icon);
         bt_deslogar = view.findViewById(R.id.btn_deslogar);

@@ -3,439 +3,444 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Activity_Tela_Perfil_usuario_id"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true"
     tools:context=".fragments.UserFragment">
 
-        <!-- Barra superior com nome e opções -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/top_bar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/roxo"
-            android:padding="16dp"
-            app:layout_constraintTop_toTopOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/roxo"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/user_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Ícone do usuário"
+            android:src="@drawable/user"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/user_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/user"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:contentDescription="Ícone do usuário" />
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Nome do Usuário"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/user_icon"
+            app:layout_constraintStart_toEndOf="@id/user_icon"
+            app:layout_constraintTop_toTopOf="@id/user_icon" />
 
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Nome do Usuário"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/user_icon"
-                    app:layout_constraintTop_toTopOf="@id/user_icon"
-                    app:layout_constraintStart_toEndOf="@id/user_icon"/>
+        <ImageView
+            android:id="@+id/suporte_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:contentDescription="suporte"
+            android:src="@drawable/suporte_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/suporte_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:contentDescription="suporte"
-                    android:src="@drawable/suporte_icon"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/notification_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="notification"
+            android:src="@drawable/notifications_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/suporte_icon"
+            app:layout_constraintEnd_toStartOf="@+id/suporte_icon"
+            app:layout_constraintTop_toTopOf="@+id/suporte_icon" />
 
-                <ImageView
-                    android:id="@+id/notification_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="16dp"
-                    android:contentDescription="notification"
-                    android:src="@drawable/notifications_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/suporte_icon"
-                    app:layout_constraintEnd_toStartOf="@+id/suporte_icon"
-                    app:layout_constraintTop_toTopOf="@+id/suporte_icon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/orders_section"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/wait_payment_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/waiting_order_layout"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/pending_payment_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Aguardando Pagamento"
+                android:src="@drawable/wait_payment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/roxo" />
+
+            <TextView
+                android:id="@+id/txt_aguarde_pag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lines="2"
+                android:text="Aguardando\nPagamento"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pending_payment_icon"
+                app:layout_constraintWidth_max="80dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Outras seções -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/orders_section"
-            android:layout_width="0dp"
+            android:id="@+id/waiting_order_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_bar">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/wait_payment_layout"
+            app:layout_constraintEnd_toStartOf="@+id/deliverying_order_layout"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/wait_payment_layout"
+            app:layout_constraintTop_toTopOf="@+id/wait_payment_layout">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/wait_payment_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/box_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Enviado"
+                android:src="@drawable/box_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/roxo" />
 
-                        <ImageView
-                            android:id="@+id/pending_payment_icon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:contentDescription="Aguardando Pagamento"
-                            android:src="@drawable/wait_payment"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/roxo" />
-
-                        <TextView
-                            android:id="@+id/txt_aguarde_pag"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Aguardando\nPagamento"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/pending_payment_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/waiting_order_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/wait_payment_layout"
-                    app:layout_constraintEnd_toStartOf="@+id/deliverying_order_layout"
-                    app:layout_constraintStart_toEndOf="@+id/wait_payment_layout"
-                    app:layout_constraintTop_toTopOf="@+id/wait_payment_layout">
-
-                        <ImageView
-                            android:id="@+id/box_icon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:contentDescription="Enviado"
-                            android:src="@drawable/box_icon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/roxo" />
-
-                        <TextView
-                            android:id="@+id/txt_aguarde_env"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Aguardando\nenvio"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/box_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/deliverying_order_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/waiting_order_layout"
-                    app:layout_constraintEnd_toStartOf="@+id/return_order_layout"
-                    app:layout_constraintTop_toTopOf="@+id/waiting_order_layout">
-
-                        <ImageView
-                            android:id="@+id/post_truck_icon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:contentDescription="Enviado"
-                            android:src="@drawable/entrega_icon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/roxo" />
-
-                        <TextView
-                            android:id="@+id/txt_enviado"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="Enviado"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/post_truck_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/return_order_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:id="@+id/return_icon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:contentDescription="Enviado"
-                            android:src="@drawable/return_icon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/txt_devolucoes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="Devoluções"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/return_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/txt_aguarde_env"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Aguardando\nenvio"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/box_icon"
+                app:layout_constraintWidth_max="80dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/deliverying_order_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/waiting_order_layout"
+            app:layout_constraintEnd_toStartOf="@+id/return_order_layout"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/waiting_order_layout"
+            app:layout_constraintTop_toTopOf="@+id/waiting_order_layout">
+
+            <ImageView
+                android:id="@+id/post_truck_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Enviado"
+                android:src="@drawable/entrega_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/roxo" />
+
+            <TextView
+                android:id="@+id/txt_enviado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Enviado"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/post_truck_icon"
+                app:layout_constraintWidth_max="80dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/return_order_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/deliverying_order_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/deliverying_order_layout"
+            app:layout_constraintTop_toTopOf="@+id/deliverying_order_layout">
+
+            <ImageView
+                android:id="@+id/return_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Enviado"
+                android:src="@drawable/return_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_devolucoes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Devoluções"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/return_icon"
+                app:layout_constraintWidth_max="80dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginVertical="16dp"
+        android:background="#E0E0E0"
+        app:layout_constraintBottom_toTopOf="@id/other_sections"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orders_section" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/other_sections"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/orders_section">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/history_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/cupom_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cupom_layout">
+
+            <ImageView
+                android:id="@+id/history_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="Lista de Desejos"
+                android:src="@drawable/history_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_historico"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Histórico"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"   app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/history_icon"
+                app:layout_constraintWidth_max="80dp" /> </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_marginVertical="16dp"
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="16dp"
             android:background="#E0E0E0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/other_sections"
-            app:layout_constraintTop_toBottomOf="@id/orders_section" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cupom_layout"
+            app:layout_constraintStart_toEndOf="@+id/history_layout"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/other_sections"
-            android:layout_width="0dp"
+            android:id="@+id/cupom_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
-            android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/orders_section"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/history_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/cupom_layout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cupom_layout">
-
-                        <ImageView
-                            android:id="@+id/history_icon"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:contentDescription="Lista de Desejos"
-                            android:src="@drawable/history_icon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/txt_historico"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="Histórico"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="@id/history_icon"
-                            app:layout_constraintStart_toStartOf="@id/history_icon"
-                            app:layout_constraintTop_toBottomOf="@id/history_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="30dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="#E0E0E0"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/cupom_layout"
-                    app:layout_constraintStart_toEndOf="@+id/history_layout"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cupom_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/favoritos_layout"
-                    app:layout_constraintStart_toEndOf="@+id/history_layout"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:id="@+id/coupons_icon"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:contentDescription="Cupons"
-                            android:src="@drawable/cupom"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/roxo" />
-
-                        <TextView
-                            android:id="@+id/txt_cupons"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="Cupons"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toEndOf="@id/coupons_icon"
-                            app:layout_constraintStart_toStartOf="@id/coupons_icon"
-                            app:layout_constraintTop_toBottomOf="@id/coupons_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="30dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="#E0E0E0"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/favoritos_layout"
-                    app:layout_constraintStart_toEndOf="@+id/cupom_layout"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/favoritos_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@id/cupom_layout"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/cupom_layout">
-
-                        <ImageView
-                            android:id="@+id/heart_icon"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:contentDescription="Favoritos"
-                            android:src="@drawable/like"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/roxo" />
-
-                        <TextView
-                            android:id="@+id/txt_favoritos"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="Favoritos"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toEndOf="@id/heart_icon"
-                            app:layout_constraintStart_toStartOf="@id/heart_icon"
-                            app:layout_constraintTop_toBottomOf="@id/heart_icon" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/btn_deslogar"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="#FFC107"
-            android:text="Sair da conta"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/other_sections" />
-
-        <Button
-            android:id="@+id/btn_cadastrar_produto"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="#FFC107"
-            android:text="Cadastrar produtos"
-            app:layout_constraintEnd_toEndOf="@+id/btn_deslogar"
-            app:layout_constraintStart_toStartOf="@+id/btn_deslogar"
-            app:layout_constraintTop_toBottomOf="@+id/btn_deslogar" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_accessibility_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_acessibilidade"
-            app:fabSize="normal"
-            app:tint="@android:color/white"
-            app:backgroundTint="?attr/colorPrimary"/>
+            app:layout_constraintEnd_toStartOf="@+id/favoritos_layout"
+            app:layout_constraintStart_toEndOf="@+id/history_layout"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_font_size"
+            <ImageView
+                android:id="@+id/coupons_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="Cupons"
+                android:src="@drawable/cupom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/roxo" />
+
+            <TextView
+                android:id="@+id/txt_cupons"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Cupons"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"   app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/coupons_icon"
+                app:layout_constraintWidth_max="80dp" /> </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="#E0E0E0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/favoritos_layout"
+            app:layout_constraintStart_toEndOf="@+id/cupom_layout"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/favoritos_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toTopOf="@id/fab_accessibility_main"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/cupom_layout"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_font_size" app:fabSize="mini"
-            android:visibility="gone"
-            app:tint="@android:color/white"
-            app:backgroundTint="?attr/colorAccent"/>
+            app:layout_constraintTop_toTopOf="@id/cupom_layout">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_dark_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toTopOf="@id/fab_font_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_dark_mode" app:fabSize="mini"
-            android:visibility="gone"
-            app:tint="@android:color/white"
-            app:backgroundTint="?attr/colorAccent"/>
+            <ImageView
+                android:id="@+id/heart_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="Favoritos"
+                android:src="@drawable/like"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/roxo" />
+
+            <TextView
+                android:id="@+id/txt_favoritos"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Favoritos"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/heart_icon"
+                app:layout_constraintWidth_max="80dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btn_deslogar"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#FFC107"
+        android:text="Sair da conta"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/other_sections" />
+
+    <Button
+        android:id="@+id/btn_cadastrar_produto"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#FFC107"
+        android:text="Cadastrar produtos"
+        app:layout_constraintEnd_toEndOf="@+id/btn_deslogar"
+        app:layout_constraintStart_toStartOf="@+id/btn_deslogar"
+        app:layout_constraintTop_toBottomOf="@+id/btn_deslogar" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_accessibility_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="TODO"
+        android:focusable="true"
+        android:src="@drawable/ic_acessibilidade"
+        app:backgroundTint="?attr/colorPrimary"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_font_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_font_size"
+        android:visibility="gone"
+        app:backgroundTint="?attr/colorAccent"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@id/fab_accessibility_main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_dark_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_dark_mode"
+        android:visibility="gone"
+        app:backgroundTint="?attr/colorAccent"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@id/fab_font_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

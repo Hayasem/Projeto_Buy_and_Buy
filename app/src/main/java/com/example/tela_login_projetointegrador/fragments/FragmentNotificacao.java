@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tela_login_projetointegrador.Adapters.NotificacaoAdapter;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.ModelNotification;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class FragmentNotificacao extends Fragment {
+public class FragmentNotificacao extends BaseFragment {
 
     private RecyclerView recyclerView;
     private NotificacaoAdapter adapter;

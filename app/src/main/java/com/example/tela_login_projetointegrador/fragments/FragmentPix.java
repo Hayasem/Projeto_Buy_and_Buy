@@ -16,8 +16,9 @@ import android.widget.TextView;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.activities.MainActivity;
 import com.example.tela_login_projetointegrador.activities.SecondActivity;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 
-public class FragmentPix extends Fragment {
+public class FragmentPix extends BaseFragment {
 
 
     @Override

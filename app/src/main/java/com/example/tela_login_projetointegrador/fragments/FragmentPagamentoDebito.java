@@ -13,8 +13,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.activities.MainActivity;
+import com.example.tela_login_projetointegrador.utils.BaseFragment;
 
-public class FragmentPagamentoDebito extends Fragment {
+public class FragmentPagamentoDebito extends BaseFragment {
 
     @Nullable
     @Override
