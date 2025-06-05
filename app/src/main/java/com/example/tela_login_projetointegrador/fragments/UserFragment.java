@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.tela_login_projetointegrador.utils.AccessibilityUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.activities.MainActivity;
@@ -46,17 +48,7 @@ public class UserFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Carrega as preferências antes de inflar o layout para que a fonte já venha ajustada
-        SharedPreferences prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        currentFontScale = prefs.getFloat(KEY_FONT_SCALE, FONT_SCALE_NORMAL);
-        boolean isDarkModeEnabled = prefs.getBoolean(KEY_DARK_MODE, false);
-
-        // Aplica o modo escuro salvo ao iniciar o fragmento
-        if (isDarkModeEnabled) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+        AccessibilityUtils.applyDarkMode(requireActivity());
 
         View view = inflater.inflate(R.layout.activity_tela_perfil_usuario, container, false);
 
@@ -87,7 +79,7 @@ public class UserFragment extends Fragment {
         fabFontSize = view.findViewById(R.id.fab_font_size);
         fabDarkMode = view.findViewById(R.id.fab_dark_mode);
 
-        applyFontScale(view);
+        AccessibilityUtils.applyFontScale(view, AccessibilityUtils.getCurrentFontScale(requireActivity()));
 
         bt_deslogar.setOnClickListener(view1 -> {
             requireActivity().getSharedPreferences(MainActivity.PREFS_NAME, getContext().MODE_PRIVATE)
@@ -136,11 +128,9 @@ public class UserFragment extends Fragment {
 
         return view;
     }
-
     public static UserFragment newInstance(){
         return new UserFragment();
     }
-
 
     //Recuperando o ID:
     @Override
@@ -176,57 +166,35 @@ public class UserFragment extends Fragment {
         }
         isFabMenuOpen = !isFabMenuOpen;
     }
-
     private void changeFontSize() {
-        if (currentFontScale == FONT_SCALE_NORMAL) {
-            currentFontScale = FONT_SCALE_LARGE;
-            Toast.makeText(getContext(), "Fonte: Grande", Toast.LENGTH_SHORT).show();
-        } else if (currentFontScale == FONT_SCALE_LARGE) {
-            currentFontScale = FONT_SCALE_SMALL;
-            Toast.makeText(getContext(), "Fonte: Pequena", Toast.LENGTH_SHORT).show();
+        float currentFontScale = AccessibilityUtils.getCurrentFontScale(requireActivity());
+        float newFontScale;
+        String toastMessage;
+
+        if (currentFontScale == AccessibilityUtils.FONT_SCALE_NORMAL) {
+            newFontScale = AccessibilityUtils.FONT_SCALE_LARGE;
+            toastMessage = "Fonte: Grande";
+        } else if (currentFontScale == AccessibilityUtils.FONT_SCALE_LARGE) {
+            newFontScale = AccessibilityUtils.FONT_SCALE_SMALL;
+            toastMessage = "Fonte: Pequena";
         } else { // currentFontScale == FONT_SCALE_SMALL
-            currentFontScale = FONT_SCALE_NORMAL;
-            Toast.makeText(getContext(), "Fonte: Normal", Toast.LENGTH_SHORT).show();
+            newFontScale = AccessibilityUtils.FONT_SCALE_NORMAL;
+            toastMessage = "Fonte: Normal";
         }
-        SharedPreferences.Editor editor = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-        editor.putFloat(KEY_FONT_SCALE, currentFontScale);
-        editor.apply();
-        applyFontScale(getView());
-    }
 
-    private void applyFontScale(View view) {
-        if (view == null) return;
+        AccessibilityUtils.saveFontScale(requireActivity(), newFontScale);
+        Toast.makeText(getContext(), toastMessage, Toast.LENGTH_SHORT).show();
 
-        if (view instanceof TextView) {
-            TextView textView = (TextView) view;
-            // Obtém o tamanho da fonte original definido no XML (em SP)
-            float originalSpSize = textView.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
-            // Calcula o novo tamanho com base na escala
-            float newSpSize = originalSpSize * currentFontScale;
-            // Define o novo tamanho da fonte
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSpSize);
-        } else if (view instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) view;
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                applyFontScale(viewGroup.getChildAt(i));
-            }
-        }
+        requireActivity().recreate();
     }
     private void toggleDarkMode() {
-        boolean isDarkModeCurrentlyEnabled = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
-        if (isDarkModeCurrentlyEnabled) {
-            // Mudar para Modo Claro
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            Toast.makeText(getContext(), "Modo Claro Ativado", Toast.LENGTH_SHORT).show();
-        } else {
-            // Mudar para Modo Escuro
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        AccessibilityUtils.toggleDarkMode(requireActivity());
+        boolean isDarkModeEnabled = AccessibilityUtils.isDarkModeEnabled(requireActivity());
+        if (isDarkModeEnabled) {
             Toast.makeText(getContext(), "Modo Escuro Ativado", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Modo Claro Ativado", Toast.LENGTH_SHORT).show();
         }
-
-        // Salva a preferência do modo escuro
-        SharedPreferences.Editor editor = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-        editor.putBoolean(KEY_DARK_MODE, !isDarkModeCurrentlyEnabled);
-        editor.apply();
+        requireActivity().recreate(); // Recria a Activity para aplicar o tema imediatamente
     }
 }

@@ -21,10 +21,11 @@ import com.example.tela_login_projetointegrador.fragments.FragmentNotificacao;
 import com.example.tela_login_projetointegrador.fragments.HomeFragment;
 import com.example.tela_login_projetointegrador.fragments.UserFragment;
 import com.example.tela_login_projetointegrador.listeners.OnCartCountChangeListener;
+import com.example.tela_login_projetointegrador.utils.BaseActivity;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class SecondActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnCartCountChangeListener {
+public class SecondActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnCartCountChangeListener {
 
     private BottomNavigationView navigationView;
     private OnCartCountChangeListener cartCountChangeListener; // Mantenha isso se você o usa em outro lugar

@@ -14,12 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tela_login_projetointegrador.R;
+import com.example.tela_login_projetointegrador.utils.BaseActivity;
 import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class RecoverPassActivity extends AppCompatActivity {
+public class RecoverPassActivity extends BaseActivity {
 
     private Button btn_enviar_senha;
     private ImageView btn_voltar;

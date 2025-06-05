@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHolder> {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHolder>{
     private List<ProdutosCarrinho> listaProdutosCarrinho = new ArrayList<>();
     private TextView totalPriceView; // Este TextView será atualizado pelo Fragment agora, não pelo Adapter
     private OnCartItemChangeListener listener; // Nova interface de callback
@@ -110,24 +110,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewCartHold
                 }
             });
         }
-
-        // Lógica para o CheckBox (se você for implementar seleção de itens)
-        /*
-        if (holder.checkboxProduct != null) {
-            holder.checkboxProduct.setOnCheckedChangeListener(null); // Limpa listener para evitar loops
-            // Defina o estado do checkbox (você precisaria de um campo "isSelected" no ProdutosCarrinho)
-            // holder.checkboxProduct.setChecked(item.isSelected());
-            holder.checkboxProduct.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (listener != null) {
-                    // Notifique o fragmento sobre a mudança de seleção
-                    // listener.onItemSelected(item, isChecked);
-                }
-            });
-        }
-        */
-
-        // O 'buy_tv' (Comprar) parece ser mais uma label, ou uma ação que levaria para compra direta?
-        // Por enquanto, não adicionaremos um listener específico a ele, a menos que haja uma necessidade.
     }
 
     @Override

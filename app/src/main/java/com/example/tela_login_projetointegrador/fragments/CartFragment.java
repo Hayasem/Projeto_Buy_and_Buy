@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class CartFragment extends Fragment {
+public class CartFragment extends Fragment{
     ConstraintLayout prompt_container,container_valor_total;
     private ImageView trashIcon, iv_bag, iv_left_arrow, iv_empty_state;
     private Button btn_comprar_mais, btn_finalizar_compra;
@@ -210,7 +210,6 @@ public class CartFragment extends Fragment {
                             item.setIdCarrinho(dataSnapshot.getKey());
                             Log.d("CartFragment_FIREBASE", "ID do carrinho definido para item: " + item.getIdCarrinho());
                         }
-
                         // Logs detalhados do item
                         Log.d("CartFragment_ITEM_DATA", "Nome: " + item.getNomeProduto());
                         Log.d("CartFragment_ITEM_DATA", "Preço: " + item.getPreco());

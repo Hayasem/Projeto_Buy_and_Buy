@@ -25,6 +25,7 @@ import com.example.tela_login_projetointegrador.FirebaseMessageAPI.MyFirebaseMes
 import com.example.tela_login_projetointegrador.Formats.EmailTextWatcher;
 import com.example.tela_login_projetointegrador.Formats.SenhaTextWatcher;
 import com.example.tela_login_projetointegrador.R;
+import com.example.tela_login_projetointegrador.utils.BaseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,7 +44,7 @@ import java.util.Objects;
 
 //Classe Principal, e objetos da classe:
 //--------------------------------------------------------------------------------------------
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private ActivityResultLauncher<String> resultLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted ->{

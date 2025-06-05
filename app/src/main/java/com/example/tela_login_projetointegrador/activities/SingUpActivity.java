@@ -21,6 +21,7 @@ import com.example.tela_login_projetointegrador.Formats.TelefoneTextWatcher;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.models.Telefone;
 import com.example.tela_login_projetointegrador.models.Usuario;
+import com.example.tela_login_projetointegrador.utils.BaseActivity;
 import com.example.tela_login_projetointegrador.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,7 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 //Classe e objetos que serão utilizados para realização do cadastro:
 //--------------------------------------------------------------------------------------------------
-public class SingUpActivity extends AppCompatActivity {
+public class SingUpActivity extends BaseActivity {
     private EditText edit_nome, editemail, edit_senha, edit_cep, edit_cpf, edit_numero;
     private TextInputLayout helper_text, layout_nome, layout_contato, layout_email, layout_cep, layout_cpf;
     private Button bt_cadastrar;
