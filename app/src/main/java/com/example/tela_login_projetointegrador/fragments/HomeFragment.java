@@ -1,5 +1,6 @@
 package com.example.tela_login_projetointegrador.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -16,10 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.tela_login_projetointegrador.Adapters.ProdutosAdapter;
 import com.example.tela_login_projetointegrador.R;
 import com.example.tela_login_projetointegrador.listeners.ProductsListener;
+import com.example.tela_login_projetointegrador.models.CategoriaProduto;
 import com.example.tela_login_projetointegrador.models.Produto;
 import com.example.tela_login_projetointegrador.utils.BaseFragment;
 import com.google.firebase.database.DataSnapshot;
@@ -35,11 +40,15 @@ public class HomeFragment extends BaseFragment implements ProductsListener {
     private GridView gvProdutos;
     private EditText searchBar;
     private Parcelable gridViewState;
+    private LinearLayout linearLayoutCategorias;
     private final List<Produto> listProdutos = new ArrayList<>();
     private final List<Produto> listProdutosFiltrados = new ArrayList<>();
     private ProdutosAdapter produtosAdapter;
     private DatabaseReference produtosGlobaisRef;
     public static final String ARG_FOCUS_SEARCH = "focus_search_bar";
+    private int currentCategoryId = -1; // -1 significa "Todos" os produtos
+    private List<CategoriaProduto> categoriasDisponiveis; // Lista de categorias
+
 
     public HomeFragment() {
         // Construtor vazio público é necessário
@@ -62,6 +71,7 @@ public class HomeFragment extends BaseFragment implements ProductsListener {
 
         gvProdutos = view.findViewById(R.id.gridView_products);
         searchBar = view.findViewById(R.id.search_bar);
+        linearLayoutCategorias = view.findViewById(R.id.linearLayoutCategorias);
 
         produtosGlobaisRef = FirebaseDatabase.getInstance().getReference("produtos_globais");
 
@@ -75,13 +85,13 @@ public class HomeFragment extends BaseFragment implements ProductsListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filtrarProdutos(s.toString());
+                aplicarFiltros();
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
-
+        carregarCategorias();
         carregarProdutos();
         return view;
     }
@@ -117,6 +127,9 @@ public class HomeFragment extends BaseFragment implements ProductsListener {
             transaction.addToBackStack(null);
             transaction.commit();
         });
+        if (categoriasDisponiveis != null && !categoriasDisponiveis.isEmpty()) {
+            atualizarEstiloCategorias(currentCategoryId);
+        }
     }
 
     private void carregarProdutos() {
@@ -130,7 +143,7 @@ public class HomeFragment extends BaseFragment implements ProductsListener {
                         listProdutos.add(produto);
                     }
                 }
-                filtrarProdutos(searchBar.getText().toString());
+                aplicarFiltros();
                 Log.d("HomeFragment", "Produtos globais carregados: " + listProdutos.size());
             }
 
@@ -142,14 +155,89 @@ public class HomeFragment extends BaseFragment implements ProductsListener {
             }
         });
     }
-    private void filtrarProdutos(String texto) {
+    private void carregarCategorias() {
+        categoriasDisponiveis = new ArrayList<>();
+        // Adiciona a opção "Todos" ou "Remover Filtro"
+        categoriasDisponiveis.add(new CategoriaProduto(-1, "Todos")); // ID -1 para "Todos"
+        categoriasDisponiveis.add(new CategoriaProduto(1, "Eletronicos"));
+        categoriasDisponiveis.add(new CategoriaProduto(2, "Brinquedos"));
+        categoriasDisponiveis.add(new CategoriaProduto(3, "Vestuários"));
+        categoriasDisponiveis.add(new CategoriaProduto(4, "Cama/Mesa/Banho"));
+
+        exibirCategoriasNoLayout();
+    }
+    private void exibirCategoriasNoLayout() {
+        if (linearLayoutCategorias != null) { // Adicionado um check defensivo extra
+            linearLayoutCategorias.removeAllViews();
+        }
+        for (CategoriaProduto categoria : categoriasDisponiveis) {
+            TextView textViewCategoria = new TextView(getContext());
+            textViewCategoria.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            textViewCategoria.setText(categoria.getDescricao());
+            textViewCategoria.setPadding(24, 12, 24, 12); // Aumentei o padding para melhor toque
+            textViewCategoria.setBackgroundResource(R.drawable.img_backpack);
+            textViewCategoria.setTextColor(Color.BLACK);
+            textViewCategoria.setTextSize(14); // Ajustei o tamanho da fonte
+            textViewCategoria.setClickable(true);
+            textViewCategoria.setFocusable(true);
+            textViewCategoria.setTag(categoria.getId()); // Armazena o ID da categoria na tag
+
+            // Define o listener de clique
+            textViewCategoria.setOnClickListener(v -> {
+                int selectedId = (int) v.getTag();
+                if (currentCategoryId == selectedId) {
+                    // Clicou na mesma categoria, desativar filtro (voltar para "Todos")
+                    currentCategoryId = -1;
+                } else {
+                    currentCategoryId = selectedId;
+                }
+                aplicarFiltros(); // Aplica o filtro da categoria e da busca
+                atualizarEstiloCategorias(currentCategoryId); // Atualiza o estilo visual dos botões
+            });
+
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewCategoria.getLayoutParams();
+            params.setMarginEnd(16); // Adiciona margem entre os itens
+            textViewCategoria.setLayoutParams(params);
+
+            if (linearLayoutCategorias != null) { // Adicionado um check defensivo extra
+                linearLayoutCategorias.addView(textViewCategoria);
+            }
+        }
+
+            atualizarEstiloCategorias(currentCategoryId);
+    }
+    private void atualizarEstiloCategorias(int selectedCategoryId) {
+        for (int i = 0; i < linearLayoutCategorias.getChildCount(); i++) {
+            View child = linearLayoutCategorias.getChildAt(i);
+            if (child instanceof TextView) {
+                TextView textView = (TextView) child;
+                int categoryId = (int) textView.getTag();
+                if (categoryId == selectedCategoryId) {
+                    textView.setBackgroundResource(R.drawable.bg_category_selected);
+                    textView.setTextColor(Color.WHITE);
+                } else {
+                    textView.setBackgroundResource(R.drawable.bg_category_unselected);
+                    textView.setTextColor(Color.BLACK);
+                }
+            }
+        }
+    }
+    private void aplicarFiltros() {
         listProdutosFiltrados.clear();
+        String textoBusca = searchBar.getText().toString().toLowerCase().trim();
+
         for (Produto produto : listProdutos) {
-            if (produto.getNomeProduto() != null && produto.getNomeProduto().toLowerCase().contains(texto.toLowerCase())) {
+            boolean matchesSearch = (produto.getNomeProduto() != null && produto.getNomeProduto().toLowerCase().contains(textoBusca));
+            boolean matchesCategory = (currentCategoryId == -1 || produto.getIdCategoria() == currentCategoryId);
+
+            if (matchesSearch && matchesCategory) {
                 listProdutosFiltrados.add(produto);
             }
         }
         produtosAdapter.notifyDataSetChanged();
+        Log.d("HomeFragment", "Produtos filtrados (busca + categoria): " + listProdutosFiltrados.size());
     }
 
     @Override

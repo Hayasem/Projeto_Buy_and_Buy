@@ -62,69 +62,13 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/linearLayoutCategorias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- Itens da Navegação -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Início"
-                android:textSize="18sp"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textColor="?android:attr/textColorSecondary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Perto de mim"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="18sp"
-                android:textColor="?android:attr/textColorSecondary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="infantil"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="18sp"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Casual"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="18sp"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Feminina"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="18sp"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Masculina"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="18sp"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Férias"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="18sp"
-                android:textColor="?android:attr/textColorSecondary" />
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:gravity="center_vertical">
         </LinearLayout>
     </HorizontalScrollView>
 
