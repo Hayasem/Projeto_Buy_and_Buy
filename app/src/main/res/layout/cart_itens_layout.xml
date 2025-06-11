@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:attr/colorBackground"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -33,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Nome do Vendedor"
-            android:textColor="@android:color/black"
+            android:textColor="@color/roxo"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -81,7 +82,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="Nome do Produto"
-                android:textColor="@android:color/black"
+                android:textColor="@color/roxo"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +130,8 @@
                     android:src="@drawable/minus_icon"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="#F6C40D" />
 
                 <TextView
                     android:id="@+id/product_quantity"
@@ -139,7 +141,8 @@
                     android:layout_marginTop="24dp"
                     android:paddingHorizontal="8dp"
                     android:text="1"
-                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:textColor="@color/roxo"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/minus_icon"
                     app:layout_constraintEnd_toStartOf="@+id/plus_icon"
@@ -153,7 +156,8 @@
                     android:src="@drawable/plus_icon"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="#F6C40D" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -165,7 +169,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="R$ 0,00"
-            android:textColor="@android:color/black"
+            android:textColor="@color/roxo"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

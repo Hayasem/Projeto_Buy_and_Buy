@@ -119,11 +119,11 @@ public class SingUpActivity extends BaseActivity {
                                     String userId = user.getUid();
                                     DatabaseReference telefoneRef = FirebaseDatabase.getInstance().getReference("telefones");
                                     String telefoneId = telefoneRef.push().getKey();
-                                    String hashSenha = Utils.gerarHashSenha(senha, Utils.gerarSalt());
+                                    //String hashSenha = Utils.gerarHashSenha(senha, Utils.gerarSalt());
                                     DatabaseReference usuarioRef = FirebaseDatabase.getInstance().getReference("usuarios").child(userId);
 
                                     Usuario usuario = new Usuario(
-                                            userId, telefoneId, nome, cpf, email, senha, cep, hashSenha, Utils.gerarSalt(), Utils.obterDataHoraAtual());
+                                            userId, telefoneId, nome, cpf, email, cep, Utils.obterDataHoraAtual());
                                     usuarioRef.setValue(usuario);
 
                                     DatabaseReference carrinhoRef = usuarioRef.child("carrinho");
@@ -175,7 +175,7 @@ public class SingUpActivity extends BaseActivity {
         edit_nome.addTextChangedListener(new NomeTextWatcher(layout_nome));
         edit_numero.addTextChangedListener(new TelefoneTextWatcher(layout_contato));
         edit_cpf.addTextChangedListener(new CpfTextWatcher(layout_cpf));
-        edit_cep.addTextChangedListener(new CepTextWatcher(layout_cep));
+        edit_cep.addTextChangedListener(new CepTextWatcher(layout_cep, edit_cep));
         edit_senha.addTextChangedListener(new SenhaTextWatcher(helper_text));
         editemail.addTextChangedListener(new EmailTextWatcher(layout_email));
         edit_numero.addTextChangedListener(new PhoneNumberFormattingTextWatcher());

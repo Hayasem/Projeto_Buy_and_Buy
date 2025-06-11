@@ -52,6 +52,7 @@ public class CpfTextWatcher implements TextWatcher {
             format.append(text);
         }
         ((Editable) s).replace(0, s.length(), format);
+
         if(text.length() == 11){
             layout_cpf.setHelperText("CPF válido");
             layout_cpf.setHelperTextColor(ColorStateList.valueOf(getColor(layout_cpf.getContext(), R.color.verde)));
@@ -65,7 +66,6 @@ public class CpfTextWatcher implements TextWatcher {
             layout_cpf.setBoxStrokeColor(ContextCompat.getColor(layout_cpf.getContext(), R.color.vermelho));
             layout_cpf.setDefaultHintTextColor(ColorStateList.valueOf(getColor(layout_cpf.getContext(), R.color.vermelho)));
         }
-        isUpdating = false;
     }
     @Override
     public void afterTextChanged(Editable s) {}

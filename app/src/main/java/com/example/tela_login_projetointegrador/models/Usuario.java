@@ -6,26 +6,19 @@ public class Usuario {
     String nome;
     String cpf;
     String email;
-    String senha;
     String cep;
-    String hash_senha;
     String dataReg;
-    String salt;
 
 
     public Usuario(){}
-    public Usuario(String idUsuario, String idContato, String nome, String cpf, String email, String senha,
-                   String cep, String hash_senha, String salt,String dataReg)
-    {
+
+    public Usuario(String idUsuario, String idContato, String nome, String cpf, String email, String cep, String dataReg){
         this.idUsuario = idUsuario;
         this.idContato = idContato;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
-        this.senha = senha;
         this.cep = cep;
-        this.hash_senha = hash_senha;
-        this.salt = salt;
         this.dataReg = dataReg;
     }
 
@@ -69,14 +62,6 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
     public String getCep() {
         return cep;
     }
@@ -85,13 +70,6 @@ public class Usuario {
         this.cep = cep;
     }
 
-    public String getHash_senha() {
-        return hash_senha;
-    }
-
-    public void setHash_senha(String hash_senha) {
-        this.hash_senha = hash_senha;
-    }
 
     public String getDataReg() {
         return dataReg;
@@ -101,13 +79,6 @@ public class Usuario {
         this.dataReg = dataReg;
     }
 
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
 }
 
 
