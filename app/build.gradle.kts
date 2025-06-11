@@ -72,5 +72,6 @@ dependencies {
 
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation("com.jakewharton:butterknife:10.2.3")
+    implementation("com.google.code.gson:gson:2.7")
 
 }

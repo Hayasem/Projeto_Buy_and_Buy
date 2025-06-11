@@ -72,14 +72,15 @@ public class ProdutosAdapter extends ArrayAdapter<Produto> {
             Glide.with(myContext)
                     .load(produto.getImagem())
                     .placeholder(android.R.drawable.ic_menu_gallery)
-                    .error(android.R.drawable.ic_dialog_alert)     // Imagem mostrada se houver erro no carregamento
+                    .error(android.R.drawable.ic_dialog_alert)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.imageView);
 
             holder.nameView.setText(produto.getNomeProduto());
             holder.descriptionView.setText(produto.getDescricao());
-            NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-            holder.priceView.setText(format.format(produto.getPreco()));
+            //NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+            //holder.priceView.setText(format.format(produto.getPreco()));
+            holder.priceView.setText(String.format("R$ %.2f", produto.getPreco()));
         }else{
             holder.imageView.setImageResource(android.R.drawable.ic_menu_gallery);
             holder.nameView.setText("");

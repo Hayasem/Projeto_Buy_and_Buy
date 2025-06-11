@@ -73,7 +73,9 @@ public class FragmentProdutoDetalhe extends BaseFragment {
         } else {
             image.setImageResource(R.drawable.img_backpack);
         }
-        textPreco.setText("R$ " + produto.getPreco());
+//        textPreco.setText("R$ " + produto.getPreco());
+        textPreco.setText(String.format("R$ %.2f", produto.getPreco()));
+
         descricao.setText(produto.getDescricao());
 
         descricaoExpandida.setText(produto.getDescricao());
